@@ -1,107 +1,310 @@
+// ========================================
+// GIFTORA - HOME PAGE JAVASCRIPT
+// ========================================
 
-// CART COUNT
+
+// ========================================
+// CART STORAGE KEY
+// ========================================
+
+const CART_KEY = "giftoraCart";
 
 
-let cartCount = Number(localStorage.getItem("cartCount")) || 0;
+// ========================================
+// LOAD CART
+// ========================================
 
-const cartBadge = document.querySelector(".cart-count");
+let cart =
+    JSON.parse(localStorage.getItem(CART_KEY)) || [];
 
-if (cartBadge) {
-    cartBadge.textContent = cartCount;
+
+// ========================================
+// CART BADGE
+// ========================================
+
+const cartBadges =
+    document.querySelectorAll(".cart-count");
+
+
+// ========================================
+// UPDATE CART COUNT
+// ========================================
+
+function updateCartCount() {
+
+    let totalQuantity = 0;
+
+
+    cart.forEach(function (item) {
+
+        totalQuantity +=
+            Number(item.quantity) || 0;
+
+    });
+
+
+    cartBadges.forEach(function (badge) {
+
+        badge.textContent =
+            totalQuantity;
+
+    });
+
 }
 
 
-// WISHLIST BUTTONS
+// ========================================
+// SAVE CART
+// ========================================
 
-const wishlistButtons =
-    document.querySelectorAll(".wishlist-btn");
+function saveCart() {
 
+    localStorage.setItem(
+        CART_KEY,
+        JSON.stringify(cart)
+    );
 
-wishlistButtons.forEach((button) => {
-
-    button.addEventListener("click", function () {
-
-        if (this.textContent.trim() === "♡") {
-
-            this.textContent = "♥";
-
-        } else {
-
-            this.textContent = "♡";
-
-        }
-
-    });
-
-});
+}
 
 
-// ADD TO CART
+// ========================================
+// ADD PRODUCT TO CART
+// ========================================
+
+function addToCart(product) {
+
+
+    // Check whether product already exists
+    const existingProduct =
+        cart.find(function (item) {
+
+            return item.id === product.id;
+
+        });
+
+
+    // ====================================
+    // PRODUCT ALREADY IN CART
+    // ====================================
+
+    if (existingProduct) {
+
+        existingProduct.quantity += 1;
+
+    }
+
+
+    // ====================================
+    // NEW PRODUCT
+    // ====================================
+
+    else {
+
+        cart.push({
+
+            id: product.id,
+
+            name: product.name,
+
+            price: product.price,
+
+            image: product.image,
+
+            quantity: 1
+
+        });
+
+    }
+
+
+    // Save updated cart
+    saveCart();
+
+
+    // Update badge
+    updateCartCount();
+
+}
+
+
+// ========================================
+// HOME PAGE PRODUCTS
+// ========================================
+
+const homeProducts = [
+
+    {
+        id: 1,
+
+        name: "Personalized Greeting Card",
+
+        price: 350,
+
+        image: "home_images/pr_card.png"
+
+    },
+
+
+    {
+        id: 3,
+
+        name: "Customized Resin Keychain",
+
+        price: 950,
+
+        image: "home_images/pr_keychain.png"
+
+    },
+
+
+    {
+        id: 5,
+
+        name: "Premium Handmade Gift Box",
+
+        price: 2500,
+
+        image: "home_images/pr_giftbox.png"
+
+    },
+
+
+    {
+        id: 7,
+
+        name: "Scented Handmade Candle",
+
+        price: 1500,
+
+        image: "home_images/pr_canddle.png"
+
+    }
+
+];
+
+
+// ========================================
+// ADD TO CART BUTTONS
+// ========================================
+
 const cartButtons =
-    document.querySelectorAll(".cart-btn");
+    document.querySelectorAll(
+        ".featured-products .cart-btn"
+    );
 
 
-cartButtons.forEach((button) => {
-
-    button.addEventListener("click", function () {
-
-        // Increase cart count
-        cartCount++;
-
-        // Save count
-        localStorage.setItem(
-            "cartCount",
-            cartCount
-        );
-
-        // Update cart badge
-        if (cartBadge) {
-
-            cartBadge.textContent =
-                cartCount;
-
-        }
+cartButtons.forEach(function (button, index) {
 
 
-        // Get product name
-        const productName =
-            this.dataset.product;
+    button.addEventListener(
+        "click",
+        function () {
 
 
-        // Change button temporarily
-        const originalText =
-            this.textContent;
-
-        this.textContent = "Added ✓";
-
-        this.style.background = "#c98262";
+            // Get correct product
+            const product =
+                homeProducts[index];
 
 
-        setTimeout(() => {
+            if (!product) {
+                return;
+            }
+
+
+            // Add product
+            addToCart(product);
+
+
+            // ====================================
+            // BUTTON EFFECT
+            // ====================================
+
+            const originalText =
+                this.textContent;
+
 
             this.textContent =
-                originalText;
-
-            this.style.background = "";
-
-        }, 1500);
+                "Added ✓";
 
 
-        // Show message
-        alert(
-            productName +
-            " added to your cart! 🎁"
-        );
+            this.style.background =
+                "#c98262";
 
-    });
+
+            const currentButton =
+                this;
+
+
+            setTimeout(function () {
+
+                currentButton.textContent =
+                    originalText;
+
+                currentButton.style.background =
+                    "";
+
+            }, 1500);
+
+
+            // ====================================
+            // MESSAGE
+            // ====================================
+
+            alert(
+                product.name +
+                " added to your cart! 🎁"
+            );
+
+        }
+    );
 
 });
 
 
+// ========================================
+// WISHLIST BUTTONS
+// ========================================
+
+const wishlistButtons =
+    document.querySelectorAll(
+        ".wishlist-btn"
+    );
+
+
+wishlistButtons.forEach(function (button) {
+
+    button.addEventListener(
+        "click",
+        function () {
+
+            if (
+                this.textContent.trim() === "♡"
+            ) {
+
+                this.textContent = "♥";
+
+            }
+
+            else {
+
+                this.textContent = "♡";
+
+            }
+
+        }
+    );
+
+});
+
+
+// ========================================
 // NEWSLETTER
+// ========================================
 
 const newsletterForm =
-    document.querySelector(".newsletter-form");
+    document.querySelector(
+        ".newsletter-form"
+    );
 
 
 if (newsletterForm) {
@@ -111,11 +314,6 @@ if (newsletterForm) {
         function (event) {
 
             event.preventDefault();
-
-            const email =
-                this.querySelector(
-                    'input[type="email"]'
-                ).value;
 
 
             alert(
@@ -131,10 +329,14 @@ if (newsletterForm) {
 }
 
 
+// ========================================
 // SEARCH BUTTON
+// ========================================
 
 const searchButton =
-    document.querySelector(".search-btn");
+    document.querySelector(
+        ".search-btn"
+    );
 
 
 if (searchButton) {
@@ -142,6 +344,7 @@ if (searchButton) {
     searchButton.addEventListener(
         "click",
         function () {
+
 
             const searchTerm =
                 prompt(
@@ -154,8 +357,9 @@ if (searchButton) {
                 searchTerm.trim() !== ""
             ) {
 
+
                 window.location.href =
-                    "shop.html?search=" +
+                    "product_listing.html?search=" +
                     encodeURIComponent(
                         searchTerm
                     );
@@ -168,8 +372,9 @@ if (searchButton) {
 }
 
 
+// ========================================
 // HEADER WISHLIST
-
+// ========================================
 
 const headerWishlist =
     document.querySelector(
@@ -191,3 +396,10 @@ if (headerWishlist) {
     );
 
 }
+
+
+// ========================================
+// INITIALIZE CART COUNT
+// ========================================
+
+updateCartCount();
