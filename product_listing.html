@@ -6,20 +6,19 @@
     <meta charset="UTF-8">
 
     <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+          content="width=device-width, initial-scale=1.0">
 
     <title>Shop | GIFTORA</title>
 
     <link rel="stylesheet" href="product_listing.css">
 
     <!-- Google Fonts -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
 
     <link rel="preconnect"
-        href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin>
+          href="https://fonts.gstatic.com"
+          crossorigin>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
@@ -31,7 +30,9 @@
 <body>
 
 
-    <!--TOP BAR-->
+    <!-- =====================================================
+         TOP BAR
+         ===================================================== -->
 
     <div class="top-bar">
 
@@ -55,7 +56,9 @@
 
 
 
-    <!--NAVBAR-->
+    <!-- =====================================================
+         NAVBAR
+         ===================================================== -->
 
     <header>
 
@@ -64,8 +67,8 @@
 
             <!-- LOGO -->
 
-            <a href="index.html"
-                class="logo">
+            <a href="home.html"
+               class="logo">
 
                 <div class="logo-icon">
 
@@ -77,7 +80,9 @@
 
                 <div>
 
-                    <h1>GIFTORA</h1>
+                    <h1>
+                        GIFTORA
+                    </h1>
 
                     <span>
                         Handmade & Personalized Gifts
@@ -93,24 +98,24 @@
 
             <nav>
 
-                <a href="index.html">
+                <a href="home.html">
                     Home
                 </a>
 
-                <a href="shop.html"
-                    class="active">
+                <a href="product_listing.html"
+                   class="active">
                     Shop
                 </a>
 
-                <a href="index.html#categories">
+                <a href="home.html#categories">
                     Categories
                 </a>
 
-                <a href="index.html#about">
+                <a href="home.html#about">
                     About Us
                 </a>
 
-                <a href="index.html#contact">
+                <a href="home.html#contact">
                     Contact
                 </a>
 
@@ -123,6 +128,8 @@
             <div class="header-actions">
 
 
+                <!-- SEARCH BUTTON -->
+
                 <button
                     class="icon-btn"
                     id="searchBtn"
@@ -133,8 +140,11 @@
                 </button>
 
 
+                <!-- WISHLIST -->
+
                 <button
                     class="icon-btn"
+                    id="headerWishlist"
                     title="Wishlist">
 
                     ♡
@@ -142,8 +152,10 @@
                 </button>
 
 
+                <!-- CART -->
+
                 <a href="cart.html"
-                    class="cart-link">
+                   class="cart-link">
 
                     🛒
 
@@ -154,8 +166,11 @@
                 </a>
 
 
+                <!-- ACCOUNT -->
+
                 <a href="login.html"
-                    class="account-btn">
+                   class="account-btn"
+                   title="My Account">
 
                     👤
 
@@ -169,7 +184,9 @@
 
 
 
-    <!--SHOP HERO-->
+    <!-- =====================================================
+         SHOP HERO
+         ===================================================== -->
 
     <section class="shop-hero">
 
@@ -190,12 +207,16 @@
 
 
 
-    <!-- SHOP SECTION-->
+    <!-- =====================================================
+         SHOP SECTION
+         ===================================================== -->
 
     <section class="shop-section">
 
 
-        <!-- SEARCH -->
+        <!-- =================================================
+             SEARCH
+             ================================================= -->
 
         <div class="shop-search">
 
@@ -212,9 +233,14 @@
 
 
 
-        <!-- CATEGORY FILTERS -->
+        <!-- =================================================
+             CATEGORY FILTERS
+             ================================================= -->
 
         <div class="category-filters">
+
+
+            <!-- ALL -->
 
             <button
                 class="filter-btn active"
@@ -225,6 +251,8 @@
             </button>
 
 
+            <!-- CARDS -->
+
             <button
                 class="filter-btn"
                 data-category="cards">
@@ -233,6 +261,8 @@
 
             </button>
 
+
+            <!-- KEYCHAINS -->
 
             <button
                 class="filter-btn"
@@ -243,6 +273,8 @@
             </button>
 
 
+            <!-- GIFT BOXES -->
+
             <button
                 class="filter-btn"
                 data-category="giftboxes">
@@ -251,6 +283,8 @@
 
             </button>
 
+
+            <!-- CANDLES -->
 
             <button
                 class="filter-btn"
@@ -261,6 +295,8 @@
             </button>
 
 
+            <!-- WOOD -->
+
             <button
                 class="filter-btn"
                 data-category="wood">
@@ -270,6 +306,8 @@
             </button>
 
 
+            <!-- PHOTO FRAMES -->
+
             <button
                 class="filter-btn"
                 data-category="frames">
@@ -278,6 +316,8 @@
 
             </button>
 
+
+            <!-- CAKES -->
 
             <button
                 class="filter-btn"
@@ -291,1386 +331,27 @@
 
 
 
-        <!-- PRODUCTS -->
-
-        <div class="product-grid">
-
-
-            <!-- PRODUCT 1-->
-
-            <div
-                class="product-card"
-                data-category="cards">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/G1.jpg"
-                        alt="Personalized Greeting Card">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        GREETING CARDS
-                    </p>
-
-                    <h3>
-                        Personalized Greeting Card
-                    </h3>
-
-                    <p class="price">
-                        Rs. 350.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Personalized Greeting Card"
-                            data-price="350">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 2-->
-
-            <div
-                class="product-card"
-                data-category="cards">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/B1.jpg"
-                        alt="Handmade Birthday Card">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        GREETING CARDS
-                    </p>
-
-                    <h3>
-                        Handmade Birthday Card
-                    </h3>
-
-                    <p class="price">
-                        Rs. 450.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Handmade Birthday Card"
-                            data-price="450">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 3-->
-
-            <div
-                class="product-card"
-                data-category="keychains">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/key01.png"
-                        alt="Customized Resin Keychain">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        RESIN COLLECTION
-                    </p>
-
-                    <h3>
-                        Customized Resin Keychain
-                    </h3>
-
-                    <p class="price">
-                        Rs. 950.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Customized Resin Keychain"
-                            data-price="950">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 4-->
-
-            <div
-                class="product-card"
-                data-category="keychains">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/key02.png"
-                        alt="Couple Resin Keychain">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        RESIN COLLECTION
-                    </p>
-
-                    <h3>
-                        Couple Resin Keychain
-                    </h3>
-
-                    <p class="price">
-                        Rs. 1,200.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Couple Resin Keychain"
-                            data-price="1200">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 5-->
-
-            <div
-                class="product-card"
-                data-category="giftboxes">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/GB01.png"
-                        alt="Premium Handmade Gift Box">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        GIFT BOX
-                    </p>
-
-                    <h3>
-                        Premium Handmade Gift Box
-                    </h3>
-
-                    <p class="price">
-                        Rs. 2,500.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Premium Handmade Gift Box"
-                            data-price="2500">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 6-->
-
-            <div
-                class="product-card"
-                data-category="giftboxes">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/GB02.png"
-                        alt="Birthday Surprise Gift Box">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        GIFT BOX
-                    </p>
-
-                    <h3>
-                        Birthday Surprise Gift Box
-                    </h3>
-
-                    <p class="price">
-                        Rs. 3,500.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Birthday Surprise Gift Box"
-                            data-price="3500">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 7-->
-
-            <div
-                class="product-card"
-                data-category="candles">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/candel01.png"
-                        alt="Scented Handmade Candle">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        HANDMADE CANDLE
-                    </p>
-
-                    <h3>
-                        Scented Handmade Candle
-                    </h3>
-
-                    <p class="price">
-                        Rs. 1,500.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Scented Handmade Candle"
-                            data-price="1500">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 8-->
-
-            <div
-                class="product-card"
-                data-category="candles">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/candel02.png"
-                        alt="Personalized Name Candle">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        HANDMADE CANDLE
-                    </p>
-
-                    <h3>
-                        Personalized Name Candle
-                    </h3>
-
-                    <p class="price">
-                        Rs. 1,800.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Personalized Name Candle"
-                            data-price="1800">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 9-->
-
-            <div
-                class="product-card"
-                data-category="wood">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/wood01.png"
-                        alt="Wooden Engraved Plaque">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        WOOD COLLECTION
-                    </p>
-
-                    <h3>
-                        Wooden Engraved Plaque
-                    </h3>
-
-                    <p class="price">
-                        Rs. 1,600.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Wooden Engraved Plaque"
-                            data-price="1600">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 10-->
-
-            <div
-                class="product-card"
-                data-category="wood">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/wood02.png"
-                        alt="Personalized Wooden couple gift">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        WOOD COLLECTION
-                    </p>
-
-                    <h3>
-                        Personalized photo frame
-                    </h3>
-
-                    <p class="price">
-                        Rs. 2,000.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Personalized Name Board"
-                            data-price="2000">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 11-->
-
-            <div
-                class="product-card"
-                data-category="frames">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/photo01.png"
-                        alt="Personalized Photo Frame">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        PHOTO FRAME
-                    </p>
-
-                    <h3>
-                        Personalized Photo Frame
-                    </h3>
-
-                    <p class="price">
-                        Rs. 2,500.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Personalized Photo Frame"
-                            data-price="2500">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 12-->
-
-            <div
-                class="product-card"
-                data-category="frames">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/photo02.png"
-                        alt="Couple Memory Photo Frame">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        PHOTO FRAME
-                    </p>
-
-                    <h3>
-                        Couple Memory Photo Frame
-                    </h3>
-
-                    <p class="price">
-                        Rs. 2,800.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Couple Memory Photo Frame"
-                            data-price="2800">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 13-->
-
-            <div
-                class="product-card"
-                data-category="cakes">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/cake01.png"
-                        alt="Customized Birthday Cake">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        CUSTOMIZED CAKE
-                    </p>
-
-                    <h3>
-                        Customized Birthday Cake
-                    </h3>
-
-                    <p class="price">
-                        Rs. 4,500.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Customized Birthday Cake"
-                            data-price="4500">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!--PRODUCT 14-->
-
-            <div
-                class="product-card"
-                data-category="cakes">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/cake02.png"
-                        alt="Customized Anniversary Cake">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        CUSTOMIZED CAKE
-                    </p>
-
-                    <h3>
-                        Customized Anniversary Cake
-                    </h3>
-
-                    <p class="price">
-                        Rs. 5,000.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Customized Anniversary Cake"
-                            data-price="5000">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!--PRODUCT 15-->
-
-            <div
-                class="product-card"
-                data-category="cards">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/A1.jpg"
-                        alt="Handmade Anniversary Card">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        GREETING CARDS
-                    </p>
-
-                    <h3>
-                        Handmade Anniversary Card
-                    </h3>
-
-                    <p class="price">
-                        Rs. 450.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Handmade Birthday Card"
-                            data-price="450">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!--PRODUCT 16-->
-
-            <div
-                class="product-card"
-                data-category="cards">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/B2.jpg"
-                        alt="Handmade Birthday Card">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        GREETING CARDS
-                    </p>
-
-                    <h3>
-                        Handmade Birthday Card
-                    </h3>
-
-                    <p class="price">
-                        Rs. 450.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Handmade Birthday Card"
-                            data-price="450">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!--PRODUCT 17-->
-
-            <div
-                class="product-card"
-                data-category="cards">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/C1.jpg"
-                        alt="Handmade Welcome Card">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        WELCOME CARDS
-                    </p>
-
-                    <h3>
-                        Welcome Baby Card
-                    </h3>
-
-                    <p class="price">
-                        Rs. 450.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Handmade Birthday Card"
-                            data-price="450">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!--PRODUCT 18-->
-
-            <div
-                class="product-card"
-                data-category="cards">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/F1.jpg"
-                        alt="Handmade Father's Day Card">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        GREETING CARDS
-                    </p>
-
-                    <h3>
-                        Handmade Fathder's Day Card
-                    </h3>
-
-                    <p class="price">
-                        Rs. 450.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Handmade Birthday Card"
-                            data-price="450">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!--PRODUCT 19-->
-
-            <div
-                class="product-card"
-                data-category="cards">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/G2.jpg"
-                        alt="Handmade Greeting Card">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        GREETING CARDS
-                    </p>
-
-                    <h3>
-                        Handmade Greeting Card
-                    </h3>
-
-                    <p class="price">
-                        Rs. 450.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Handmade Birthday Card"
-                            data-price="450">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!--PRODUCT 20-->
-
-            <div
-                class="product-card"
-                data-category="cards">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/IMG1.jpg"
-                        alt="Handmade Greeting Card">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        GREETING CARDS
-                    </p>
-
-                    <h3>
-                        Handmade Greeting Card
-                    </h3>
-
-                    <p class="price">
-                        Rs. 450.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Handmade Birthday Card"
-                            data-price="450">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!--PRODUCT 21-->
-
-            <div
-                class="product-card"
-                data-category="cards">
-
-                <div class="product-image">
-
-                    <img
-                        src="shop_images/M1.jpg"
-                        alt="Handmade Mother's day Card">
-
-
-                    <button
-                        class="wishlist-btn">
-
-                        ♡
-
-                    </button>
-
-                </div>
-
-
-                <div class="product-info">
-
-                    <p class="product-category">
-                        GREETING CARDS
-                    </p>
-
-                    <h3>
-                        Handmade Mother's Day Card
-                    </h3>
-
-                    <p class="price">
-                        Rs. 450.00
-                    </p>
-
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="product-details.html"
-                            class="details-btn">
-
-                            View Details
-
-                        </a>
-
-
-                        <button
-                            class="cart-btn"
-                            data-product="Handmade Birthday Card"
-                            data-price="450">
-
-                            Add to Cart
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+        <!-- =================================================
+             PRODUCT GRID
+             
+             IMPORTANT:
+             Products are NOT written manually here.
+             product_listing.js creates all product cards.
+             ================================================= -->
+
+        <div
+            class="product-grid"
+            id="productGrid">
+
+            <!-- Products will be automatically loaded here -->
 
         </div>
 
 
-        <!-- NO RESULTS -->
+
+        <!-- =================================================
+             NO RESULTS
+             ================================================= -->
 
         <div
             class="no-results"
@@ -1691,7 +372,9 @@
 
 
 
-    <!--FOOTER-->
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
 
     <footer>
 
@@ -1723,19 +406,19 @@
                     Quick Links
                 </h3>
 
-                <a href="index.html">
+                <a href="home.html">
                     Home
                 </a>
 
-                <a href="shop.html">
+                <a href="product_listing.html">
                     Shop
                 </a>
 
-                <a href="index.html#about">
+                <a href="home.html#about">
                     About Us
                 </a>
 
-                <a href="index.html#contact">
+                <a href="home.html#contact">
                     Contact Us
                 </a>
 
@@ -1751,7 +434,7 @@
                     Customer Service
                 </h3>
 
-                <a href="#">
+                <a href="login.html">
                     My Account
                 </a>
 
@@ -1799,6 +482,8 @@
 
 
 
+        <!-- FOOTER BOTTOM -->
+
         <div class="footer-bottom">
 
             <p>
@@ -1815,7 +500,13 @@
     </footer>
 
 
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
     <script src="product_listing.js"></script>
+
 
 </body>
 
