@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | GIFTORA</title>
+    <link rel="stylesheet" href="cart.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- =========================================
+         TOP BAR
+    ========================================== -->
+    <div class="top-bar">
+        <p>🚚 Free delivery on orders over Rs. 2,000</p>
+        <div>
+            <a href="#">Help</a>
+            <a href="#">Track Order</a>
+        </div>
+    </div>
+
+    <!-- =========================================
+         NAVBAR
+    ========================================== -->
+    <header>
+        <div class="navbar">
+            <!-- LOGO -->
+            <a href="home.html" class="logo">
+                <img src="Logo.png" alt="GIFTORA Logo">
+                <div>
+                    <h1>GIFTORA</h1>
+                    <span>Handmade & Personalized Gifts</span>
+                </div>
+            </a>
+
+            <!-- NAVIGATION -->
+            <nav>
+                <a href="home.html">Home</a>
+                <a href="product_listing.html">Shop</a>
+                <a href="home.html#categories">Categories</a>
+                <a href="home.html#about">About Us</a>
+                <a href="home.html#contact">Contact</a>
+            </nav>
+
+            <!-- HEADER ACTIONS -->
+            <div class="header-actions">
+                <a href="product_listing.html" class="icon-btn" title="Search">🔍</a>
+                <button class="icon-btn wishlist-header" title="Wishlist">♡</button>
+                <a href="cart.html" class="cart-link" title="Shopping Cart">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="login.html" class="account-btn" title="My Account">👤</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- =========================================
+         PAGE HERO
+    ========================================== -->
+    <section class="cart-hero">
+        <p>YOUR SHOPPING BAG</p>
+        <h1>Shopping Cart</h1>
+        <span>Review your beautiful gifts before checkout.</span>
+    </section>
+
+    <!-- =========================================
+         CART SECTION
+    ========================================== -->
+    <main class="cart-section">
+
+        <!-- CART ITEMS -->
+        <section class="cart-items">
+            <div class="cart-heading">
+                <h2>Your Cart</h2>
+                <span id="itemCount">0 items</span>
+            </div>
+
+            <!-- PRODUCTS CONTAINER -->
+            <div id="cartContainer"></div>
+
+            <!-- EMPTY CART MESSAGE -->
+            <div id="emptyCart" class="empty-cart">
+                <div class="empty-icon">🛍️</div>
+                <h2>Your cart is empty</h2>
+                <p>Looks like you haven't added any gifts yet.</p>
+                <a href="product_listing.html">Continue Shopping</a>
+            </div>
+        </section>
+
+        <!-- ORDER SUMMARY -->
+        <aside class="order-summary">
+            <h2>Order Summary</h2>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <strong id="subtotal">Rs. 0.00</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Delivery</span>
+                <strong id="delivery">Rs. 0.00</strong>
+            </div>
+
+            <div class="summary-line"></div>
+
+            <div class="summary-total">
+                <span>Total</span>
+                <strong id="total">Rs. 0.00</strong>
+            </div>
+
+            <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+
+            <a href="product_listing.html" class="continue-shopping">← Continue Shopping</a>
+
+            <div class="secure-payment">
+                <span class="lock-icon">🔒</span>
+                <span>Secure & safe checkout</span>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- =========================================
+         FOOTER
+    ========================================== -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h2>🎁 GIFTORA</h2>
+                <p>Handmade and personalized gifts created with love, just for you.</p>
+            </div>
+
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <a href="home.html">Home</a>
+                <a href="product_listing.html">Shop</a>
+                <a href="home.html#about">About Us</a>
+                <a href="home.html#contact">Contact Us</a>
+            </div>
+
+            <div class="footer-column">
+                <h3>Customer Service</h3>
+                <a href="login.html">My Account</a>
+                <a href="#">My Orders</a>
+                <a href="#">Wishlist</a>
+                <a href="#">Track Order</a>
+            </div>
+
+            <div class="footer-column">
+                <h3>Contact Us</h3>
+                <p>📞 +94 762063296</p>
+                <p>📍 126, Ratnapura Road, Awissawella</p>
+                <p>📧 support@giftora.lk</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 GIFTORA. All Rights Reserved.</p>
+            <p>Made with ❤️ for special moments.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script src="cart.js"></script>
+
+</body>
+
+</html>
