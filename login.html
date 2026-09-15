@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | GIFTORA</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+
+    <div class="top-bar">
+
+        <p>
+            Handmade with Love • Personalized Just for You
+        </p>
+
+        <div class="top-links">
+            <a href="#">Contact</a>
+            <a href="#">Help</a>
+        </div>
+
+    </div>
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="navbar">
+
+            <!-- LOGO -->
+
+            <a href="home.html" class="logo">
+
+                <div class="logo-icon">
+                    🎁
+                </div>
+
+                <div>
+                    <h1>GIFTORA</h1>
+                    <span>HANDMADE • PERSONALIZED • WITH LOVE</span>
+                </div>
+
+            </a>
+
+
+            <!-- NAVIGATION -->
+
+            <nav>
+
+                <a href="home.html">Home</a>
+
+                <a href="product_listing.html">
+                    Shop
+                </a>
+
+                <a href="cart.html">
+                    Cart
+                </a>
+
+                <a href="register.html">
+                    Register
+                </a>
+
+            </nav>
+
+
+            <!-- HEADER ACTIONS -->
+
+            <div class="header-actions">
+
+                <a href="#" class="icon-btn">
+                    ♡
+                </a>
+
+                <a href="login.html" class="account-btn active">
+                    ♙
+                </a>
+
+                <a href="cart.html" class="cart-link">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- LOGIN SECTION -->
+
+    <main class="login-section">
+
+        <div class="login-wrapper">
+
+            <!-- LEFT SIDE -->
+
+            <div class="login-image">
+
+                <div class="image-content">
+
+                    <span class="section-label">
+                        WELCOME BACK
+                    </span>
+
+                    <h2>
+                        Gifts made
+                        <span>meaningful.</span>
+                    </h2>
+
+                    <p>
+                        Sign in to your GIFTORA account and continue
+                        discovering handmade and personalized gifts
+                        created specially for your loved ones.
+                    </p>
+
+                    <div class="feature-list">
+
+                        <div class="feature-item">
+                            <span>♡</span>
+                            <p>Save your favorite gifts</p>
+                        </div>
+
+                        <div class="feature-item">
+                            <span>✓</span>
+                            <p>Manage your orders easily</p>
+                        </div>
+
+                        <div class="feature-item">
+                            <span>📦</span>
+                            <p>Track your gift deliveries</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOGIN FORM -->
+
+            <div class="login-form-container">
+
+                <div class="form-heading">
+
+                    <p class="section-label">
+                        YOUR ACCOUNT
+                    </p>
+
+                    <h1>
+                        Welcome Back
+                    </h1>
+
+                    <p>
+                        Login to continue your GIFTORA journey.
+                    </p>
+
+                </div>
+
+
+                <form id="loginForm">
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email address"
+                        >
+
+                        <small
+                            class="error"
+                            id="emailError">
+                        </small>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <div class="password-label">
+
+                            <label for="password">
+                                Password
+                            </label>
+
+                            <a href="#">
+                                Forgot Password?
+                            </a>
+
+                        </div>
+
+                        <div class="password-box">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                            >
+
+                            <button
+                                type="button"
+                                id="showPassword"
+                                class="show-password">
+
+                                👁
+
+                            </button>
+
+                        </div>
+
+                        <small
+                            class="error"
+                            id="passwordError">
+                        </small>
+
+                    </div>
+
+
+                    <!-- REMEMBER -->
+
+                    <label class="remember">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                        >
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+
+                    <!-- LOGIN BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="login-btn">
+
+                        Login to Account
+
+                    </button>
+
+
+                    <!-- ERROR -->
+
+                    <div
+                        id="loginError"
+                        class="login-error">
+                    </div>
+
+
+                    <!-- SUCCESS -->
+
+                    <div
+                        id="successMessage"
+                        class="success-message">
+                    </div>
+
+
+                    <!-- REGISTER -->
+
+                    <div class="register-link">
+
+                        <span>
+                            Don't have a GIFTORA account?
+                        </span>
+
+                        <a href="register.html">
+                            Create an Account
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-container">
+
+            <div class="footer-column">
+
+                <h2>GIFTORA</h2>
+
+                <p>
+                    Handmade and personalized gifts
+                    created with love for every special moment.
+                </p>
+
+            </div>
+
+            <div class="footer-column">
+
+                <h3>Quick Links</h3>
+
+                <a href="home.html">Home</a>
+                <a href="product_listing.html">Shop</a>
+                <a href="cart.html">Cart</a>
+
+            </div>
+
+            <div class="footer-column">
+
+                <h3>Account</h3>
+
+                <a href="login.html">Login</a>
+                <a href="register.html">Register</a>
+
+            </div>
+
+            <div class="footer-column">
+
+                <h3>Contact</h3>
+
+                <p>
+                    Kandy, Sri Lanka
+                </p>
+
+                <p>
+                    hello@giftora.com
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 GIFTORA. All Rights Reserved.
+            </p>
+
+            <p>
+                Handmade • Personalized • Made with Love
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <script src="js/login.js"></script>
+
+</body>
+
+</html>
