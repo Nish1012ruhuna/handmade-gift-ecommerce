@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Account | GIFTORA</title>
+
+    <link
+        rel="stylesheet"
+        href="profile.css"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="logo">
+
+        <a href="home.html">
+            GIFTORA
+        </a>
+
+    </div>
+
+
+    <nav>
+
+        <a href="home.html">
+            Home
+        </a>
+
+        <a href="product_listing.html">
+            Shop
+        </a>
+
+        <a href="home.html#about">
+            About
+        </a>
+
+        <a href="home.html#contact">
+            Contact
+        </a>
+
+
+
+    </nav>
+
+
+    <div class="nav-actions">
+
+        <a
+            href="profile.html"
+            class="account-btn"
+            title="My Account"
+        >
+            👤
+        </a>
+
+        <a
+            href="cart.html"
+            class="cart-btn"
+        >
+            🛒
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     PROFILE HEADER
+===================================================== -->
+
+<section class="profile-header">
+
+    <div>
+
+        <h1>
+            My Account
+        </h1>
+
+        <p>
+            Manage your GIFTORA account and personal information.
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     MAIN PROFILE AREA
+===================================================== -->
+
+<main class="profile-container">
+
+
+    <!-- Account Summary -->
+
+    <section class="account-summary">
+
+        <div class="profile-icon">
+            👤
+        </div>
+
+        <div>
+
+            <h2 id="displayName">
+                Loading...
+            </h2>
+
+            <p id="displayEmail">
+                Loading...
+            </p>
+
+            <span class="account-status">
+                Active Account
+            </span>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         PERSONAL INFORMATION
+    ================================================= -->
+
+    <section class="profile-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Personal Information
+                </h2>
+
+                <p>
+                    Update your personal and contact information.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form id="profileForm">
+
+
+            <div class="form-grid">
+
+
+                <!-- Full Name -->
+
+                <div class="form-group">
+
+                    <label for="fullName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        name="fullName"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        readonly
+                    >
+
+                    <small>
+                        Email address cannot be changed here.
+                    </small>
+
+                </div>
+
+
+                <!-- NIC -->
+
+                <div class="form-group">
+
+                    <label for="nic">
+                        NIC
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nic"
+                        name="nic"
+                    >
+
+                </div>
+
+
+                <!-- Mobile -->
+
+                <div class="form-group">
+
+                    <label for="mobileNo">
+                        Mobile Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="mobileNo"
+                        name="mobileNo"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <!-- Shipping Address -->
+
+            <div class="form-group full-width">
+
+                <label for="shippingAddress">
+                    Shipping Address
+                </label>
+
+                <textarea
+                    id="shippingAddress"
+                    name="shippingAddress"
+                    rows="3"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Billing Address -->
+
+            <div class="form-group full-width">
+
+                <label for="billingAddress">
+                    Billing Address
+                </label>
+
+                <textarea
+                    id="billingAddress"
+                    name="billingAddress"
+                    rows="3"
+                ></textarea>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-btn"
+            >
+                Save Changes
+            </button>
+
+
+            <p
+                id="profileMessage"
+                class="message"
+            ></p>
+
+
+        </form>
+
+    </section>
+
+
+
+    <!-- =================================================
+         ACCOUNT INFORMATION
+    ================================================= -->
+
+    <section class="profile-card">
+
+        <h2>
+            Account Information
+        </h2>
+
+        <div class="account-details">
+
+            <div>
+
+                <span>
+                    Customer ID
+                </span>
+
+                <strong id="customerID">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Registration Date
+                </span>
+
+                <strong id="createdAt">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Account Status
+                </span>
+
+                <strong>
+                    Active
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         CHANGE PASSWORD
+    ================================================= -->
+
+    <section class="profile-card">
+
+        <h2>
+            Change Password
+        </h2>
+
+        <p>
+            Update your password to keep your account secure.
+        </p>
+
+
+        <form id="passwordForm">
+
+
+            <div class="form-group">
+
+                <label for="currentPassword">
+                    Current Password
+                </label>
+
+                <input
+                    type="password"
+                    id="currentPassword"
+                    name="currentPassword"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="newPassword">
+                    New Password
+                </label>
+
+                <input
+                    type="password"
+                    id="newPassword"
+                    name="newPassword"
+                    required
+                >
+
+                <small>
+                    Minimum 8 characters, including uppercase,
+                    lowercase and a number.
+                </small>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="confirmPassword">
+                    Confirm New Password
+                </label>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-btn"
+            >
+                Change Password
+            </button>
+
+
+            <p
+                id="passwordMessage"
+                class="message"
+            ></p>
+
+
+        </form>
+
+    </section>
+
+
+</main>
+
+
+
+<footer>
+
+    <p>
+        © 2026 GIFTORA | Handmade & Personalized Gifts
+    </p>
+
+</footer>
+
+
+<script src="auth.js"></script>
+<script src="profile.js"></script>
+
+</body>
+
+</html>

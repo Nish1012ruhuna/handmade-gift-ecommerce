@@ -1,0 +1,323 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #fffdf9;
+    color: #333;
+}
+
+
+/* NAVBAR */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 6%;
+    background: white;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo a {
+    font-family: "Playfair Display", serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f6f5b;
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    gap: 28px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+nav a:hover {
+    color: #1f6f5b;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.account-btn,
+.cart-btn {
+    text-decoration: none;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.account-btn {
+    background: #1f6f5b;
+    color: white;
+}
+
+.cart-btn {
+    color: #1f6f5b;
+    border: 1px solid #1f6f5b;
+}
+
+
+/* DASHBOARD */
+
+.dashboard {
+    width: 90%;
+    max-width: 1200px;
+    margin: 50px auto;
+}
+
+
+/* WELCOME */
+
+.welcome-section {
+    background: #eef7f3;
+    padding: 35px;
+    border-radius: 18px;
+    margin-bottom: 30px;
+}
+
+.small-title {
+    color: #1f6f5b;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.welcome-section h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 38px;
+    margin-bottom: 8px;
+}
+
+.welcome-section h1 span {
+    color: #1f6f5b;
+}
+
+.welcome-section p {
+    color: #666;
+}
+
+
+/* GRID */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+
+/* CARD */
+
+.dashboard-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.06);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.card-header h2 {
+    font-size: 18px;
+    color: #1f6f5b;
+}
+
+.edit-btn,
+.address-btn,
+.password-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: #1f6f5b;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+/* INFORMATION */
+
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.info-item span {
+    color: #777;
+    font-size: 13px;
+}
+
+.info-item strong {
+    font-size: 13px;
+    text-align: right;
+}
+
+.active {
+    color: #1f6f5b;
+}
+
+
+/* ADDRESS */
+
+.address-box {
+    min-height: 90px;
+    background: #f8faf9;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 15px;
+}
+
+.address-box p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.address-btn {
+    border-bottom: 1px solid #1f6f5b;
+}
+
+
+/* PASSWORD */
+
+.password-btn {
+    margin-top: 22px;
+}
+
+
+/* ORDERS */
+
+.orders-section {
+    margin-top: 30px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.06);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.section-header h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 28px;
+}
+
+.shop-btn {
+    background: #1f6f5b;
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+
+/* NO ORDERS */
+
+.no-orders {
+    text-align: center;
+    padding: 40px 20px;
+    background: #fafafa;
+    border-radius: 12px;
+}
+
+.empty-icon {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.no-orders h3 {
+    margin-bottom: 8px;
+}
+
+.no-orders p {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.no-orders a {
+    display: inline-block;
+    background: #1f6f5b;
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    padding: 30px;
+    margin-top: 30px;
+    background: #1f6f5b;
+    color: white;
+    font-size: 13px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-section h1 {
+        font-size: 30px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}

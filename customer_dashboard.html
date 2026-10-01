@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Dashboard | GIFTORA</title>
+
+    <link rel="stylesheet" href="customer_dashboard.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+
+        <div class="logo">
+            <a href="home.html">GIFTORA</a>
+        </div>
+
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="product_listing.html">Shop</a>
+            <a href="home.html#about">About</a>
+            <a href="home.html#contact">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+
+            <a href="customer_dashboard.html" class="account-btn">
+                My Account
+            </a>
+
+            <a href="cart.html" class="cart-btn">
+                🛒 Cart
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- DASHBOARD -->
+    <main class="dashboard">
+
+        <div class="welcome-section">
+
+            <div>
+                <p class="small-title">WELCOME BACK</p>
+
+                <h1>
+                    Hello, <span id="customerName">Customer</span>! 👋
+                </h1>
+
+                <p>
+                    Manage your GIFTORA account and view your personal information.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- DASHBOARD CARDS -->
+
+        <div class="dashboard-grid">
+
+            <!-- PERSONAL INFORMATION -->
+
+            <section class="dashboard-card">
+
+                <div class="card-header">
+
+                    <h2>👤 Personal Information</h2>
+
+                    <a href="profile.html" class="edit-btn">
+                        Edit Profile
+                    </a>
+
+                </div>
+
+                <div class="info-list">
+
+                    <div class="info-item">
+                        <span>Customer ID</span>
+                        <strong id="customerID">-</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Full Name</span>
+                        <strong id="fullName">-</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Email</span>
+                        <strong id="email">-</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Mobile Number</span>
+                        <strong id="mobile">-</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>NIC</span>
+                        <strong id="nic">-</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ACCOUNT INFORMATION -->
+
+            <section class="dashboard-card">
+
+                <div class="card-header">
+
+                    <h2>🔐 Account Information</h2>
+
+                </div>
+
+                <div class="info-list">
+
+                    <div class="info-item">
+                        <span>Account Status</span>
+                        <strong class="active">Active</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Registered Date</span>
+                        <strong id="createdAt">-</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Account Type</span>
+                        <strong>Customer</strong>
+                    </div>
+
+                </div>
+
+                <a href="profile.html#password" class="password-btn">
+                    🔑 Change Password
+                </a>
+
+            </section>
+
+
+            <!-- SHIPPING ADDRESS -->
+
+            <section class="dashboard-card">
+
+                <div class="card-header">
+
+                    <h2>📦 Shipping Address</h2>
+
+                </div>
+
+                <div class="address-box">
+
+                    <p id="shippingAddress">
+                        No shipping address added yet.
+                    </p>
+
+                </div>
+
+                <a href="profile.html" class="address-btn">
+                    Manage Address
+                </a>
+
+            </section>
+
+
+            <!-- BILLING ADDRESS -->
+
+            <section class="dashboard-card">
+
+                <div class="card-header">
+
+                    <h2>🧾 Billing Address</h2>
+
+                </div>
+
+                <div class="address-box">
+
+                    <p id="billingAddress">
+                        No billing address added yet.
+                    </p>
+
+                </div>
+
+                <a href="profile.html" class="address-btn">
+                    Manage Address
+                </a>
+
+            </section>
+
+        </div>
+
+
+        <!-- ORDERS -->
+
+        <section class="orders-section">
+
+            <div class="section-header">
+
+                <div>
+                    <p class="small-title">PURCHASE HISTORY</p>
+                    <h2>📦 My Orders</h2>
+                </div>
+
+                <a href="cart.html" class="shop-btn">
+                    Continue Shopping
+                </a>
+
+            </div>
+
+            <div id="ordersContainer">
+
+                <div class="no-orders">
+
+                    <div class="empty-icon">🛍️</div>
+
+                    <h3>No Orders Yet</h3>
+
+                    <p>
+                        Your orders will appear here after you make a purchase.
+                    </p>
+
+                    <a href="product_listing.html">
+                        Start Shopping
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>
+            © 2026 GIFTORA. Handmade with Love ❤️
+        </p>
+
+    </footer>
+
+
+    <script src="auth.js"></script>
+    <script src="customer_dashboard.js"></script>
+
+</body>
+
+</html>
