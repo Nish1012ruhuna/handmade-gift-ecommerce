@@ -72,6 +72,8 @@ input {
 }
 
 
+
+
 /* =========================
    HEADER
 ========================= */
@@ -127,7 +129,6 @@ header {
     justify-content: center;
 
     background: #e9f5ef;
-
     border-radius: 50%;
 
     font-size: 24px;

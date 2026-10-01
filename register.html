@@ -9,7 +9,11 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet"
+    >
 
     <!-- Register CSS -->
     <link rel="stylesheet" href="register.css">
@@ -17,190 +21,397 @@
 
 <body>
 
-    <!-- TOP BAR -->
+    <!-- ================================
+         TOP BAR
+    ================================= -->
+
     <div class="top-bar">
         🎁 Handmade with Love • Personalized Just for You
     </div>
 
-    <!-- HEADER -->
+
+    <!-- ================================
+         HEADER
+    ================================= -->
+
     <header class="header">
 
         <div class="logo">
-            <div class="logo-icon">G</div>
+
+            <div class="logo-icon">
+                G
+            </div>
+
             <div>
                 <h1>GIFTORA</h1>
                 <span>Gifts Made Special</span>
             </div>
+
         </div>
 
+
         <nav class="navbar">
+
             <a href="home.html">Home</a>
+
             <a href="product_listing.html">Shop</a>
+
             <a href="#">About</a>
+
             <a href="#">Contact</a>
+
         </nav>
 
+
         <div class="header-actions">
-            <a href="login.html" class="login-link">Login</a>
-            <a href="register.html" class="register-btn">Register</a>
+
+            <a href="login.html" class="login-link">
+                Login
+            </a>
+
+            <a href="register.html" class="register-btn">
+                Register
+            </a>
+
         </div>
 
     </header>
 
 
-    <!-- REGISTER SECTION -->
+    <!-- ================================
+         REGISTER SECTION
+    ================================= -->
+
     <main class="register-section">
 
         <div class="register-container">
 
-            <!-- LEFT SIDE -->
+
+            <!-- ============================
+                 LEFT WELCOME PANEL
+            ============================= -->
+
             <div class="register-welcome">
 
-                <div class="welcome-icon">🎁</div>
+                <div class="welcome-icon">
+                    🎁
+                </div>
 
-                <h2>Welcome to<br>GIFTORA</h2>
+
+                <h2>
+                    Welcome to<br>
+                    GIFTORA
+                </h2>
+
 
                 <p>
                     Create your account and discover a world of
                     beautiful handmade and personalized gifts.
                 </p>
 
+
                 <div class="welcome-features">
-                    <div>✓ Personalized Gifts</div>
-                    <div>✓ Handmade with Love</div>
-                    <div>✓ Easy & Secure Shopping</div>
-                    <div>✓ Special Gifts for Every Moment</div>
+
+                    <div>
+                        ✓ Personalized Gifts
+                    </div>
+
+                    <div>
+                        ✓ Handmade with Love
+                    </div>
+
+                    <div>
+                        ✓ Easy & Secure Shopping
+                    </div>
+
+                    <div>
+                        ✓ Special Gifts for Every Moment
+                    </div>
+
                 </div>
 
             </div>
 
 
-            <!-- RIGHT SIDE -->
+            <!-- ============================
+                 RIGHT FORM
+            ============================= -->
+
             <div class="register-form-container">
 
                 <div class="form-heading">
-                    <h2>Create Your Account</h2>
-                    <p>Join GIFTORA and start your gifting journey.</p>
+
+                    <h2>
+                        Create Your Account
+                    </h2>
+
+                    <p>
+                        Join GIFTORA and start your gifting journey.
+                    </p>
+
                 </div>
+
+
+                <!-- REGISTER FORM -->
 
                 <form id="registerForm">
 
+
                     <!-- FULL NAME -->
+
                     <div class="form-group">
-                        <label for="fullName">Full Name</label>
+
+                        <label for="fullName">
+                            Full Name *
+                        </label>
 
                         <input
                             type="text"
                             id="fullName"
                             name="fullName"
                             placeholder="Enter your full name"
+                            autocomplete="name"
                             required
                         >
 
-                        <small class="error-message" id="nameError"></small>
+                        <small
+                            class="error-message"
+                            id="fullNameError">
+                        </small>
+
+                    </div>
+
+
+                    <!-- NIC -->
+
+                    <div class="form-group">
+
+                        <label for="nic">
+                            NIC
+                        </label>
+
+                        <input
+                            type="text"
+                            id="nic"
+                            name="nic"
+                            placeholder="Enter your NIC number"
+                            autocomplete="off"
+                        >
+
+                        <small
+                            class="error-message"
+                            id="nicError">
+                        </small>
+
                     </div>
 
 
                     <!-- EMAIL -->
+
                     <div class="form-group">
-                        <label for="email">Email Address</label>
+
+                        <label for="email">
+                            Email Address *
+                        </label>
 
                         <input
                             type="email"
                             id="email"
                             name="email"
                             placeholder="Enter your email"
+                            autocomplete="email"
                             required
                         >
 
-                        <small class="error-message" id="emailError"></small>
+                        <small
+                            class="error-message"
+                            id="emailError">
+                        </small>
+
+                    </div>
+
+
+                    <!-- MOBILE -->
+
+                    <div class="form-group">
+
+                        <label for="mobileNo">
+                            Mobile Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="mobileNo"
+                            name="mobileNo"
+                            placeholder="Enter your mobile number"
+                            autocomplete="tel"
+                        >
+
+                        <small
+                            class="error-message"
+                            id="mobileError">
+                        </small>
+
                     </div>
 
 
                     <!-- PASSWORD -->
+
                     <div class="form-group">
-                        <label for="password">Password</label>
+
+                        <label for="password">
+                            Password *
+                        </label>
+
 
                         <div class="password-box">
+
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
                                 placeholder="Create a password"
+                                autocomplete="new-password"
                                 required
                             >
 
-                            <button type="button" class="show-password" id="togglePassword">
+
+                            <button
+                                type="button"
+                                class="show-password"
+                                id="togglePassword"
+                            >
                                 Show
                             </button>
+
                         </div>
+
 
                         <small class="password-hint">
                             Use at least 8 characters with uppercase,
                             lowercase and a number.
                         </small>
 
-                        <small class="error-message" id="passwordError"></small>
+
+                        <small
+                            class="error-message"
+                            id="passwordError">
+                        </small>
+
                     </div>
 
 
                     <!-- CONFIRM PASSWORD -->
+
                     <div class="form-group">
-                        <label for="confirmPassword">Confirm Password</label>
+
+                        <label for="confirmPassword">
+                            Confirm Password *
+                        </label>
+
 
                         <div class="password-box">
+
                             <input
                                 type="password"
                                 id="confirmPassword"
                                 name="confirmPassword"
                                 placeholder="Confirm your password"
+                                autocomplete="new-password"
                                 required
                             >
 
-                            <button type="button" class="show-password" id="toggleConfirmPassword">
+
+                            <button
+                                type="button"
+                                class="show-password"
+                                id="toggleConfirmPassword"
+                            >
                                 Show
                             </button>
+
                         </div>
 
-                        <small class="error-message" id="confirmPasswordError"></small>
+
+                        <small
+                            class="error-message"
+                            id="confirmPasswordError">
+                        </small>
+
                     </div>
 
 
                     <!-- TERMS -->
+
                     <div class="terms">
 
                         <label>
-                            <input type="checkbox" id="terms" required>
+
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                name="terms"
+                                required
+                            >
 
                             <span>
+
                                 I agree to the
-                                <a href="#">Terms & Conditions</a>
+                                <a href="#">
+                                    Terms & Conditions
+                                </a>
+
                                 and
-                                <a href="#">Privacy Policy</a>.
+
+                                <a href="#">
+                                    Privacy Policy
+                                </a>.
+
                             </span>
+
                         </label>
+
+
+                        <small
+                            class="error-message"
+                            id="termsError">
+                        </small>
 
                     </div>
 
 
                     <!-- REGISTER BUTTON -->
-                    <button type="submit" class="register-submit">
+
+                    <button
+                        type="submit"
+                        class="register-submit"
+                        id="registerSubmit"
+                    >
                         Create Account
                     </button>
 
 
-                    <!-- SUCCESS MESSAGE -->
-                    <div id="successMessage" class="success-message">
-                        Account created successfully! Redirecting to login...
+                    <!-- SUCCESS / SERVER MESSAGE -->
+
+                    <div
+                        id="successMessage"
+                        class="success-message">
                     </div>
+
 
                 </form>
 
 
                 <!-- LOGIN LINK -->
+
                 <div class="login-text">
+
                     Already have an account?
-                    <a href="login.html">Login here</a>
+
+                    <a href="login.html">
+                        Login here
+                    </a>
+
                 </div>
 
             </div>
@@ -210,43 +421,82 @@
     </main>
 
 
-    <!-- FOOTER -->
+    <!-- ================================
+         FOOTER
+    ================================= -->
+
     <footer class="footer">
 
         <div class="footer-content">
 
+
             <div>
-                <h3>GIFTORA</h3>
+
+                <h3>
+                    GIFTORA
+                </h3>
+
                 <p>
                     Handmade gifts created with love,
                     creativity and personal meaning.
                 </p>
+
             </div>
 
-            <div>
-                <h4>Quick Links</h4>
-                <a href="home.html">Home</a>
-                <a href="product_listing.html">Shop</a>
-                <a href="login.html">Login</a>
-            </div>
 
             <div>
-                <h4>Contact Us</h4>
-                <p>Email: giftora@gmail.com</p>
-                <p>Phone: +94 77 123 4567</p>
+
+                <h4>
+                    Quick Links
+                </h4>
+
+                <a href="home.html">
+                    Home
+                </a>
+
+                <a href="product_listing.html">
+                    Shop
+                </a>
+
+                <a href="login.html">
+                    Login
+                </a>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Contact Us
+                </h4>
+
+                <p>
+                    Email: giftora@gmail.com
+                </p>
+
+                <p>
+                    Phone: +94 77 123 4567
+                </p>
+
             </div>
 
         </div>
 
+
         <div class="footer-bottom">
+
             © 2026 GIFTORA. All Rights Reserved.
+
         </div>
 
     </footer>
 
 
     <!-- Register JavaScript -->
+
     <script src="register.js"></script>
+    <script src="auth.js"></script>
 
 </body>
 </html>

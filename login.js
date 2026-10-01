@@ -1,131 +1,151 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     const loginForm = document.getElementById("loginForm");
+    const loginBtn = document.getElementById("loginBtn");
 
-    const email = document.getElementById("email");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
 
-    const password = document.getElementById("password");
+    const emailError = document.getElementById("emailError");
+    const passwordError = document.getElementById("passwordError");
 
-    const emailError =
-        document.getElementById("emailError");
+    const loginError = document.getElementById("loginError");
+    const successMessage = document.getElementById("successMessage");
 
-    const passwordError =
-        document.getElementById("passwordError");
-
-    const loginError =
-        document.getElementById("loginError");
-
-    const successMessage =
-        document.getElementById("successMessage");
+    const showPassword = document.getElementById("showPassword");
 
 
-    /* =========================
-       SHOW / HIDE PASSWORD
-    ========================= */
+    // Show / hide password
+    if (showPassword && passwordInput) {
 
-    const showPassword =
-        document.getElementById("showPassword");
+        showPassword.addEventListener("click", function () {
 
-    showPassword.addEventListener("click", function () {
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                showPassword.textContent = "🙈";
+            } else {
+                passwordInput.type = "password";
+                showPassword.textContent = "👁";
+            }
 
-        if (password.type === "password") {
-
-            password.type = "text";
-
-            showPassword.textContent = "🙈";
-
-        } else {
-
-            password.type = "password";
-
-            showPassword.textContent = "👁";
-
-        }
-
-    });
+        });
+    }
 
 
-    /* =========================
-       LOGIN FORM
-    ========================= */
+    // Login form
+    if (loginForm) {
 
-    loginForm.addEventListener("submit", function (event) {
+        loginForm.addEventListener("submit", async function (event) {
 
-        event.preventDefault();
+            event.preventDefault();
 
+            // Clear old messages
+            emailError.textContent = "";
+            passwordError.textContent = "";
+            loginError.textContent = "";
+            successMessage.textContent = "";
 
-        // Clear previous messages
-
-        emailError.textContent = "";
-
-        passwordError.textContent = "";
-
-        loginError.style.display = "none";
-
-        successMessage.style.display = "none";
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
 
 
-        let isValid = true;
+            // Validation
+            if (email === "") {
+                emailError.textContent = "Please enter your email.";
+                return;
+            }
+
+            if (password === "") {
+                passwordError.textContent = "Please enter your password.";
+                return;
+            }
 
 
-        /* =========================
-           EMAIL VALIDATION
-        ========================= */
-
-        const emailPattern =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            loginBtn.disabled = true;
+            loginBtn.textContent = "Logging in...";
 
 
-        if (email.value.trim() === "") {
+            const formData = new FormData();
 
-            emailError.textContent =
-                "Please enter your email address.";
-
-            isValid = false;
-
-        } else if (!emailPattern.test(email.value.trim())) {
-
-            emailError.textContent =
-                "Please enter a valid email address.";
-
-            isValid = false;
-        }
+            formData.append("email", email);
+            formData.append("password", password);
 
 
-        /* =========================
-           PASSWORD VALIDATION
-        ========================= */
+            try {
 
-        if (password.value === "") {
+                const response = await fetch(
+                    "backend/api/login.php",
+                    {
+                        method: "POST",
+                        body: formData,
+                        credentials: "same-origin"
+                    }
+                );
 
-            passwordError.textContent =
-                "Please enter your password.";
 
-            isValid = false;
-        }
+                // Read response as TEXT first
+                const rawResponse = await response.text();
+
+                console.log("Login status:", response.status);
+                console.log("Login response:", rawResponse);
 
 
-        /* =========================
-           SUCCESS
-        ========================= */
+                // Convert response to JSON
+                let data;
 
-        if (isValid) {
+                try {
+                    data = JSON.parse(rawResponse);
+                } catch (jsonError) {
 
-            successMessage.textContent =
-                "Login details are valid! 🎉";
+                    console.error("Invalid JSON:", rawResponse);
 
-            successMessage.style.display = "block";
+                    loginError.textContent =
+                        "Server returned an invalid response. Check the browser console.";
 
-            console.log("Login data:", {
+                    return;
+                }
 
-                email: email.value.trim(),
 
-                password: password.value
+                // Successful login
+                if (response.ok && data.success === true) {
 
-            });
+                    successMessage.textContent =
+                        "Login successful! Redirecting...";
 
-        }
+                    console.log("LOGIN SUCCESS");
+                    console.log("Customer:", data.data.customer);
 
-    });
+
+                    // Redirect to dashboard
+                    setTimeout(function () {
+
+                        window.location.href =
+                            "customer_dashboard.html";
+
+                    }, 700);
+
+                } else {
+
+                    loginError.textContent =
+                        data.message || "Invalid email or password.";
+
+                }
+
+            } catch (error) {
+
+                console.error("Login error:", error);
+
+                loginError.textContent =
+                    "Unable to connect to the server.";
+
+            } finally {
+
+                loginBtn.disabled = false;
+                loginBtn.textContent = "Login to Account";
+
+            }
+
+        });
+    }
 
 });
