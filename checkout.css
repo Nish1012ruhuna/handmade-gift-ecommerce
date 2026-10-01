@@ -1,0 +1,685 @@
+:root {
+    --green: #1f6f5b;
+    --dark-green: #185846;
+    --deep-green: #1d2f29;
+
+    --cream: #fffdf9;
+    --warm-cream: #faf6ef;
+    --pale-green: #eef8f3;
+    --sage: #dcece3;
+
+    --orange: #d17c4c;
+    --light-orange: #fbf0e8;
+
+    --text: #34483e;
+    --heading: #1d4d3f;
+    --muted: #78877e;
+
+    --border: #e2e9e2;
+    --white: #ffffff;
+    --error: #a94442;
+}
+
+/* Reset */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+/* Keep all page text within the GIFTORA palette */
+
+h1,
+h2,
+h3,
+h4 {
+    color: var(--heading);
+    font-family: 'Playfair Display', serif;
+    line-height: 1.3;
+}
+
+p,
+span,
+small,
+label {
+    color: inherit;
+}
+
+a {
+    text-decoration: none;
+    color: var(--green);
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--orange);
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 7%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow: 0 3px 15px rgba(29, 77, 63, 0.04);
+}
+
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--green);
+}
+
+.logo span {
+    color: var(--orange);
+}
+
+.logo:hover {
+    color: var(--dark-green);
+}
+
+.back-link {
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    color: var(--orange);
+}
+
+/* =========================================
+   PAGE HEADING
+========================================= */
+
+.page-heading {
+    text-align: center;
+    padding: 48px 20px 35px;
+    background: linear-gradient(
+        135deg,
+        #eef5f1,
+        #dfece7
+    );
+}
+
+.page-heading h1 {
+    font-size: 42px;
+    font-weight: 600;
+    color: var(--heading);
+    margin-bottom: 12px;
+}
+
+.page-heading p {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* Small decorative accent */
+
+.page-heading h1::after {
+    content: "";
+    display: block;
+    width: 55px;
+    height: 3px;
+    background: var(--orange);
+    border-radius: 5px;
+    margin: 15px auto 0;
+}
+
+/* =========================================
+   MAIN CHECKOUT LAYOUT
+========================================= */
+
+.checkout-container {
+    width: 86%;
+    max-width: 1200px;
+    margin: 0 auto 75px;
+
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+.checkout-section,
+.order-summary {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+
+    box-shadow: 0 8px 28px rgba(29, 77, 63, 0.045);
+}
+
+/* Section headings */
+
+.section-title {
+    font-size: 25px;
+    font-weight: 600;
+    color: var(--heading);
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+}
+
+.subheading {
+    font-family: 'Poppins', sans-serif;
+    color: var(--green);
+    font-size: 15px;
+    font-weight: 600;
+    margin: 28px 0 18px;
+}
+
+/* =========================================
+   FORM FIELDS
+========================================= */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.form-group {
+    min-width: 0;
+    margin-bottom: 20px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    color: var(--deep-green);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+/* Input backgrounds and text */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    display: block;
+    width: 100%;
+
+    padding: 13px 15px;
+
+    background: var(--warm-cream);
+    color: var(--deep-green);
+
+    border: 1px solid #dce5dc;
+    border-radius: 8px;
+
+    font-size: 13px;
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+/* Placeholder text */
+
+input::placeholder,
+textarea::placeholder {
+    color: #9aa69e;
+    opacity: 1;
+}
+
+/* Focus effect */
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    background: var(--white);
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(31, 111, 91, 0.10);
+}
+
+/* Dropdown options */
+
+select option {
+    background: var(--white);
+    color: var(--deep-green);
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* =========================================
+   BILLING ADDRESS CHECKBOX
+========================================= */
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 8px 0 25px;
+    padding: 15px;
+    background: var(--pale-green);
+    border-radius: 9px;
+}
+
+.checkbox-row input {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    accent-color: var(--green);
+    cursor: pointer;
+}
+
+.checkbox-row label {
+    color: var(--deep-green);
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0;
+    cursor: pointer;
+}
+
+/* =========================================
+   PAYMENT OPTIONS
+========================================= */
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 17px;
+    margin-bottom: 13px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.payment-option:hover {
+    border-color: var(--sage);
+    background: #fbfdfb;
+}
+
+/* Selected payment option */
+
+.payment-option:has(input:checked) {
+    background: var(--pale-green);
+    border-color: var(--green);
+    box-shadow: 0 0 0 1px rgba(31, 111, 91, 0.08);
+}
+
+.payment-option input {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    accent-color: var(--green);
+    cursor: pointer;
+}
+
+.payment-option label {
+    flex: 1;
+    margin: 0;
+    color: var(--heading);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.payment-option small {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+/* =========================================
+   ORDER SUMMARY
+========================================= */
+
+.order-summary {
+    background: #fffefa;
+    position: sticky;
+    top: 25px;
+}
+
+.order-summary .section-title {
+    margin-bottom: 12px;
+}
+
+/* Individual cart item */
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+
+    padding: 17px 0;
+    border-bottom: 1px solid var(--border);
+
+    font-size: 13px;
+}
+
+.item-info {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.item-info strong {
+    display: block;
+    color: var(--deep-green);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.item-info small {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.item-price {
+    color: var(--green);
+    font-weight: 600;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+/* Subtotal and delivery rows */
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+
+    margin-top: 17px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.summary-row span:last-child {
+    color: var(--deep-green);
+    font-weight: 500;
+}
+
+/* Total */
+
+.summary-row.total {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-top: 22px;
+
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.summary-row.total span:first-child {
+    color: var(--heading);
+}
+
+.summary-row.total .total-amount {
+    color: var(--green);
+    font-size: 21px;
+    font-weight: 700;
+}
+
+/* =========================================
+   PLACE ORDER BUTTON
+========================================= */
+
+.place-order-btn {
+    display: block;
+    width: 100%;
+
+    margin-top: 28px;
+    padding: 16px;
+
+    background: var(--green);
+    color: var(--white);
+
+    border: 1px solid var(--green);
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 14px rgba(31, 111, 91, 0.13);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.place-order-btn:hover:not(:disabled) {
+    background: var(--dark-green);
+    border-color: var(--dark-green);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgba(31, 111, 91, 0.2);
+}
+
+.place-order-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.place-order-btn:disabled {
+    background: #aabbb1;
+    border-color: #aabbb1;
+    color: var(--white);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+/* Security note */
+
+.secure-note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 16px;
+}
+
+/* =========================================
+   SUCCESS AND ERROR MESSAGES
+========================================= */
+
+.message {
+    display: none;
+    padding: 14px 16px;
+    border-radius: 9px;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.error {
+    color: var(--error);
+    background: #fff2f0;
+    border: 1px solid #f2d4cf;
+}
+
+.success {
+    color: var(--green);
+    background: var(--pale-green);
+    border: 1px solid #cce5d7;
+}
+
+/* =========================================
+   EMPTY CART
+========================================= */
+
+.empty-cart {
+    text-align: center;
+    padding: 30px 12px;
+    color: var(--muted);
+    background: var(--pale-green);
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.empty-cart p {
+    color: var(--muted);
+}
+
+.empty-cart a {
+    display: inline-block;
+    margin-top: 14px;
+    color: var(--green);
+    font-weight: 600;
+}
+
+.empty-cart a:hover {
+    color: var(--orange);
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer {
+    background: var(--deep-green);
+    color: #f4f5ee;
+    text-align: center;
+    padding: 27px 15px;
+    font-size: 12px;
+}
+
+.footer p {
+    color: #e3ebe5;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 900px) {
+    .checkout-container {
+        width: 92%;
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .order-summary {
+        position: static;
+    }
+
+    .page-heading h1 {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 600px) {
+    .header {
+        padding: 16px 5%;
+    }
+
+    .logo {
+        font-size: 25px;
+    }
+
+    .back-link {
+        font-size: 12px;
+    }
+
+    .page-heading {
+        padding: 35px 15px 28px;
+    }
+
+    .page-heading h1 {
+        font-size: 32px;
+    }
+
+    .page-heading p {
+        font-size: 12px;
+    }
+
+    .checkout-container {
+        width: 92%;
+        margin-bottom: 45px;
+    }
+
+    .checkout-section,
+    .order-summary {
+        padding: 22px 18px;
+        border-radius: 12px;
+    }
+
+    .section-title {
+        font-size: 22px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .summary-row.total .total-amount {
+        font-size: 19px;
+    }
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgba(209, 124, 76, 0.55);
+    outline-offset: 3px;
+}

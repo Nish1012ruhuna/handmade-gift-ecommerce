@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout | GIFTORA</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- Checkout CSS -->
+    <link rel="stylesheet" href="checkout.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="home.html" class="logo">
+            GIFTORA
+        </a>
+
+        <a href="cart.html" class="back-link">
+            &larr; Back to Cart
+        </a>
+    </header>
+
+    <!-- Page Heading -->
+    <section class="page-heading">
+        <h1>Checkout</h1>
+        <p>Almost there! Let's get your thoughtful gifts to you.</p>
+    </section>
+
+    <main class="checkout-container">
+
+        <!-- Checkout Form -->
+        <section class="checkout-section">
+
+            <h2 class="section-title">Delivery Details</h2>
+
+            <div id="formError" class="message error"
+                 role="alert"></div>
+
+            <div id="formSuccess" class="message success"
+                 role="status"></div>
+
+            <form id="checkoutForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName"
+                               name="fullName"
+                               autocomplete="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone"
+                               name="phone"
+                               autocomplete="tel" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email"
+                               name="email"
+                               autocomplete="email" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="address">Street Address *</label>
+                        <input type="text" id="address"
+                               name="address"
+                               autocomplete="street-address" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city"
+                               name="city"
+                               autocomplete="address-level2" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="postalCode">Postal Code</label>
+                        <input type="text" id="postalCode"
+                               name="postalCode"
+                               autocomplete="postal-code">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="country">Country *</label>
+                        <select id="country" name="country" required>
+                            <option value="Sri Lanka" selected>
+                                Sri Lanka
+                            </option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="notes">
+                            Order Notes (Optional)
+                        </label>
+                        <textarea id="notes" name="notes"
+                            placeholder="Gift message, personalization, or delivery instructions..."></textarea>
+                    </div>
+
+                </div>
+
+                <!-- Billing Address -->
+                <div class="checkbox-row">
+                    <input type="checkbox" id="billingSame" checked>
+                    <label for="billingSame">
+                        Billing address is the same as delivery address
+                    </label>
+                </div>
+
+                <div id="billingFields" hidden>
+
+                    <h3 class="subheading">Billing Address</h3>
+
+                    <div class="form-group">
+                        <label for="billingAddress">
+                            Billing Street Address *
+                        </label>
+                        <input type="text" id="billingAddress"
+                               name="billingAddress">
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="billingCity">
+                                Billing City *
+                            </label>
+                            <input type="text" id="billingCity"
+                                   name="billingCity">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="billingPostal">
+                                Billing Postal Code
+                            </label>
+                            <input type="text" id="billingPostal"
+                                   name="billingPostal">
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Payment -->
+                <h3 class="subheading">Payment Method</h3>
+
+                <div class="payment-option">
+                    <input type="radio" id="cod"
+                           name="paymentMethod"
+                           value="Cash on Delivery" checked>
+
+                    <label for="cod">
+                        Cash on Delivery
+                        <small>Pay when your order arrives.</small>
+                    </label>
+                </div>
+
+                <div class="payment-option">
+                    <input type="radio" id="bank"
+                           name="paymentMethod"
+                           value="Bank Transfer">
+
+                    <label for="bank">
+                        Bank Transfer
+                        <small>
+                            Payment instructions provided after
+                            order confirmation.
+                        </small>
+                    </label>
+                </div>
+
+                <button type="submit" class="place-order-btn"
+                        id="placeOrderBtn">
+                    Place Order
+                </button>
+
+                <p class="secure-note">
+                    🔒 Your checkout details are handled securely.
+                </p>
+
+            </form>
+        </section>
+
+        <!-- Order Summary -->
+        <aside class="order-summary">
+
+            <h2 class="section-title">Your Order</h2>
+
+            <div id="cartItems"></div>
+
+            <div id="emptyCart" class="empty-cart" hidden>
+                <p>Your cart is currently empty.</p>
+                <a href="product_listing.html">
+                    Explore our gifts &rarr;
+                </a>
+            </div>
+
+            <div id="totals">
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">LKR 0.00</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span id="shipping">LKR 0.00</span>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="total" class="total-amount">
+                        LKR 0.00
+                    </span>
+                </div>
+
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            &copy; 2026 GIFTORA. Made with love, wrapped with care. 💚
+        </p>
+    </footer>
+
+    <!-- Checkout JavaScript -->
+    <script src="checkout.js"></script>
+
+</body>
+</html>
