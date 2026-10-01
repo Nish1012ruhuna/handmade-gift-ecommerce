@@ -320,7 +320,11 @@ nav a:hover {
 
     padding: 65px 20px;
 
-    background: var(--beige);
+    background: linear-gradient(
+        135deg,
+        #eef5f1,
+        #dfece7
+    );
 
 }
 
