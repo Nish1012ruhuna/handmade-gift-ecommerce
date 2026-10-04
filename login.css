@@ -134,6 +134,13 @@ header {
     font-size: 24px;
 }
 
+.logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
 .logo h1 {
     font-family: 'Playfair Display', serif;
 
@@ -337,6 +344,15 @@ nav a.active::after {
     align-items: center;
 
     padding: 70px;
+}
+
+
+.login-image img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
 }
 
 .image-content {
