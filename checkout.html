@@ -377,105 +377,90 @@
                      PAYMENT METHOD
                 =================================== -->
 
-                <h3 class="subheading">
-                    Payment Method
-                </h3>
+<h3 class="subheading">Payment Method</h3>
 
 
+<!-- Cash on Delivery -->
 
-                <!-- Cash on Delivery -->
+<div class="payment-option">
 
-                <div class="payment-option">
+    <input
+        type="radio"
+        id="cod"
+        name="paymentMethod"
+        value="Cash on Delivery"
+        checked
+    >
 
-                    <input
-                        type="radio"
-                        id="cod"
-                        name="paymentMethod"
-                        value="Cash on Delivery"
-                        checked
-                    >
+    <label for="cod">
 
-                    <label for="cod">
+        Cash on Delivery
 
-                        Cash on Delivery
+        <small>
+            Pay when your order arrives.
+        </small>
 
-                        <small>
-                            Pay when your order arrives.
-                        </small>
+    </label>
 
-                    </label>
-
-                </div>
-
+</div>
 
 
-                <!-- Bank Transfer -->
+<!-- Bank Transfer -->
 
-                <div class="payment-option">
+<div class="payment-option">
 
-                    <input
-                        type="radio"
-                        id="bank"
-                        name="paymentMethod"
-                        value="Bank Transfer"
-                    >
+    <input
+        type="radio"
+        id="bank"
+        name="paymentMethod"
+        value="Bank Transfer"
+    >
 
-                    <label for="bank">
+    <label for="bank">
 
-                        Bank Transfer
+        Bank Transfer
 
-                        <small>
-                            Payment instructions provided
-                            after order confirmation.
-                        </small>
+        <small>
+            Payment instructions provided after
+            order confirmation.
+        </small>
 
-                    </label>
+    </label>
 
-                </div>
-
-
-
-                <!-- ==================================
-                     PAYHERE
-                =================================== -->
-
-                <div class="payment-option">
-
-                    <input
-                        type="radio"
-                        id="payhere"
-                        name="paymentMethod"
-                        value="PayHere"
-                    >
-
-                    <label for="payhere">
-
-                        PayHere
-
-                        <small>
-                            Pay securely using Visa
-                            or Mastercard.
-                        </small>
-
-                    </label>
-
-                </div>
+</div>
 
 
+<!-- PayHere -->
 
-                <!-- ==================================
-                     PLACE ORDER BUTTON
-                =================================== -->
+<div class="payment-option">
 
-                <button
-                    type="submit"
-                    class="place-order-btn"
-                    id="placeOrderBtn"
-                >
+    <input
+        type="radio"
+        id="payhere"
+        name="paymentMethod"
+        value="PayHere"
+    >
 
-                    Place Order
+    <label for="payhere">
 
-                </button>
+        PayHere
+
+        <small>
+            Pay securely online using PayHere.
+        </small>
+
+    </label>
+
+</div>
+
+
+<button
+    type="submit"
+    class="place-order-btn"
+    id="placeOrderBtn"
+>
+    Place Order
+</button>
 
 
 

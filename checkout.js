@@ -1,89 +1,43 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-
     // =====================================================
-    // PAYHERE SANDBOX CONFIGURATION
-    // =====================================================
-
-    const PAYHERE_MERCHANT_ID =
-        "YOUR_MERCHANT_ID";
-
-
-    const PAYHERE_MERCHANT_SECRET =
-        "YOUR_MERCHANT_SECRET";
-
-
-    /*
-     * Your project folder is currently:
-     *
-     * Gift Shop
-     *
-     * If you rename the folder to GiftShop,
-     * change this to:
-     *
-     * http://localhost/GiftShop
-     */
-
-    const BASE_URL =
-        "http://localhost/Gift%20Shop";
-
-
-    // =====================================================
-    // GET HTML ELEMENTS
+    // ELEMENTS
     // =====================================================
 
     const cartItemsContainer =
         document.getElementById("cartItems");
 
-
     const emptyCart =
         document.getElementById("emptyCart");
-
 
     const totals =
         document.getElementById("totals");
 
-
     const form =
         document.getElementById("checkoutForm");
-
 
     const placeOrderBtn =
         document.getElementById("placeOrderBtn");
 
-
     const formError =
         document.getElementById("formError");
-
 
     const formSuccess =
         document.getElementById("formSuccess");
 
-
     const billingSame =
         document.getElementById("billingSame");
-
 
     const billingFields =
         document.getElementById("billingFields");
 
 
     // =====================================================
-    // CART VARIABLES
+    // CART
     // =====================================================
 
     let cart = [];
 
-
-    // This stores the final amount
-    // including delivery fee.
-
-    let checkoutTotal = 0;
-
-
-    // =====================================================
-    // LOAD CART FROM LOCAL STORAGE
-    // =====================================================
 
     try {
 
@@ -92,28 +46,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.getItem("giftoraCart")
             );
 
-
         cart =
             Array.isArray(savedCart)
                 ? savedCart
                 : [];
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
-            "Could not load cart:",
+            "Unable to load cart:",
             error
         );
 
         cart = [];
-
     }
 
 
     // =====================================================
-    // FORMAT MONEY
+    // MONEY FORMAT
     // =====================================================
 
     function money(amount) {
@@ -126,12 +76,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     maximumFractionDigits: 2
                 }
             );
-
     }
 
 
     // =====================================================
-    // SHOW ERROR
+    // ERROR MESSAGE
     // =====================================================
 
     function showError(message) {
@@ -139,19 +88,16 @@ document.addEventListener("DOMContentLoaded", function () {
         formError.textContent =
             message;
 
-
         formError.style.display =
             "block";
 
-
         formSuccess.style.display =
             "none";
-
     }
 
 
     // =====================================================
-    // SHOW SUCCESS
+    // SUCCESS MESSAGE
     // =====================================================
 
     function showSuccess(message) {
@@ -159,14 +105,61 @@ document.addEventListener("DOMContentLoaded", function () {
         formSuccess.textContent =
             message;
 
-
         formSuccess.style.display =
             "block";
 
-
         formError.style.display =
             "none";
+    }
 
+
+    // =====================================================
+    // CALCULATE CART TOTAL
+    // =====================================================
+
+    function calculateTotals() {
+
+        let subtotal = 0;
+
+
+        cart.forEach(function (item) {
+
+            const price =
+                Number(item.price);
+
+            const quantity =
+                Number(item.quantity);
+
+
+            if (
+                Number.isFinite(price) &&
+                price >= 0 &&
+                Number.isInteger(quantity) &&
+                quantity >= 1
+            ) {
+
+                subtotal +=
+                    price * quantity;
+            }
+
+        });
+
+
+        const shipping =
+            subtotal > 0
+                ? 350
+                : 0;
+
+
+        const total =
+            subtotal + shipping;
+
+
+        return {
+            subtotal: subtotal,
+            shipping: shipping,
+            total: total
+        };
     }
 
 
@@ -179,10 +172,6 @@ document.addEventListener("DOMContentLoaded", function () {
         cartItemsContainer.replaceChildren();
 
 
-        // -----------------------------------------------
-        // EMPTY CART
-        // -----------------------------------------------
-
         if (cart.length === 0) {
 
             emptyCart.hidden = false;
@@ -194,10 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
             placeOrderBtn.textContent =
                 "Your Cart Is Empty";
 
-            checkoutTotal = 0;
-
             return;
-
         }
 
 
@@ -211,10 +197,6 @@ document.addEventListener("DOMContentLoaded", function () {
             "Place Order";
 
 
-        // -----------------------------------------------
-        // CALCULATE SUBTOTAL
-        // -----------------------------------------------
-
         let subtotal = 0;
 
 
@@ -223,27 +205,18 @@ document.addEventListener("DOMContentLoaded", function () {
             const price =
                 Number(item.price);
 
-
             const quantity =
                 Number(item.quantity);
 
 
-            // Ignore invalid items
-
             if (
-
                 !Number.isFinite(price) ||
-
                 price < 0 ||
-
                 !Number.isInteger(quantity) ||
-
                 quantity < 1
-
             ) {
 
                 return;
-
             }
 
 
@@ -251,16 +224,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 price * quantity;
 
 
-            subtotal += lineTotal;
+            subtotal +=
+                lineTotal;
 
-
-            // -------------------------------------------
-            // CREATE CART ITEM ROW
-            // -------------------------------------------
 
             const row =
                 document.createElement("div");
-
 
             row.className =
                 "summary-item";
@@ -269,14 +238,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const info =
                 document.createElement("div");
 
-
             info.className =
                 "item-info";
 
 
             const name =
                 document.createElement("strong");
-
 
             name.textContent =
                 item.name || "Gift item";
@@ -285,7 +252,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const qty =
                 document.createElement("small");
 
-
             qty.textContent =
                 "Qty: " + quantity;
 
@@ -293,10 +259,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const priceElement =
                 document.createElement("span");
 
-
             priceElement.className =
                 "item-price";
-
 
             priceElement.textContent =
                 money(lineTotal);
@@ -321,33 +285,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
 
-        // =================================================
-        // DELIVERY FEE
-        // =================================================
-
         const shipping =
             subtotal > 0
                 ? 350
                 : 0;
 
 
-        // =================================================
-        // FINAL TOTAL
-        // =================================================
-
         const total =
             subtotal + shipping;
 
-
-        // Save total so PayHere can use it
-
-        checkoutTotal =
-            total;
-
-
-        // =================================================
-        // DISPLAY TOTALS
-        // =================================================
 
         document.getElementById(
             "subtotal"
@@ -371,7 +317,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             placeOrderBtn.disabled =
                 true;
-
         }
 
     }
@@ -397,7 +342,6 @@ document.addEventListener("DOMContentLoaded", function () {
             "billingCity"
         ).required =
             !billingSame.checked;
-
     }
 
 
@@ -411,421 +355,316 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
+    // GET CUSTOMER DETAILS
+    // =====================================================
+
+    function getCustomerDetails() {
+
+        return {
+
+            fullName:
+                document
+                    .getElementById("fullName")
+                    .value
+                    .trim(),
+
+            phone:
+                document
+                    .getElementById("phone")
+                    .value
+                    .trim(),
+
+            email:
+                document
+                    .getElementById("email")
+                    .value
+                    .trim(),
+
+            address:
+                document
+                    .getElementById("address")
+                    .value
+                    .trim(),
+
+            city:
+                document
+                    .getElementById("city")
+                    .value
+                    .trim(),
+
+            postalCode:
+                document
+                    .getElementById("postalCode")
+                    .value
+                    .trim(),
+
+            country:
+                document
+                    .getElementById("country")
+                    .value,
+
+            notes:
+                document
+                    .getElementById("notes")
+                    .value
+                    .trim()
+        };
+    }
+
+
+    // =====================================================
     // PAYHERE PAYMENT
     // =====================================================
 
-    function payWithPayHere(orderDetails) {
+    async function startPayHerePayment() {
+
+        const customer =
+            getCustomerDetails();
 
 
-        // -----------------------------------------------
-        // CHECK CREDENTIALS
-        // -----------------------------------------------
+        const totals =
+            calculateTotals();
 
-        if (
 
-            PAYHERE_MERCHANT_ID ===
-                "YOUR_MERCHANT_ID" ||
+        const paymentData = {
 
-            PAYHERE_MERCHANT_SECRET ===
-                "YOUR_MERCHANT_SECRET"
+            fullName:
+                customer.fullName,
 
-        ) {
+            phone:
+                customer.phone,
 
-            showError(
-                "PayHere is not configured yet. Please add your Merchant ID and Merchant Secret."
+            email:
+                customer.email,
+
+            address:
+                customer.address,
+
+            city:
+                customer.city,
+
+            country:
+                customer.country,
+
+            amount:
+                totals.total
+        };
+
+
+        try {
+
+            placeOrderBtn.disabled =
+                true;
+
+            placeOrderBtn.textContent =
+                "Connecting to PayHere...";
+
+
+            // -------------------------------------------------
+            // Send checkout data to PHP
+            // -------------------------------------------------
+
+            const response =
+                await fetch(
+                    "backend/api/payhere/create_payment.php",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                paymentData
+                            )
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Server returned HTTP " +
+                    response.status
+                );
+            }
+
+
+            const result =
+                await response.json();
+
+
+            console.log(
+                "PayHere response:",
+                result
             );
 
-            return;
 
-        }
+            if (!result.success) {
 
+                throw new Error(
+                    result.message ||
+                    "Unable to create PayHere payment."
+                );
+            }
 
-        // -----------------------------------------------
-        // MERCHANT DETAILS
-        // -----------------------------------------------
 
-        const merchantId =
-            PAYHERE_MERCHANT_ID;
+            // -------------------------------------------------
+            // Create HTML form for PayHere
+            // -------------------------------------------------
 
+            const payhereForm =
+                document.createElement("form");
 
-        const merchantSecret =
-            PAYHERE_MERCHANT_SECRET;
 
+            payhereForm.method =
+                "POST";
 
-        // -----------------------------------------------
-        // AMOUNT
-        //
-        // PayHere requires exactly 2 decimals.
-        //
-        // Example:
-        //
-        // 2500
-        //
-        // becomes:
-        //
-        // 2500.00
-        // -----------------------------------------------
 
-        const amount =
-            Number(checkoutTotal)
-                .toFixed(2);
+            payhereForm.action =
+                result.payment_url;
 
 
-        const currency =
-            "LKR";
+            /*
+             * PayHere expects application/x-www-form-urlencoded
+             * form data, so we create hidden inputs.
+             */
 
+            const fields = {
 
-        // -----------------------------------------------
-        // CREATE UNIQUE ORDER ID
-        // -----------------------------------------------
+                merchant_id:
+                    result.merchant_id,
 
-        const orderId =
-            "GIFTORA-" +
-            Date.now();
+                return_url:
+                    result.return_url,
 
+                cancel_url:
+                    result.cancel_url,
 
-        // -----------------------------------------------
-        // CUSTOMER NAME
-        // -----------------------------------------------
+                notify_url:
+                    result.notify_url,
 
-        const fullName =
-            orderDetails.customer.fullName
-                .trim();
+                first_name:
+                    result.first_name,
 
+                last_name:
+                    result.last_name,
 
-        const nameParts =
-            fullName.split(/\s+/);
+                email:
+                    result.email,
 
+                phone:
+                    result.phone,
 
-        const firstName =
-            nameParts[0] ||
-            "Customer";
+                address:
+                    result.address,
 
+                city:
+                    result.city,
 
-        const lastName =
-            nameParts
-                .slice(1)
-                .join(" ") ||
-            "Customer";
+                country:
+                    result.country,
 
+                order_id:
+                    result.order_id,
 
-        // =================================================
-        // PAYHERE HASH
-        // =================================================
+                items:
+                    result.items,
 
-        /*
-         * Step 1
-         *
-         * MD5 Merchant Secret
-         */
+                currency:
+                    result.currency,
 
-        const hashedSecret =
-            CryptoJS.MD5(
-                merchantSecret
-            )
-            .toString()
-            .toUpperCase();
+                amount:
+                    result.amount,
 
+                hash:
+                    result.hash
+            };
 
-        /*
-         * Step 2
-         *
-         * Build hash string
-         */
 
-        const hashString =
-            merchantId +
-            orderId +
-            amount +
-            currency +
-            hashedSecret;
+            Object.keys(fields)
+                .forEach(function (key) {
 
+                    const input =
+                        document.createElement(
+                            "input"
+                        );
 
-        /*
-         * Step 3
-         *
-         * Final MD5 hash
-         */
 
-        const hash =
-            CryptoJS.MD5(
-                hashString
-            )
-            .toString()
-            .toUpperCase();
+                    input.type =
+                        "hidden";
 
 
-        console.log(
-            "PayHere Order ID:",
-            orderId
-        );
+                    input.name =
+                        key;
 
 
-        console.log(
-            "PayHere Amount:",
-            amount
-        );
+                    input.value =
+                        fields[key];
 
 
-        console.log(
-            "PayHere Hash:",
-            hash
-        );
-
-
-        // =================================================
-        // CREATE PAYHERE FORM
-        // =================================================
-
-        const payhereForm =
-            document.createElement("form");
-
-
-        payhereForm.method =
-            "POST";
-
-
-        payhereForm.action =
-            "https://sandbox.payhere.lk/pay/checkout";
-
-
-        // =================================================
-        // HELPER FUNCTION
-        // =================================================
-
-        function addField(
-            name,
-            value
-        ) {
-
-            const input =
-                document.createElement("input");
-
-
-            input.type =
-                "hidden";
-
-
-            input.name =
-                name;
-
-
-            input.value =
-                value;
-
-
-            payhereForm.appendChild(
-                input
-            );
-
-        }
-
-
-        // =================================================
-        // MERCHANT ID
-        // =================================================
-
-        addField(
-            "merchant_id",
-            merchantId
-        );
-
-
-        // =================================================
-        // RETURN URL
-        // =================================================
-
-        addField(
-            "return_url",
-            BASE_URL +
-            "/success.html"
-        );
-
-
-        // =================================================
-        // CANCEL URL
-        // =================================================
-
-        addField(
-            "cancel_url",
-            BASE_URL +
-            "/cancel.html"
-        );
-
-
-        // =================================================
-        // NOTIFICATION URL
-        // =================================================
-
-        addField(
-            "notify_url",
-            BASE_URL +
-            "/backend/api/payhere/notify.php"
-        );
-
-
-        // =================================================
-        // ORDER ID
-        // =================================================
-
-        addField(
-            "order_id",
-            orderId
-        );
-
-
-        // =================================================
-        // ITEMS
-        // =================================================
-
-        const itemsDescription =
-            orderDetails.items
-                .map(function (item) {
-
-                    return (
-                        item.name +
-                        " x" +
-                        item.quantity
+                    payhereForm.appendChild(
+                        input
                     );
 
-                })
-                .join(", ");
+                });
 
 
-        addField(
-            "items",
-            itemsDescription
-        );
+            document.body.appendChild(
+                payhereForm
+            );
 
 
-        // =================================================
-        // AMOUNT
-        // =================================================
-
-        addField(
-            "amount",
-            amount
-        );
+            console.log(
+                "Redirecting to PayHere..."
+            );
 
 
-        // =================================================
-        // CURRENCY
-        // =================================================
+            // -------------------------------------------------
+            // Submit to PayHere
+            // -------------------------------------------------
 
-        addField(
-            "currency",
-            currency
-        );
+            payhereForm.submit();
 
+        }
 
-        // =================================================
-        // CUSTOMER FIRST NAME
-        // =================================================
+        catch (error) {
 
-        addField(
-            "first_name",
-            firstName
-        );
+            console.error(
+                "PayHere Error:",
+                error
+            );
 
 
-        // =================================================
-        // CUSTOMER LAST NAME
-        // =================================================
-
-        addField(
-            "last_name",
-            lastName
-        );
+            showError(
+                error.message ||
+                "Unable to connect to PayHere."
+            );
 
 
-        // =================================================
-        // EMAIL
-        // =================================================
-
-        addField(
-            "email",
-            orderDetails.customer.email
-        );
+            placeOrderBtn.disabled =
+                false;
 
 
-        // =================================================
-        // PHONE
-        // =================================================
-
-        addField(
-            "phone",
-            orderDetails.customer.phone
-        );
-
-
-        // =================================================
-        // ADDRESS
-        // =================================================
-
-        addField(
-            "address",
-            orderDetails.shippingAddress.address
-        );
-
-
-        // =================================================
-        // CITY
-        // =================================================
-
-        addField(
-            "city",
-            orderDetails.shippingAddress.city
-        );
-
-
-        // =================================================
-        // COUNTRY
-        // =================================================
-
-        addField(
-            "country",
-            orderDetails.shippingAddress.country
-        );
-
-
-        // =================================================
-        // SECURITY HASH
-        // =================================================
-
-        addField(
-            "hash",
-            hash
-        );
-
-
-        // =================================================
-        // SUBMIT FORM TO PAYHERE
-        // =================================================
-
-        document.body.appendChild(
-            payhereForm
-        );
-
-
-        payhereForm.submit();
+            placeOrderBtn.textContent =
+                "Place Order";
+        }
 
     }
 
 
     // =====================================================
-    // CHECKOUT FORM SUBMISSION
+    // CHECKOUT FORM SUBMIT
     // =====================================================
 
     form.addEventListener(
         "submit",
-        function (event) {
+        async function (event) {
 
             event.preventDefault();
 
-
-            // ---------------------------------------------
-            // CLEAR MESSAGES
-            // ---------------------------------------------
 
             formError.style.display =
                 "none";
@@ -835,9 +674,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 "none";
 
 
-            // ---------------------------------------------
-            // CHECK CART
-            // ---------------------------------------------
+            // -------------------------------------------------
+            // Check cart
+            // -------------------------------------------------
 
             if (cart.length === 0) {
 
@@ -846,24 +685,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return;
-
             }
 
 
-            // ---------------------------------------------
-            // VALIDATE FORM
-            // ---------------------------------------------
+            // -------------------------------------------------
+            // HTML validation
+            // -------------------------------------------------
 
             if (!form.reportValidity()) {
 
                 return;
-
             }
 
 
-            // ---------------------------------------------
-            // GET PAYMENT METHOD
-            // ---------------------------------------------
+            // -------------------------------------------------
+            // Get payment method
+            // -------------------------------------------------
 
             const selectedPayment =
                 document.querySelector(
@@ -878,77 +715,67 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return;
-
             }
 
 
-            // ---------------------------------------------
-            // COLLECT ORDER DETAILS
-            // ---------------------------------------------
+            const paymentMethod =
+                selectedPayment.value;
+
+
+            // -------------------------------------------------
+            // PAYHERE
+            // -------------------------------------------------
+
+            if (
+                paymentMethod === "PayHere"
+            ) {
+
+                await startPayHerePayment();
+
+                return;
+            }
+
+
+            // -------------------------------------------------
+            // COD / BANK TRANSFER
+            // -------------------------------------------------
+
+            const customer =
+                getCustomerDetails();
+
+
+            const totals =
+                calculateTotals();
+
 
             const orderDetails = {
-
 
                 customer: {
 
                     fullName:
-                        document.getElementById(
-                            "fullName"
-                        )
-                        .value
-                        .trim(),
-
+                        customer.fullName,
 
                     phone:
-                        document.getElementById(
-                            "phone"
-                        )
-                        .value
-                        .trim(),
-
+                        customer.phone,
 
                     email:
-                        document.getElementById(
-                            "email"
-                        )
-                        .value
-                        .trim()
-
+                        customer.email
                 },
 
 
                 shippingAddress: {
 
                     address:
-                        document.getElementById(
-                            "address"
-                        )
-                        .value
-                        .trim(),
-
+                        customer.address,
 
                     city:
-                        document.getElementById(
-                            "city"
-                        )
-                        .value
-                        .trim(),
-
+                        customer.city,
 
                     postalCode:
-                        document.getElementById(
-                            "postalCode"
-                        )
-                        .value
-                        .trim(),
-
+                        customer.postalCode,
 
                     country:
-                        document.getElementById(
-                            "country"
-                        )
-                        .value
-
+                        customer.country
                 },
 
 
@@ -962,46 +789,53 @@ document.addEventListener("DOMContentLoaded", function () {
                         : {
 
                             address:
-                                document.getElementById(
-                                    "billingAddress"
-                                )
-                                .value
-                                .trim(),
-
+                                document
+                                    .getElementById(
+                                        "billingAddress"
+                                    )
+                                    .value
+                                    .trim(),
 
                             city:
-                                document.getElementById(
-                                    "billingCity"
-                                )
-                                .value
-                                .trim(),
-
+                                document
+                                    .getElementById(
+                                        "billingCity"
+                                    )
+                                    .value
+                                    .trim(),
 
                             postalCode:
-                                document.getElementById(
-                                    "billingPostal"
-                                )
-                                .value
-                                .trim()
-
+                                document
+                                    .getElementById(
+                                        "billingPostal"
+                                    )
+                                    .value
+                                    .trim()
                         },
 
 
                 notes:
-                    document.getElementById(
-                        "notes"
-                    )
-                    .value
-                    .trim(),
+                    customer.notes,
 
 
                 paymentMethod:
-                    selectedPayment.value,
+                    paymentMethod,
 
 
                 items:
-                    cart
+                    cart,
 
+
+                subtotal:
+                    totals.subtotal,
+
+
+                shipping:
+                    totals.shipping,
+
+
+                total:
+                    totals.total
             };
 
 
@@ -1011,39 +845,16 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-            // =================================================
-            // PAYHERE
-            // =================================================
-
-            if (
-                orderDetails.paymentMethod ===
-                "PayHere"
-            ) {
-
-                payWithPayHere(
-                    orderDetails
-                );
-
-                return;
-
-            }
-
-
-            // =================================================
-            // CASH ON DELIVERY / BANK TRANSFER
-            // =================================================
-
             showSuccess(
-                "Your order has been placed successfully!"
+                "Your details are valid! Order is ready to process."
             );
-
 
         }
     );
 
 
     // =====================================================
-    // INITIALIZE
+    // INITIAL RENDER
     // =====================================================
 
     renderCart();
