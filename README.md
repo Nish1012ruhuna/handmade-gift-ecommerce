@@ -411,14 +411,6 @@ Possible future improvements include:
 
 ---
 
-## 👩‍💻 Project
-
-**GIFTORA – Handmade & Personalized Gifts**
-
-A university web development project demonstrating the development of a full-stack e-commerce platform using modern web technologies.
-
----
-
 ### 💚 Made with love for every special moment
 
 **GIFTORA — Give something meaningful. 🎁**
