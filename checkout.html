@@ -5,8 +5,10 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Checkout | GIFTORA</title>
 
@@ -16,14 +18,18 @@
     <link rel="preconnect"
           href="https://fonts.googleapis.com">
 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
 
     <!-- Checkout CSS -->
 
-    <link rel="stylesheet"
-          href="checkout.css">
+    <link
+        rel="stylesheet"
+        href="checkout.css"
+    >
 
 </head>
 
@@ -37,19 +43,19 @@
 
     <header class="header">
 
-        <a href="home.html"
-           class="logo">
-
+        <a
+            href="home.html"
+            class="logo"
+        >
             GIFTORA
-
         </a>
 
 
-        <a href="cart.html"
-           class="back-link">
-
+        <a
+            href="cart.html"
+            class="back-link"
+        >
             &larr; Back to Cart
-
         </a>
 
     </header>
@@ -75,12 +81,16 @@
 
 
 
+    <!-- ==========================================
+         MAIN CHECKOUT
+    =========================================== -->
+
     <main class="checkout-container">
 
 
-        <!-- ==========================================
+        <!-- ======================================
              CHECKOUT FORM
-        =========================================== -->
+        ======================================= -->
 
         <section class="checkout-section">
 
@@ -92,20 +102,20 @@
 
             <!-- Error -->
 
-            <div id="formError"
-                 class="message error"
-                 role="alert">
-
-            </div>
+            <div
+                id="formError"
+                class="message error"
+                role="alert"
+            ></div>
 
 
             <!-- Success -->
 
-            <div id="formSuccess"
-                 class="message success"
-                 role="status">
-
-            </div>
+            <div
+                id="formSuccess"
+                class="message success"
+                role="status"
+            ></div>
 
 
 
@@ -312,9 +322,10 @@
 
 
 
-                <div id="billingFields"
-                     hidden>
-
+                <div
+                    id="billingFields"
+                    hidden
+                >
 
                     <h3 class="subheading">
                         Billing Address
@@ -377,91 +388,333 @@
                      PAYMENT METHOD
                 =================================== -->
 
-<h3 class="subheading">Payment Method</h3>
+                <h3 class="subheading">
+                    Payment Method
+                </h3>
 
 
-<!-- Cash on Delivery -->
 
-<div class="payment-option">
+                <!-- ==============================
+                     CASH ON DELIVERY
+                =============================== -->
 
-    <input
-        type="radio"
-        id="cod"
-        name="paymentMethod"
-        value="Cash on Delivery"
-        checked
-    >
+                <label
+                    class="payment-option"
+                    for="cod"
+                >
 
-    <label for="cod">
+                    <input
+                        type="radio"
+                        id="cod"
+                        name="paymentMethod"
+                        value="Cash on Delivery"
+                        checked
+                    >
 
-        Cash on Delivery
+                    <div class="payment-option-content">
 
-        <small>
-            Pay when your order arrives.
-        </small>
+                        <strong>
+                            Cash on Delivery
+                        </strong>
 
-    </label>
+                        <small>
+                            Pay when your order arrives.
+                        </small>
 
-</div>
+                    </div>
 
-
-<!-- Bank Transfer -->
-
-<div class="payment-option">
-
-    <input
-        type="radio"
-        id="bank"
-        name="paymentMethod"
-        value="Bank Transfer"
-    >
-
-    <label for="bank">
-
-        Bank Transfer
-
-        <small>
-            Payment instructions provided after
-            order confirmation.
-        </small>
-
-    </label>
-
-</div>
+                </label>
 
 
-<!-- PayHere -->
 
-<div class="payment-option">
+                <!-- COD DETAILS -->
 
-    <input
-        type="radio"
-        id="payhere"
-        name="paymentMethod"
-        value="PayHere"
-    >
+                <div
+                    id="codDetails"
+                    class="payment-details cod-details"
+                >
 
-    <label for="payhere">
+                    <div class="payment-details-icon">
+                        💵
+                    </div>
 
-        PayHere
+                    <div>
 
-        <small>
-            Pay securely online using PayHere.
-        </small>
+                        <h4>
+                            Cash on Delivery
+                        </h4>
 
-    </label>
+                        <p>
+                            You can pay the delivery person
+                            when your order arrives.
+                        </p>
 
-</div>
+                        <span>
+                            Your order will be prepared after
+                            you confirm the order.
+                        </span>
+
+                    </div>
+
+                </div>
 
 
-<button
-    type="submit"
-    class="place-order-btn"
-    id="placeOrderBtn"
->
-    Place Order
-</button>
 
+                <!-- ==============================
+                     BANK TRANSFER
+                =============================== -->
+
+                <label
+                    class="payment-option"
+                    for="bank"
+                >
+
+                    <input
+                        type="radio"
+                        id="bank"
+                        name="paymentMethod"
+                        value="Bank Transfer"
+                    >
+
+                    <div class="payment-option-content">
+
+                        <strong>
+                            Bank Transfer
+                        </strong>
+
+                        <small>
+                            Transfer the payment directly
+                            to our bank account.
+                        </small>
+
+                    </div>
+
+                </label>
+
+
+
+                <!-- BANK TRANSFER DETAILS -->
+
+                <div
+                    id="bankTransferDetails"
+                    class="payment-details bank-transfer-details"
+                    hidden
+                >
+
+                    <div class="payment-details-icon">
+                        🏦
+                    </div>
+
+
+                    <div class="bank-content">
+
+                        <h4>
+                            Bank Transfer Instructions
+                        </h4>
+
+                        <p class="bank-intro">
+
+                            Please transfer the exact order
+                            amount to the account below.
+
+                        </p>
+
+
+                        <div class="bank-details-box">
+
+
+                            <div class="bank-detail">
+
+                                <span>
+                                    Bank Name
+                                </span>
+
+                                <strong>
+                                    YOUR BANK NAME
+                                </strong>
+
+                            </div>
+
+
+                            <div class="bank-detail">
+
+                                <span>
+                                    Account Name
+                                </span>
+
+                                <strong>
+                                    GIFTORA
+                                </strong>
+
+                            </div>
+
+
+                            <div class="bank-detail">
+
+                                <span>
+                                    Account Number
+                                </span>
+
+                                <strong>
+                                    1234567890
+                                </strong>
+
+                            </div>
+
+
+                            <div class="bank-detail">
+
+                                <span>
+                                    Branch
+                                </span>
+
+                                <strong>
+                                    YOUR BRANCH
+                                </strong>
+
+                            </div>
+
+
+                            <div class="bank-detail highlight">
+
+                                <span>
+                                    Amount to Transfer
+                                </span>
+
+                                <strong
+                                    id="bankTransferAmount"
+                                >
+                                    LKR 0.00
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="bank-warning">
+
+                            <strong>
+                                Important
+                            </strong>
+
+                            <p>
+
+                                Please use your order number
+                                as the payment reference when
+                                making the bank transfer.
+
+                            </p>
+
+                        </div>
+
+
+                        <div class="form-group bank-reference-group">
+
+                            <label for="bankReference">
+
+                                Bank Transfer Reference *
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="bankReference"
+                                name="bankReference"
+                                placeholder="Example: TXN123456789"
+                            >
+
+                            <small class="field-help">
+
+                                Enter the transaction/reference
+                                number provided by your bank.
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==============================
+                     PAYHERE
+                =============================== -->
+
+                <label
+                    class="payment-option"
+                    for="payhere"
+                >
+
+                    <input
+                        type="radio"
+                        id="payhere"
+                        name="paymentMethod"
+                        value="PayHere"
+                    >
+
+                    <div class="payment-option-content">
+
+                        <strong>
+                            PayHere
+                        </strong>
+
+                        <small>
+                            Pay securely online using PayHere.
+                        </small>
+
+                    </div>
+
+                </label>
+
+
+
+                <!-- PAYHERE DETAILS -->
+
+                <div
+                    id="payhereDetails"
+                    class="payment-details payhere-details"
+                    hidden
+                >
+
+                    <div class="payment-details-icon">
+                        💳
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Secure Online Payment
+                        </h4>
+
+                        <p>
+
+                            You will be redirected to PayHere
+                            to securely complete your payment.
+
+                        </p>
+
+                        <span>
+                            PayHere supports secure online payments.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PLACE ORDER -->
+
+                <button
+                    type="submit"
+                    class="place-order-btn"
+                    id="placeOrderBtn"
+                >
+                    Place Order
+                </button>
 
 
                 <p class="secure-note">
@@ -471,15 +724,16 @@
 
                 </p>
 
+
             </form>
 
         </section>
 
 
 
-        <!-- ==========================================
+        <!-- ======================================
              ORDER SUMMARY
-        =========================================== -->
+        ======================================= -->
 
         <aside class="order-summary">
 
@@ -508,9 +762,7 @@
                 </p>
 
                 <a href="product_listing.html">
-
                     Explore our gifts &rarr;
-
                 </a>
 
             </div>
@@ -560,16 +812,17 @@
                         id="total"
                         class="total-amount"
                     >
-
                         LKR 0.00
-
                     </span>
 
                 </div>
 
+
             </div>
 
+
         </aside>
+
 
     </main>
 
@@ -598,8 +851,8 @@
     =========================================== -->
 
     <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
-    </script>
+        src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"
+    ></script>
 
 
 
