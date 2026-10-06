@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+
     // =====================================================
     // ELEMENTS
     // =====================================================
@@ -31,6 +32,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const billingFields =
         document.getElementById("billingFields");
 
+    const codDetails =
+        document.getElementById("codDetails");
+
+    const bankTransferDetails =
+        document.getElementById("bankTransferDetails");
+
+    const payhereDetails =
+        document.getElementById("payhereDetails");
+
+    const bankTransferAmount =
+        document.getElementById("bankTransferAmount");
+
+    const bankReference =
+        document.getElementById("bankReference");
+
 
     // =====================================================
     // CART
@@ -46,12 +62,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.getItem("giftoraCart")
             );
 
+
         cart =
             Array.isArray(savedCart)
                 ? savedCart
                 : [];
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "Unable to load cart:",
@@ -59,6 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         cart = [];
+
     }
 
 
@@ -69,13 +89,14 @@ document.addEventListener("DOMContentLoaded", function () {
     function money(amount) {
 
         return "LKR " +
-            amount.toLocaleString(
+            Number(amount).toLocaleString(
                 "en-LK",
                 {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 }
             );
+
     }
 
 
@@ -93,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         formSuccess.style.display =
             "none";
+
     }
 
 
@@ -110,11 +132,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         formError.style.display =
             "none";
+
     }
 
 
     // =====================================================
-    // CALCULATE CART TOTAL
+    // CALCULATE TOTALS
     // =====================================================
 
     function calculateTotals() {
@@ -140,6 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 subtotal +=
                     price * quantity;
+
             }
 
         });
@@ -156,10 +180,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         return {
-            subtotal: subtotal,
-            shipping: shipping,
-            total: total
+
+            subtotal:
+                subtotal,
+
+            shipping:
+                shipping,
+
+            total:
+                total
+
         };
+
     }
 
 
@@ -174,24 +206,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (cart.length === 0) {
 
-            emptyCart.hidden = false;
+            emptyCart.hidden =
+                false;
 
-            totals.hidden = true;
+            totals.hidden =
+                true;
 
-            placeOrderBtn.disabled = true;
+            placeOrderBtn.disabled =
+                true;
 
             placeOrderBtn.textContent =
                 "Your Cart Is Empty";
 
             return;
+
         }
 
 
-        emptyCart.hidden = true;
+        emptyCart.hidden =
+            true;
 
-        totals.hidden = false;
+        totals.hidden =
+            false;
 
-        placeOrderBtn.disabled = false;
+        placeOrderBtn.disabled =
+            false;
 
         placeOrderBtn.textContent =
             "Place Order";
@@ -217,6 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ) {
 
                 return;
+
             }
 
 
@@ -229,38 +269,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             const row =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             row.className =
                 "summary-item";
 
 
             const info =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             info.className =
                 "item-info";
 
 
             const name =
-                document.createElement("strong");
+                document.createElement(
+                    "strong"
+                );
+
 
             name.textContent =
-                item.name || "Gift item";
+                item.name ||
+                "Gift item";
 
 
             const qty =
-                document.createElement("small");
+                document.createElement(
+                    "small"
+                );
+
 
             qty.textContent =
-                "Qty: " + quantity;
+                "Qty: " +
+                quantity;
 
 
             const priceElement =
-                document.createElement("span");
+                document.createElement(
+                    "span"
+                );
+
 
             priceElement.className =
                 "item-price";
+
 
             priceElement.textContent =
                 money(lineTotal);
@@ -313,10 +371,14 @@ document.addEventListener("DOMContentLoaded", function () {
             money(total);
 
 
+        updateBankTransferAmount();
+
+
         if (subtotal <= 0) {
 
             placeOrderBtn.disabled =
                 true;
+
         }
 
     }
@@ -342,6 +404,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "billingCity"
         ).required =
             !billingSame.checked;
+
     }
 
 
@@ -408,7 +471,319 @@ document.addEventListener("DOMContentLoaded", function () {
                     .getElementById("notes")
                     .value
                     .trim()
+
         };
+
+    }
+
+
+    // =====================================================
+    // PAYMENT UI
+    // =====================================================
+
+    function updatePaymentUI() {
+
+        const selectedPayment =
+            document.querySelector(
+                'input[name="paymentMethod"]:checked'
+            );
+
+
+        if (!selectedPayment) {
+            return;
+        }
+
+
+        const paymentMethod =
+            selectedPayment.value;
+
+
+        // Hide everything first
+
+        codDetails.hidden =
+            true;
+
+        bankTransferDetails.hidden =
+            true;
+
+        payhereDetails.hidden =
+            true;
+
+
+        bankReference.required =
+            false;
+
+
+        // ================================================
+        // COD
+        // ================================================
+
+        if (
+            paymentMethod ===
+            "Cash on Delivery"
+        ) {
+
+            codDetails.hidden =
+                false;
+
+        }
+
+
+        // ================================================
+        // BANK TRANSFER
+        // ================================================
+
+        else if (
+            paymentMethod ===
+            "Bank Transfer"
+        ) {
+
+            bankTransferDetails.hidden =
+                false;
+
+            bankReference.required =
+                true;
+
+            updateBankTransferAmount();
+
+        }
+
+
+        // ================================================
+        // PAYHERE
+        // ================================================
+
+        else if (
+            paymentMethod ===
+            "PayHere"
+        ) {
+
+            payhereDetails.hidden =
+                false;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // UPDATE BANK TRANSFER AMOUNT
+    // =====================================================
+
+    function updateBankTransferAmount() {
+
+        if (!bankTransferAmount) {
+            return;
+        }
+
+
+        const totals =
+            calculateTotals();
+
+
+        bankTransferAmount.textContent =
+            money(totals.total);
+
+    }
+
+
+    // =====================================================
+    // PAYMENT RADIO EVENTS
+    // =====================================================
+
+    document
+        .querySelectorAll(
+            'input[name="paymentMethod"]'
+        )
+        .forEach(function (radio) {
+
+            radio.addEventListener(
+                "change",
+                updatePaymentUI
+            );
+
+        });
+
+
+    updatePaymentUI();
+
+
+    // =====================================================
+    // GENERATE ORDER ID
+    // =====================================================
+
+    function generateOrderId() {
+
+        const now =
+            new Date();
+
+
+        const date =
+            now.getTime();
+
+
+        const random =
+            Math.floor(
+                1000 +
+                Math.random() * 9000
+            );
+
+
+        return (
+            "GFT-" +
+            date +
+            "-" +
+            random
+        );
+
+    }
+
+
+    // =====================================================
+    // SAVE ORDER LOCALLY
+    // =====================================================
+
+    function saveOrder(order) {
+
+        localStorage.setItem(
+            "giftoraLastOrder",
+            JSON.stringify(order)
+        );
+
+    }
+
+
+    // =====================================================
+    // CREATE ORDER OBJECT
+    // =====================================================
+
+    function createOrderObject(
+        paymentMethod
+    ) {
+
+        const customer =
+            getCustomerDetails();
+
+
+        const totals =
+            calculateTotals();
+
+
+        const orderId =
+            generateOrderId();
+
+
+        const order = {
+
+            orderId:
+                orderId,
+
+            orderDate:
+                new Date().toISOString(),
+
+            customer: {
+
+                fullName:
+                    customer.fullName,
+
+                phone:
+                    customer.phone,
+
+                email:
+                    customer.email
+
+            },
+
+
+            shippingAddress: {
+
+                address:
+                    customer.address,
+
+                city:
+                    customer.city,
+
+                postalCode:
+                    customer.postalCode,
+
+                country:
+                    customer.country
+
+            },
+
+
+            billingSameAsShipping:
+                billingSame.checked,
+
+
+            billingAddress:
+                billingSame.checked
+                    ? null
+                    : {
+
+                        address:
+                            document
+                                .getElementById(
+                                    "billingAddress"
+                                )
+                                .value
+                                .trim(),
+
+                        city:
+                            document
+                                .getElementById(
+                                    "billingCity"
+                                )
+                                .value
+                                .trim(),
+
+                        postalCode:
+                            document
+                                .getElementById(
+                                    "billingPostal"
+                                )
+                                .value
+                                .trim()
+
+                    },
+
+
+            notes:
+                customer.notes,
+
+
+            paymentMethod:
+                paymentMethod,
+
+
+            bankReference:
+                paymentMethod ===
+                "Bank Transfer"
+                    ? bankReference.value
+                        .trim()
+                    : null,
+
+
+            items:
+                cart,
+
+
+            subtotal:
+                totals.subtotal,
+
+
+            shipping:
+                totals.shipping,
+
+
+            total:
+                totals.total
+
+        };
+
+
+        return order;
+
     }
 
 
@@ -448,6 +823,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             amount:
                 totals.total
+
         };
 
 
@@ -455,6 +831,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             placeOrderBtn.disabled =
                 true;
+
 
             placeOrderBtn.textContent =
                 "Connecting to PayHere...";
@@ -468,17 +845,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 await fetch(
                     "backend/api/payhere/create_payment.php",
                     {
-                        method: "POST",
+
+                        method:
+                            "POST",
 
                         headers: {
+
                             "Content-Type":
                                 "application/json"
+
                         },
 
                         body:
                             JSON.stringify(
                                 paymentData
                             )
+
                     }
                 );
 
@@ -489,6 +871,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Server returned HTTP " +
                     response.status
                 );
+
             }
 
 
@@ -508,15 +891,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     result.message ||
                     "Unable to create PayHere payment."
                 );
+
             }
 
 
             // -------------------------------------------------
-            // Create HTML form for PayHere
+            // Create PayHere form
             // -------------------------------------------------
 
             const payhereForm =
-                document.createElement("form");
+                document.createElement(
+                    "form"
+                );
 
 
             payhereForm.method =
@@ -528,8 +914,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             /*
-             * PayHere expects application/x-www-form-urlencoded
-             * form data, so we create hidden inputs.
+             * PayHere expects
+             * application/x-www-form-urlencoded
+             * form data.
              */
 
             const fields = {
@@ -581,6 +968,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 hash:
                     result.hash
+
             };
 
 
@@ -622,13 +1010,10 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-            // -------------------------------------------------
-            // Submit to PayHere
-            // -------------------------------------------------
-
             payhereForm.submit();
 
         }
+
 
         catch (error) {
 
@@ -650,13 +1035,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             placeOrderBtn.textContent =
                 "Place Order";
+
         }
 
     }
 
 
     // =====================================================
-    // CHECKOUT FORM SUBMIT
+    // FORM SUBMIT
     // =====================================================
 
     form.addEventListener(
@@ -674,9 +1060,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 "none";
 
 
-            // -------------------------------------------------
-            // Check cart
-            // -------------------------------------------------
+            // ==============================================
+            // CHECK CART
+            // ==============================================
 
             if (cart.length === 0) {
 
@@ -685,22 +1071,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return;
+
             }
 
 
-            // -------------------------------------------------
-            // HTML validation
-            // -------------------------------------------------
+            // ==============================================
+            // HTML VALIDATION
+            // ==============================================
 
             if (!form.reportValidity()) {
 
                 return;
+
             }
 
 
-            // -------------------------------------------------
-            // Get payment method
-            // -------------------------------------------------
+            // ==============================================
+            // GET PAYMENT METHOD
+            // ==============================================
 
             const selectedPayment =
                 document.querySelector(
@@ -715,6 +1103,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 return;
+
             }
 
 
@@ -722,132 +1111,134 @@ document.addEventListener("DOMContentLoaded", function () {
                 selectedPayment.value;
 
 
-            // -------------------------------------------------
+            // ==============================================
             // PAYHERE
-            // -------------------------------------------------
+            // ==============================================
 
             if (
-                paymentMethod === "PayHere"
+                paymentMethod ===
+                "PayHere"
             ) {
 
                 await startPayHerePayment();
 
                 return;
+
             }
 
 
-            // -------------------------------------------------
-            // COD / BANK TRANSFER
-            // -------------------------------------------------
+            // ==============================================
+            // BANK TRANSFER VALIDATION
+            // ==============================================
 
-            const customer =
-                getCustomerDetails();
+            if (
+                paymentMethod ===
+                "Bank Transfer"
+            ) {
 
+                if (
+                    !bankReference.value.trim()
+                ) {
 
-            const totals =
-                calculateTotals();
-
-
-            const orderDetails = {
-
-                customer: {
-
-                    fullName:
-                        customer.fullName,
-
-                    phone:
-                        customer.phone,
-
-                    email:
-                        customer.email
-                },
+                    showError(
+                        "Please enter your bank transfer reference number."
+                    );
 
 
-                shippingAddress: {
-
-                    address:
-                        customer.address,
-
-                    city:
-                        customer.city,
-
-                    postalCode:
-                        customer.postalCode,
-
-                    country:
-                        customer.country
-                },
+                    bankReference.focus();
 
 
-                billingSameAsShipping:
-                    billingSame.checked,
+                    return;
+
+                }
+
+            }
 
 
-                billingAddress:
-                    billingSame.checked
-                        ? null
-                        : {
+            // ==============================================
+            // CREATE ORDER
+            // ==============================================
 
-                            address:
-                                document
-                                    .getElementById(
-                                        "billingAddress"
-                                    )
-                                    .value
-                                    .trim(),
-
-                            city:
-                                document
-                                    .getElementById(
-                                        "billingCity"
-                                    )
-                                    .value
-                                    .trim(),
-
-                            postalCode:
-                                document
-                                    .getElementById(
-                                        "billingPostal"
-                                    )
-                                    .value
-                                    .trim()
-                        },
+            const order =
+                createOrderObject(
+                    paymentMethod
+                );
 
 
-                notes:
-                    customer.notes,
+            // ==============================================
+            // COD
+            // ==============================================
+
+            if (
+                paymentMethod ===
+                "Cash on Delivery"
+            ) {
+
+                order.status =
+                    "Order Received";
 
 
-                paymentMethod:
-                    paymentMethod,
+                order.paymentStatus =
+                    "Payment Pending";
 
 
-                items:
-                    cart,
+                saveOrder(order);
 
 
-                subtotal:
-                    totals.subtotal,
+                // Clear cart
+
+                localStorage.removeItem(
+                    "giftoraCart"
+                );
 
 
-                shipping:
-                    totals.shipping,
+                // Redirect
+
+                window.location.href =
+                    "order_confirmation.html";
 
 
-                total:
-                    totals.total
-            };
+                return;
+
+            }
 
 
-            console.log(
-                "Checkout details:",
-                orderDetails
-            );
+            // ==============================================
+            // BANK TRANSFER
+            // ==============================================
+
+            if (
+                paymentMethod ===
+                "Bank Transfer"
+            ) {
+
+                order.status =
+                    "Pending Payment Verification";
 
 
-            showSuccess(
-                "Your details are valid! Order is ready to process."
-            );
+                order.paymentStatus =
+                    "Bank Transfer Pending";
+
+
+                saveOrder(order);
+
+
+                // Clear cart
+
+                localStorage.removeItem(
+                    "giftoraCart"
+                );
+
+
+                // Redirect
+
+                window.location.href =
+                    "order_confirmation.html";
+
+
+                return;
+
+            }
 
         }
     );
@@ -858,5 +1249,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // =====================================================
 
     renderCart();
+
+
+    updatePaymentUI();
 
 });
