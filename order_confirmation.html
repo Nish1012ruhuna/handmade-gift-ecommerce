@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Order Confirmation | GIFTORA</title>
+
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <style>
+
+        :root {
+
+            --green: #1f6f5b;
+            --dark-green: #185846;
+            --deep-green: #1d2f29;
+
+            --cream: #fffdf9;
+            --warm-cream: #faf6ef;
+            --pale-green: #eef8f3;
+            --sage: #dcece3;
+
+            --orange: #d17c4c;
+
+            --text: #34483e;
+            --heading: #1d4d3f;
+            --muted: #78877e;
+
+            --border: #e2e9e2;
+            --white: #ffffff;
+
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family: 'Poppins', sans-serif;
+
+            background: var(--cream);
+
+            color: var(--text);
+
+            line-height: 1.7;
+
+        }
+
+
+        h1,
+        h2,
+        h3 {
+
+            font-family:
+                'Playfair Display',
+                serif;
+
+            color:
+                var(--heading);
+
+        }
+
+
+        a {
+
+            text-decoration: none;
+
+        }
+
+
+        /* ==================================
+           HEADER
+        ================================== */
+
+        .header {
+
+            background:
+                var(--white);
+
+            border-bottom:
+                1px solid var(--border);
+
+            padding:
+                18px 7%;
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+        }
+
+
+        .logo {
+
+            font-family:
+                'Playfair Display',
+                serif;
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            letter-spacing: 1px;
+
+            color:
+                var(--green);
+
+        }
+
+
+        .back-link {
+
+            color:
+                var(--green);
+
+            font-size: 13px;
+
+            font-weight: 500;
+
+        }
+
+
+        .back-link:hover {
+
+            color:
+                var(--orange);
+
+        }
+
+
+        /* ==================================
+           PAGE
+        ================================== */
+
+        .page {
+
+            width: 90%;
+
+            max-width: 900px;
+
+            margin:
+                55px auto 80px;
+
+        }
+
+
+        .confirmation-card {
+
+            background:
+                var(--white);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 18px;
+
+            padding:
+                40px;
+
+            box-shadow:
+                0 10px 35px
+                rgba(
+                    29,
+                    77,
+                    63,
+                    0.07
+                );
+
+        }
+
+
+        /* ==================================
+           SUCCESS ICON
+        ================================== */
+
+        .success-icon {
+
+            width: 75px;
+
+            height: 75px;
+
+            margin:
+                0 auto 20px;
+
+            display: flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            background:
+                var(--pale-green);
+
+            border:
+                2px solid #cce5d7;
+
+            border-radius: 50%;
+
+            color:
+                var(--green);
+
+            font-size: 38px;
+
+            font-weight: 600;
+
+        }
+
+
+        .page-title {
+
+            text-align:
+                center;
+
+        }
+
+
+        .page-title h1 {
+
+            font-size: 36px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .page-title p {
+
+            color:
+                var(--muted);
+
+            font-size: 14px;
+
+        }
+
+
+        /* ==================================
+           ORDER NUMBER
+        ================================== */
+
+        .order-number {
+
+            margin:
+                30px 0;
+
+            padding:
+                18px;
+
+            background:
+                var(--pale-green);
+
+            border-radius: 10px;
+
+            text-align:
+                center;
+
+        }
+
+
+        .order-number span {
+
+            display: block;
+
+            color:
+                var(--muted);
+
+            font-size: 12px;
+
+        }
+
+
+        .order-number strong {
+
+            display: block;
+
+            color:
+                var(--green);
+
+            font-size: 20px;
+
+            margin-top: 5px;
+
+        }
+
+
+        /* ==================================
+           STATUS MESSAGE
+        ================================== */
+
+        .status-message {
+
+            margin:
+                25px 0;
+
+            padding:
+                20px;
+
+            background:
+                var(--warm-cream);
+
+            border-left:
+                4px solid var(--orange);
+
+            border-radius: 8px;
+
+        }
+
+
+        .status-message h3 {
+
+            font-family:
+                'Poppins',
+                sans-serif;
+
+            font-size: 15px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .status-message p {
+
+            color:
+                var(--muted);
+
+            font-size: 12px;
+
+        }
+
+
+        /* ==================================
+           INFORMATION
+        ================================== */
+
+        .section {
+
+            margin-top: 32px;
+
+        }
+
+
+        .section-title {
+
+            font-size: 22px;
+
+            padding-bottom: 10px;
+
+            margin-bottom: 15px;
+
+            border-bottom:
+                1px solid var(--border);
+
+        }
+
+
+        .info-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 14px;
+
+        }
+
+
+        .info-box {
+
+            padding: 15px;
+
+            background:
+                #fffefa;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 9px;
+
+        }
+
+
+        .info-box span {
+
+            display: block;
+
+            color:
+                var(--muted);
+
+            font-size: 11px;
+
+            margin-bottom: 3px;
+
+        }
+
+
+        .info-box strong {
+
+            color:
+                var(--deep-green);
+
+            font-size: 13px;
+
+        }
+
+
+        .address-box {
+
+            padding: 16px;
+
+            background:
+                #fffefa;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 9px;
+
+            font-size: 13px;
+
+        }
+
+
+        /* ==================================
+           ORDER ITEMS
+        ================================== */
+
+        .items {
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 9px;
+
+            overflow: hidden;
+
+        }
+
+
+        .item {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 20px;
+
+            padding: 14px 16px;
+
+            border-bottom:
+                1px solid var(--border);
+
+        }
+
+
+        .item:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .item-name {
+
+            color:
+                var(--deep-green);
+
+            font-size: 13px;
+
+        }
+
+
+        .item-quantity {
+
+            color:
+                var(--muted);
+
+            font-size: 11px;
+
+        }
+
+
+        .item-price {
+
+            color:
+                var(--green);
+
+            font-weight: 600;
+
+            white-space:
+                nowrap;
+
+            font-size: 13px;
+
+        }
+
+
+        /* ==================================
+           TOTALS
+        ================================== */
+
+        .totals {
+
+            margin-top: 20px;
+
+        }
+
+
+        .total-row {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            padding: 8px 0;
+
+            font-size: 13px;
+
+        }
+
+
+        .total-row span {
+
+            color:
+                var(--muted);
+
+        }
+
+
+        .total-row strong {
+
+            color:
+                var(--deep-green);
+
+        }
+
+
+        .grand-total {
+
+            margin-top: 8px;
+
+            padding-top: 15px;
+
+            border-top:
+                1px solid var(--border);
+
+            font-size: 18px;
+
+        }
+
+
+        .grand-total strong {
+
+            color:
+                var(--green);
+
+            font-size: 20px;
+
+        }
+
+
+        /* ==================================
+           BANK REFERENCE
+        ================================== */
+
+        .reference-box {
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            background:
+                var(--pale-green);
+
+            border-radius: 8px;
+
+        }
+
+
+        .reference-box span {
+
+            display: block;
+
+            color:
+                var(--muted);
+
+            font-size: 11px;
+
+        }
+
+
+        .reference-box strong {
+
+            color:
+                var(--green);
+
+            font-size: 14px;
+
+        }
+
+
+        /* ==================================
+           BUTTONS
+        ================================== */
+
+        .buttons {
+
+            display: flex;
+
+            justify-content:
+                center;
+
+            gap: 14px;
+
+            margin-top: 35px;
+
+        }
+
+
+        .btn {
+
+            display: inline-block;
+
+            padding:
+                13px 22px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            font-weight: 500;
+
+            transition:
+                0.2s ease;
+
+        }
+
+
+        .primary {
+
+            background:
+                var(--green);
+
+            color:
+                var(--white);
+
+        }
+
+
+        .primary:hover {
+
+            background:
+                var(--dark-green);
+
+            color:
+                var(--white);
+
+        }
+
+
+        .secondary {
+
+            background:
+                var(--warm-cream);
+
+            color:
+                var(--green);
+
+            border:
+                1px solid var(--border);
+
+        }
+
+
+        .secondary:hover {
+
+            background:
+                var(--pale-green);
+
+        }
+
+
+        /* ==================================
+           FOOTER
+        ================================== */
+
+        .footer {
+
+            background:
+                var(--deep-green);
+
+            color:
+                #e3ebe5;
+
+            text-align:
+                center;
+
+            padding:
+                27px 15px;
+
+            font-size: 12px;
+
+        }
+
+
+        .footer p {
+
+            color:
+                #e3ebe5;
+
+        }
+
+
+        /* ==================================
+           RESPONSIVE
+        ================================== */
+
+        @media (max-width: 600px) {
+
+            .header {
+
+                padding:
+                    16px 5%;
+
+            }
+
+
+            .logo {
+
+                font-size: 25px;
+
+            }
+
+
+            .page {
+
+                width: 92%;
+
+                margin:
+                    30px auto 50px;
+
+            }
+
+
+            .confirmation-card {
+
+                padding: 23px 18px;
+
+            }
+
+
+            .page-title h1 {
+
+                font-size: 30px;
+
+            }
+
+
+            .info-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .buttons {
+
+                flex-direction:
+                    column;
+
+            }
+
+
+            .btn {
+
+                text-align:
+                    center;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <a
+            href="home.html"
+            class="logo"
+        >
+            GIFTORA
+        </a>
+
+
+        <a
+            href="product_listing.html"
+            class="back-link"
+        >
+            Continue Shopping
+        </a>
+
+    </header>
+
+
+
+    <main class="page">
+
+
+        <div class="confirmation-card">
+
+
+            <!-- SUCCESS ICON -->
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+
+
+            <!-- TITLE -->
+
+            <div class="page-title">
+
+                <h1 id="pageTitle">
+                    Order Confirmed!
+                </h1>
+
+                <p id="mainMessage">
+                    Thank you for choosing GIFTORA.
+                </p>
+
+            </div>
+
+
+
+            <!-- ORDER NUMBER -->
+
+            <div class="order-number">
+
+                <span>
+                    Your Order Number
+                </span>
+
+                <strong id="orderId">
+                    -
+                </strong>
+
+            </div>
+
+
+
+            <!-- STATUS -->
+
+            <div class="status-message">
+
+                <h3 id="statusTitle">
+                    Your order is being prepared
+                </h3>
+
+                <p id="statusText">
+
+                    Your order has been received
+                    and our team will begin
+                    preparing it shortly.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- ORDER INFORMATION -->
+
+            <section class="section">
+
+                <h2 class="section-title">
+                    Order Information
+                </h2>
+
+
+                <div class="info-grid">
+
+
+                    <div class="info-box">
+
+                        <span>
+                            Payment Method
+                        </span>
+
+                        <strong
+                            id="paymentMethod"
+                        >
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <span>
+                            Order Status
+                        </span>
+
+                        <strong
+                            id="orderStatus"
+                        >
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <span>
+                            Customer
+                        </span>
+
+                        <strong
+                            id="customerName"
+                        >
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <span>
+                            Phone
+                        </span>
+
+                        <strong
+                            id="customerPhone"
+                        >
+                            -
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- DELIVERY ADDRESS -->
+
+            <section class="section">
+
+                <h2 class="section-title">
+                    Delivery Address
+                </h2>
+
+
+                <div
+                    class="address-box"
+                    id="deliveryAddress"
+                >
+                    -
+                </div>
+
+            </section>
+
+
+
+            <!-- BANK REFERENCE -->
+
+            <div
+                id="bankReferenceBox"
+                class="reference-box"
+                hidden
+            >
+
+                <span>
+                    Bank Transfer Reference
+                </span>
+
+                <strong
+                    id="bankReference"
+                >
+                    -
+                </strong>
+
+            </div>
+
+
+
+            <!-- ITEMS -->
+
+            <section class="section">
+
+                <h2 class="section-title">
+                    Ordered Items
+                </h2>
+
+
+                <div
+                    id="orderItems"
+                    class="items"
+                ></div>
+
+            </section>
+
+
+
+            <!-- TOTALS -->
+
+            <div class="totals">
+
+
+                <div class="total-row">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <strong id="subtotal">
+                        LKR 0.00
+                    </strong>
+
+                </div>
+
+
+                <div class="total-row">
+
+                    <span>
+                        Delivery
+                    </span>
+
+                    <strong id="shipping">
+                        LKR 0.00
+                    </strong>
+
+                </div>
+
+
+                <div class="total-row grand-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong id="total">
+                        LKR 0.00
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <a
+                    href="product_listing.html"
+                    class="btn primary"
+                >
+                    Continue Shopping
+                </a>
+
+
+                <a
+                    href="customer_dashboard.html"
+                    class="btn secondary"
+                >
+                    View My Orders
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <p>
+
+            &copy; 2026 GIFTORA.
+            Made with love, wrapped with care. 💚
+
+        </p>
+
+    </footer>
+
+
+
+    <!-- ==========================================
+         ORDER CONFIRMATION JAVASCRIPT
+    =========================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+
+                // ==========================================
+                // GET ORDER
+                // ==========================================
+
+                const savedOrder =
+                    localStorage.getItem(
+                        "giftoraLastOrder"
+                    );
+
+
+                if (!savedOrder) {
+
+                    document.getElementById(
+                        "pageTitle"
+                    ).textContent =
+                        "Order Information Not Found";
+
+
+                    document.getElementById(
+                        "mainMessage"
+                    ).textContent =
+                        "We could not find your latest order. Please return to the shop and try again.";
+
+
+                    document.getElementById(
+                        "statusTitle"
+                    ).textContent =
+                        "No order information available";
+
+
+                    document.getElementById(
+                        "statusText"
+                    ).textContent =
+                        "Your order details could not be loaded.";
+
+
+                    return;
+
+                }
+
+
+                let order;
+
+
+                try {
+
+                    order =
+                        JSON.parse(
+                            savedOrder
+                        );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Unable to read order:",
+                        error
+                    );
+
+                    return;
+
+                }
+
+
+                // ==========================================
+                // MONEY
+                // ==========================================
+
+                function money(amount) {
+
+                    return "LKR " +
+                        Number(amount || 0)
+                            .toLocaleString(
+                                "en-LK",
+                                {
+                                    minimumFractionDigits:
+                                        2,
+
+                                    maximumFractionDigits:
+                                        2
+                                }
+                            );
+
+                }
+
+
+                // ==========================================
+                // BASIC INFORMATION
+                // ==========================================
+
+                document.getElementById(
+                    "orderId"
+                ).textContent =
+                    order.orderId || "-";
+
+
+                document.getElementById(
+                    "paymentMethod"
+                ).textContent =
+                    order.paymentMethod || "-";
+
+
+                document.getElementById(
+                    "orderStatus"
+                ).textContent =
+                    order.status || "-";
+
+
+                document.getElementById(
+                    "customerName"
+                ).textContent =
+                    order.customer?.fullName ||
+                    "-";
+
+
+                document.getElementById(
+                    "customerPhone"
+                ).textContent =
+                    order.customer?.phone ||
+                    "-";
+
+
+                // ==========================================
+                // DELIVERY ADDRESS
+                // ==========================================
+
+                const address =
+                    order.shippingAddress;
+
+
+                if (address) {
+
+                    document.getElementById(
+                        "deliveryAddress"
+                    ).textContent =
+                        [
+                            address.address,
+                            address.city,
+                            address.postalCode,
+                            address.country
+                        ]
+                        .filter(Boolean)
+                        .join(", ");
+
+                }
+
+
+                // ==========================================
+                // TOTALS
+                // ==========================================
+
+                document.getElementById(
+                    "subtotal"
+                ).textContent =
+                    money(order.subtotal);
+
+
+                document.getElementById(
+                    "shipping"
+                ).textContent =
+                    money(order.shipping);
+
+
+                document.getElementById(
+                    "total"
+                ).textContent =
+                    money(order.total);
+
+
+                // ==========================================
+                // ITEMS
+                // ==========================================
+
+                const itemsContainer =
+                    document.getElementById(
+                        "orderItems"
+                    );
+
+
+                itemsContainer.replaceChildren();
+
+
+                if (
+                    Array.isArray(order.items) &&
+                    order.items.length > 0
+                ) {
+
+                    order.items.forEach(
+                        function (item) {
+
+                            const row =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            row.className =
+                                "item";
+
+
+                            const itemInfo =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            const itemName =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            itemName.className =
+                                "item-name";
+
+
+                            itemName.textContent =
+                                item.name ||
+                                "Gift item";
+
+
+                            const quantity =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            quantity.className =
+                                "item-quantity";
+
+
+                            quantity.textContent =
+                                "Quantity: " +
+                                Number(
+                                    item.quantity || 1
+                                );
+
+
+                            itemInfo.append(
+                                itemName,
+                                quantity
+                            );
+
+
+                            const price =
+                                document.createElement(
+                                    "span"
+                                );
+
+
+                            price.className =
+                                "item-price";
+
+
+                            price.textContent =
+                                money(
+                                    Number(item.price || 0) *
+                                    Number(item.quantity || 1)
+                                );
+
+
+                            row.append(
+                                itemInfo,
+                                price
+                            );
+
+
+                            itemsContainer.appendChild(
+                                row
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                // ==========================================
+                // COD MESSAGE
+                // ==========================================
+
+                if (
+                    order.paymentMethod ===
+                    "Cash on Delivery"
+                ) {
+
+                    document.getElementById(
+                        "pageTitle"
+                    ).textContent =
+                        "Order Confirmed! 🎉";
+
+
+                    document.getElementById(
+                        "mainMessage"
+                    ).textContent =
+                        "Thank you! Your order has been successfully received.";
+
+
+                    document.getElementById(
+                        "statusTitle"
+                    ).textContent =
+                        "Your order is being prepared";
+
+
+                    document.getElementById(
+                        "statusText"
+                    ).textContent =
+                        "Your order has been received and our team will begin preparing it shortly. You can pay the delivery person when your order arrives.";
+
+                }
+
+
+                // ==========================================
+                // BANK TRANSFER MESSAGE
+                // ==========================================
+
+                else if (
+                    order.paymentMethod ===
+                    "Bank Transfer"
+                ) {
+
+                    document.getElementById(
+                        "pageTitle"
+                    ).textContent =
+                        "Order Received";
+
+
+                    document.getElementById(
+                        "mainMessage"
+                    ).textContent =
+                        "Your bank transfer information has been submitted.";
+
+
+                    document.getElementById(
+                        "statusTitle"
+                    ).textContent =
+                        "Payment verification pending";
+
+
+                    document.getElementById(
+                        "statusText"
+                    ).textContent =
+                        "We will verify your bank transfer. Once the payment is confirmed, your order will move to preparation.";
+
+
+                    // Show bank reference
+
+                    if (
+                        order.bankReference
+                    ) {
+
+                        document.getElementById(
+                            "bankReferenceBox"
+                        ).hidden =
+                            false;
+
+
+                        document.getElementById(
+                            "bankReference"
+                        ).textContent =
+                            order.bankReference;
+
+                    }
+
+                }
+
+            }
+
+        );
+
+    </script>
+
+
+</body>
+
+</html>
