@@ -1,3 +1,4 @@
+//product listing
 document.addEventListener("DOMContentLoaded", function () {
 
     // ============================================================
