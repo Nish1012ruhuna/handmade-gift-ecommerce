@@ -947,3 +947,149 @@ footer {
     }
 
 }
+
+
+/* =========================================
+   DYNAMIC PRODUCT DETAILS
+========================================= */
+
+.product-category {
+    display: block;
+}
+
+.price {
+    display: block;
+}
+
+.stock {
+    display: block;
+}
+
+
+/* DISABLED ADD TO CART */
+
+.add-cart:disabled {
+    background: #aaaaaa;
+    cursor: not-allowed;
+}
+
+.add-cart:disabled:hover {
+    background: #aaaaaa;
+}
+
+
+/* WISHLIST SELECTED */
+
+.wishlist-button.selected,
+.image-wishlist.selected {
+    color: #d95f62;
+}
+
+
+/* PRODUCT IMAGE FALLBACK */
+
+.main-image img {
+    display: block;
+}
+
+
+/* THUMBNAIL BUTTON */
+
+.thumbnail {
+    cursor: pointer;
+}
+
+.thumbnail img {
+    display: block;
+}
+
+
+
+/* RELATED PRODUCT IMAGE FIX */
+
+.related-image {
+    height: 280px;
+    background: #f3f4ef;
+    position: relative;
+    overflow: hidden;
+}
+
+.related-image a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.related-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.related-image button {
+    z-index: 2;
+}
+
+
+
+/* CONTINUE SHOPPING SECTION */
+
+.continue-shopping {
+    background: #f7f4ee;
+    padding: 65px 20px;
+    margin: 50px 0;
+    text-align: center;
+}
+
+.continue-shopping-content {
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.shopping-label {
+    color: #9b8066;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+}
+
+.continue-shopping h2 {
+    color: #40352d;
+    font-size: 34px;
+    margin-bottom: 18px;
+}
+
+.continue-shopping-content > p:not(.shopping-label) {
+    color: #756b61;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 28px;
+}
+
+.continue-shopping-btn {
+    display: inline-block;
+    background: #806b55;
+    color: #ffffff;
+    padding: 14px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 15px;
+    transition: bg 0.3s ease;
+}
+
+.continue-shopping-btn:hover {
+    background: #62503f;
+}
+
+@media (max-width: 600px) {
+    .continue-shopping {
+        padding: 45px 18px;
+    }
+
+    .continue-shopping h2 {
+        font-size: 27px;
+    }
+}
+
