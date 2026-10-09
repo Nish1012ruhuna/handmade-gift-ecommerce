@@ -1,4 +1,8 @@
-//product listing
+
+ // ============================================================
+ // GIFTORA - PRODUCT LISTING
+ // ============================================================
+
 document.addEventListener("DOMContentLoaded", function () {
 
     // ============================================================
@@ -16,6 +20,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const filterButtons =
         document.querySelectorAll(".filter-btn");
+
+
+    // Check required elements
+    if (!productGrid || !noResults || !searchInput) {
+        console.error(
+            "GIFTORA: Required product listing elements were not found."
+        );
+        return;
+    }
 
 
     // ============================================================
@@ -76,42 +89,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function getImagePath(imageURL) {
 
-        // If there is no image
         if (!imageURL) {
             return "Logo.png";
         }
 
-
-        let imagePath =
-            String(imageURL).trim();
-
+        let imagePath = String(imageURL).trim();
 
         // Remove starting slash
-        imagePath =
-            imagePath.replace(/^\/+/, "");
+        imagePath = imagePath.replace(/^\/+/, "");
 
-
-        /*
-         * Database may contain:
-         *
-         * giftbox1.jpg
-         *
-         * OR
-         *
-         * shop_images/giftbox1.jpg
-         *
-         * We handle both.
-         */
-
-        if (
-            imagePath.startsWith("shop_images/")
-        ) {
-
+        // Keep existing shop_images path
+        if (imagePath.startsWith("shop_images/")) {
             return imagePath;
-
         }
 
-
+        // Add shop_images folder to the filename
         return "shop_images/" + imagePath;
     }
 
@@ -142,17 +134,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
 
-            // Loading message
             productGrid.innerHTML = `
                 <div class="loading-message">
-                    <p>
-                        Loading our beautiful gifts... 🎁
-                    </p>
+                    <p>Loading our beautiful gifts... 🎁</p>
                 </div>
             `;
 
-
-            // Request latest database data
             const response = await fetch(
                 API_URL + "?t=" + Date.now(),
                 {
@@ -161,82 +148,46 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             );
 
-
-            // Check HTTP response
             if (!response.ok) {
-
                 throw new Error(
                     "Failed to load products. HTTP status: " +
                     response.status
                 );
             }
 
+            const data = await response.json();
 
-            // Convert to JSON
-            const data =
-                await response.json();
+            console.log("Products API response:", data);
 
-
-            console.log(
-                "Products API response:",
-                data
-            );
-
-
-            // Check API response
             if (!data.success) {
-
                 throw new Error(
                     data.message ||
                     "Unable to load products."
                 );
             }
 
+            products = Array.isArray(data.products)
+                ? data.products
+                : [];
 
-            // Store products
-            products =
-                Array.isArray(data.products)
-                    ? data.products
-                    : [];
+            console.log("Products loaded:", products);
 
-
-            console.log(
-                "Products loaded:",
-                products
-            );
-
-
-            // Display products
             displayProducts();
-
 
         } catch (error) {
 
-            console.error(
-                "Product loading error:",
-                error
-            );
-
+            console.error("Product loading error:", error);
 
             productGrid.innerHTML = `
                 <div class="loading-message">
-
-                    <h2>
-                        Unable to load products
-                    </h2>
-
+                    <h2>Unable to load products</h2>
                     <p>
-                        Please make sure the server
-                        is running and try again.
+                        Please make sure the server is running
+                        and try again.
                     </p>
-
-                    <p>
-                        Error: ${error.message}
-                    </p>
-
+                    <p>Error: ${error.message}</p>
                 </div>
             `;
-
 
             noResults.style.display = "none";
         }
@@ -249,103 +200,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function displayProducts() {
 
-        const searchText =
-            searchInput.value
-                .trim()
-                .toLowerCase();
+        const searchText = searchInput.value
+            .trim()
+            .toLowerCase();
 
+        const filteredProducts = products.filter(
+            function (product) {
 
-        // Filter products
-        const filteredProducts =
-            products.filter(function (product) {
+                const title = cleanTitle(product.Title);
 
-                const title =
-                    cleanTitle(product.Title);
-
-                const description =
-                    String(
-                        product.Description || ""
-                    );
-
-                const category =
-                    String(
-                        product.CategoryName || ""
-                    );
-
-
-                // Search
-                const matchesSearch =
-
-                    title
-                        .toLowerCase()
-                        .includes(searchText)
-
-                    ||
-
-                    description
-                        .toLowerCase()
-                        .includes(searchText)
-
-                    ||
-
-                    category
-                        .toLowerCase()
-                        .includes(searchText);
-
-
-                // Category
-                let matchesCategory = true;
-
-
-                if (
-                    selectedCategory !== "all"
-                ) {
-
-                    matchesCategory =
-                        getCategorySlug(
-                            category
-                        ) === selectedCategory;
-                }
-
-
-                return (
-                    matchesSearch &&
-                    matchesCategory
+                const description = String(
+                    product.Description || ""
                 );
 
-            });
+                const category = String(
+                    product.CategoryName || ""
+                );
 
+                const matchesSearch =
+                    title.toLowerCase().includes(searchText) ||
+                    description.toLowerCase().includes(searchText) ||
+                    category.toLowerCase().includes(searchText);
 
-        // Clear grid
+                let matchesCategory = true;
+
+                if (selectedCategory !== "all") {
+                    matchesCategory =
+                        getCategorySlug(category) === selectedCategory;
+                }
+
+                return matchesSearch && matchesCategory;
+            }
+        );
+
         productGrid.innerHTML = "";
 
-
-        // No products
-        if (
-            filteredProducts.length === 0
-        ) {
-
+        if (filteredProducts.length === 0) {
             noResults.style.display = "block";
-
             return;
         }
 
-
-        // Hide no-result message
         noResults.style.display = "none";
 
+        filteredProducts.forEach(function (product) {
 
-        // Create cards
-        filteredProducts.forEach(
-            function (product) {
+            const card = createProductCard(product);
 
-                const card =
-                    createProductCard(product);
-
-                productGrid.appendChild(card);
-
-            }
-        );
+            productGrid.appendChild(card);
+        });
     }
 
 
@@ -355,259 +257,138 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function createProductCard(product) {
 
-        const card =
-            document.createElement("article");
-
-        card.className =
-            "product-card";
+        const card = document.createElement("article");
+        card.className = "product-card";
 
 
-        // ========================================================
         // IMAGE
-        // ========================================================
+        const imageContainer = document.createElement("div");
+        imageContainer.className = "product-image";
 
-        const imageContainer =
-            document.createElement("div");
+        const image = document.createElement("img");
 
-        imageContainer.className =
-            "product-image";
+        image.src = getImagePath(product.ImageURL);
+        image.alt = cleanTitle(product.Title);
+        image.loading = "lazy";
 
+        image.onerror = function () {
 
-        const image =
-            document.createElement("img");
-
-
-        // Get correct image path
-        image.src =
-            getImagePath(
+            console.error(
+                "Image could not be loaded:",
+                image.src,
+                "Database ImageURL:",
                 product.ImageURL
             );
 
-
-        // Product title
-        const productTitle =
-            cleanTitle(product.Title);
-
-
-        image.alt =
-            productTitle;
-
-
-        image.loading =
-            "lazy";
-
-
-        // Image error
-        image.onerror =
-            function () {
-
-                console.error(
-                    "Image could not be loaded:",
-                    image.src,
-                    "Database ImageURL:",
-                    product.ImageURL
-                );
-
-
-                image.onerror = null;
-
-                image.src =
-                    "Logo.png";
-            };
-
+            image.onerror = null;
+            image.src = "Logo.png";
+        };
 
         imageContainer.appendChild(image);
 
 
-        // ========================================================
         // PRODUCT INFO
-        // ========================================================
-
-        const info =
-            document.createElement("div");
-
-        info.className =
-            "product-info";
+        const info = document.createElement("div");
+        info.className = "product-info";
 
 
-        // ========================================================
         // CATEGORY
-        // ========================================================
-
-        const category =
-            document.createElement("span");
-
-        category.className =
-            "product-category";
+        const category = document.createElement("span");
+        category.className = "product-category";
+        category.textContent = product.CategoryName || "Gift";
 
 
-        category.textContent =
-            product.CategoryName || "Gift";
-
-
-        // ========================================================
         // TITLE
-        // ========================================================
-
-        const title =
-            document.createElement("h3");
-
-        title.className =
-            "product-title";
+        const title = document.createElement("h3");
+        title.className = "product-title";
+        title.textContent = cleanTitle(product.Title);
 
 
-        title.textContent =
-            productTitle;
-
-
-        // ========================================================
         // DESCRIPTION
-        // ========================================================
-
-        const description =
-            document.createElement("p");
-
-        description.className =
-            "product-description";
+        const description = document.createElement("p");
+        description.className = "product-description";
+        description.textContent = product.Description || "";
 
 
-        description.textContent =
-            product.Description || "";
-
-
-        // ========================================================
         // PRICE
-        // ========================================================
-
-        const price =
-            document.createElement("span");
-
-        price.className =
-            "product-price";
+        const price = document.createElement("span");
+        price.className = "product-price";
+        price.textContent = formatMoney(product.Price);
 
 
-        price.textContent =
-            formatMoney(
-                product.Price
-            );
-
-
-        // ========================================================
         // BUTTON CONTAINER
-        // ========================================================
-
-        const actions =
-            document.createElement("div");
-
-        actions.className =
-            "product-actions";
+        const actions = document.createElement("div");
+        actions.className = "product-actions";
 
 
         // ========================================================
-        // VIEW PRODUCT BUTTON
+        // VIEW PRODUCT BUTTON - CORRECTED
         // ========================================================
 
-        const viewButton =
-            document.createElement("button");
+        const viewButton = document.createElement("button");
 
-        viewButton.className =
-            "view-product-btn";
+        viewButton.className = "view-product-btn";
+        viewButton.type = "button";
+        viewButton.textContent = "View Product";
 
+        viewButton.addEventListener("click", function () {
 
-        viewButton.type =
-            "button";
+            const productID = product.ProductID;
 
+            if (
+                productID === undefined ||
+                productID === null ||
+                String(productID).trim() === ""
+            ) {
+                console.error(
+                    "GIFTORA: Product ID is missing.",
+                    product
+                );
 
-        viewButton.textContent =
-            "View Product";
-
-
-        viewButton.addEventListener(
-            "click",
-            function () {
-
-                window.location.href =
-                    "prduct_details.html?id=" +
-                    encodeURIComponent(
-                        product.ProductID
-                    );
-
+                alert("Unable to open this product. Product ID is missing.");
+                return;
             }
-        );
+
+            const targetURL =
+                "/giftora/prduct_details.html?id=" +
+                encodeURIComponent(productID);
+
+            console.log("Opening product details:", targetURL);
+
+            window.location.href = targetURL;
+        });
 
 
         // ========================================================
         // ADD TO CART BUTTON
         // ========================================================
 
-        const cartButton =
-            document.createElement("button");
+        const cartButton = document.createElement("button");
 
-        cartButton.className =
-            "add-cart-btn";
+        cartButton.className = "add-cart-btn";
+        cartButton.type = "button";
+        cartButton.textContent = "Add to Cart";
 
+        cartButton.addEventListener("click", function () {
 
-        cartButton.type =
-            "button";
-
-
-        cartButton.textContent =
-            "Add to Cart";
+            addToCart(product);
+        });
 
 
-        cartButton.addEventListener(
-            "click",
-            function () {
-
-                addToCart(product);
-
-            }
-        );
+        // ADD BUTTONS
+        actions.appendChild(viewButton);
+        actions.appendChild(cartButton);
 
 
-        // Add buttons
-        actions.appendChild(
-            viewButton
-        );
+        // BUILD PRODUCT CARD
+        info.appendChild(category);
+        info.appendChild(title);
+        info.appendChild(description);
+        info.appendChild(price);
+        info.appendChild(actions);
 
-        actions.appendChild(
-            cartButton
-        );
-
-
-        // ========================================================
-        // BUILD CARD
-        // ========================================================
-
-        info.appendChild(
-            category
-        );
-
-        info.appendChild(
-            title
-        );
-
-        info.appendChild(
-            description
-        );
-
-        info.appendChild(
-            price
-        );
-
-        info.appendChild(
-            actions
-        );
-
-
-        card.appendChild(
-            imageContainer
-        );
-
-        card.appendChild(
-            info
-        );
-
+        card.appendChild(imageContainer);
+        card.appendChild(info);
 
         return card;
     }
@@ -617,58 +398,32 @@ document.addEventListener("DOMContentLoaded", function () {
     // SEARCH
     // ============================================================
 
-    searchInput.addEventListener(
-        "input",
-        function () {
+    searchInput.addEventListener("input", function () {
 
-            displayProducts();
-
-        }
-    );
+        displayProducts();
+    });
 
 
     // ============================================================
     // CATEGORY FILTER
     // ============================================================
 
-    filterButtons.forEach(
-        function (button) {
+    filterButtons.forEach(function (button) {
 
-            button.addEventListener(
-                "click",
-                function () {
+        button.addEventListener("click", function () {
 
-                    // Remove active class
-                    filterButtons.forEach(
-                        function (btn) {
+            filterButtons.forEach(function (btn) {
 
-                            btn.classList.remove(
-                                "active"
-                            );
+                btn.classList.remove("active");
+            });
 
-                        }
-                    );
+            button.classList.add("active");
 
+            selectedCategory = button.dataset.category || "all";
 
-                    // Add active class
-                    button.classList.add(
-                        "active"
-                    );
-
-
-                    // Get category
-                    selectedCategory =
-                        button.dataset.category;
-
-
-                    // Refresh products
-                    displayProducts();
-
-                }
-            );
-
-        }
-    );
+            displayProducts();
+        });
+    });
 
 
     // ============================================================
@@ -679,104 +434,79 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let cart = [];
 
-
         try {
 
-            const savedCart =
-                localStorage.getItem(
-                    "giftoraCart"
-                );
-
+            const savedCart = localStorage.getItem("giftoraCart");
 
             if (savedCart) {
-
-                cart =
-                    JSON.parse(savedCart);
+                cart = JSON.parse(savedCart);
             }
 
-
             if (!Array.isArray(cart)) {
-
                 cart = [];
             }
 
         } catch (error) {
 
-            console.error(
-                "Cart loading error:",
-                error
-            );
-
+            console.error("Cart loading error:", error);
             cart = [];
         }
 
 
-        // Check existing product
-        const existingItem =
-            cart.find(
-                function (item) {
+        // FIND EXISTING PRODUCT
+        const existingItem = cart.find(function (item) {
 
-                    return Number(
-                        item.productId
-                    ) === Number(
-                        product.ProductID
-                    );
-
-                }
-            );
+            return Number(item.productId) ===
+                Number(product.ProductID);
+        });
 
 
-        // Increase quantity
+        // INCREASE QUANTITY
         if (existingItem) {
 
             existingItem.quantity =
-                Number(
-                    existingItem.quantity
-                ) + 1;
+                (Number(existingItem.quantity) || 0) + 1;
 
-        }
+        } else {
 
-        // Add new product
-        else {
-
+            // ADD NEW PRODUCT
             cart.push({
 
-                productId:
-                    product.ProductID,
+                productId: product.ProductID,
 
-                name:
-                    cleanTitle(
-                        product.Title
-                    ),
+                name: cleanTitle(product.Title),
 
-                price:
-                    Number(
-                        product.Price
-                    ),
+                price: Number(product.Price),
 
-                image:
-                    product.ImageURL,
+                image: product.ImageURL,
 
-                quantity:
-                    1
-
+                quantity: 1
             });
-
         }
 
 
-        // Save cart
-        localStorage.setItem(
-            "giftoraCart",
-            JSON.stringify(cart)
-        );
+        // SAVE CART
+        try {
+
+            localStorage.setItem(
+                "giftoraCart",
+                JSON.stringify(cart)
+            );
+
+        } catch (error) {
+
+            console.error("Unable to save cart:", error);
+
+            alert("Unable to save your cart. Please try again.");
+            return;
+        }
 
 
-        // Update cart count
+        // UPDATE CART COUNT
         updateCartCount();
 
 
-        // Confirmation
+        // CONFIRMATION
         alert(
             cleanTitle(product.Title) +
             " has been added to your cart! 🛒"
@@ -790,33 +520,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateCartCount() {
 
-        const cartCount =
-            document.querySelector(
-                ".cart-count"
-            );
-
+        const cartCount = document.querySelector(".cart-count");
 
         if (!cartCount) {
             return;
         }
 
-
         let cart = [];
-
 
         try {
 
-            const savedCart =
-                localStorage.getItem(
-                    "giftoraCart"
-                );
+            const savedCart = localStorage.getItem("giftoraCart");
 
-
-            cart =
-                savedCart
-                    ? JSON.parse(savedCart)
-                    : [];
-
+            cart = savedCart ? JSON.parse(savedCart) : [];
 
             if (!Array.isArray(cart)) {
                 cart = [];
@@ -824,51 +540,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } catch (error) {
 
+            console.error("Cart count loading error:", error);
             cart = [];
         }
 
 
-        // Total quantity
-        const totalQuantity =
-            cart.reduce(
-                function (
-                    total,
-                    item
+        // CALCULATE TOTAL QUANTITY
+        const totalQuantity = cart.reduce(
+            function (total, item) {
+
+                const quantity = Number(item.quantity);
+
+                if (
+                    Number.isInteger(quantity) &&
+                    quantity > 0
                 ) {
+                    return total + quantity;
+                }
 
-                    const quantity =
-                        Number(
-                            item.quantity
-                        );
+                return total;
+            },
+            0
+        );
 
-
-                    if (
-                        Number.isInteger(
-                            quantity
-                        ) &&
-                        quantity > 0
-                    ) {
-
-                        return total +
-                            quantity;
-                    }
-
-
-                    return total;
-
-                },
-                0
-            );
-
-
-        cartCount.textContent =
-            totalQuantity;
+        cartCount.textContent = totalQuantity;
     }
 
 
     // ============================================================
     // INITIALIZE
     // ============================================================
+
+    console.log("GIFTORA product_listing.js loaded - corrected version");
 
     updateCartCount();
 
