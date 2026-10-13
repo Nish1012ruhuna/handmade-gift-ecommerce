@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIFTORA | Admin Dashboard</title>
+    <link rel="stylesheet" href="/giftora/admin_dashboard.css">
+</head>
+<body class="admin-page">
+
+    <aside class="sidebar">
+        <a href="/giftora/admin_dashboard.html" class="admin-brand">
+            <span>🎁</span>
+            <span>GIFTORA<small>Store Admin</small></span>
+        </a>
+
+        <nav class="admin-nav">
+            <a class="active" href="/giftora/admin_dashboard.html">
+                ▦ Dashboard
+            </a>
+            <a href="/giftora/admin_products.html">▣ Products</a>
+            <a href="/giftora/admin_categories.html">▤ Categories</a>
+            <a href="/giftora/admin_orders.html">▣ Orders</a>
+            <a href="/giftora/admin_customers.html">♙ Customers</a>
+        </nav>
+
+        <button type="button" id="logoutButton" class="logout-button">
+            ↪ Logout
+        </button>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Welcome back! Here's your store overview.</p>
+            </div>
+            <span class="admin-label">Administrator</span>
+        </header>
+
+        <p id="dashboardMessage" class="message" role="status">
+            Loading dashboard...
+        </p>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <span class="stat-icon">▣</span>
+                <div>
+                    <p>Total Products</p>
+                    <h2 id="totalProducts">—</h2>
+                    <a href="/giftora/admin_products.html">
+                        Manage products →
+                    </a>
+                </div>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-icon">▤</span>
+                <div>
+                    <p>Total Orders</p>
+                    <h2 id="totalOrders">—</h2>
+                    <a href="/giftora/admin_orders.html">
+                        View orders →
+                    </a>
+                </div>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-icon">♙</span>
+                <div>
+                    <p>Total Customers</p>
+                    <h2 id="totalCustomers">—</h2>
+                    <a href="/giftora/admin_customers.html">
+                        View customers →
+                    </a>
+                </div>
+            </article>
+
+            <article class="stat-card warning-card">
+                <span class="stat-icon">!</span>
+                <div>
+                    <p>Low Stock Products</p>
+                    <h2 id="lowStock">—</h2>
+                    <a href="/giftora/admin_products.html">
+                        Check inventory →
+                    </a>
+                </div>
+            </article>
+        </section>
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Recent Orders</h2>
+                    <p>Latest orders stored in your database</p>
+                </div>
+                <a href="/giftora/admin_orders.html">
+                    View all orders →
+                </a>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentOrdersBody">
+                        <tr>
+                            <td colspan="4">Loading orders...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="quick-links">
+            <a href="/giftora/admin_products.html" class="quick-card">
+                <span>▣</span>
+                <h3>Manage Products</h3>
+                <p>Add and update products.</p>
+            </a>
+
+            <a href="/giftora/admin_categories.html" class="quick-card">
+                <span>▤</span>
+                <h3>Manage Categories</h3>
+                <p>Organize your gift products.</p>
+            </a>
+
+            <a href="/giftora/admin_orders.html" class="quick-card">
+                <span>▧</span>
+                <h3>Manage Orders</h3>
+                <p>Review customer orders.</p>
+            </a>
+
+            <a href="/giftora/admin_customers.html" class="quick-card">
+                <span>♙</span>
+                <h3>View Customers</h3>
+                <p>Review customer records.</p>
+            </a>
+        </section>
+    </main>
+
+    <script src="/giftora/admin_dashboard.js"></script>
+</body>
+</html>
