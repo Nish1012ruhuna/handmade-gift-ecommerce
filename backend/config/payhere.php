@@ -23,11 +23,11 @@ $PAYHERE_PAYMENT_URL =
 */
 
 $PAYHERE_RETURN_URL =
-    "http://localhost/Gift%20Shop/success.html";
+    "http://localhost/giftora/success.html";
 
 $PAYHERE_CANCEL_URL =
-    "http://localhost/Gift%20Shop/cancel.html";
+    "http://localhost/giftora/cancel.html";
 
 
 $PAYHERE_NOTIFY_URL =
-    "http://localhost/Gift%20Shop/backend/api/payhere/notify.php";
+    "http://localhost/giftora/backend/api/payhere/notify.php";

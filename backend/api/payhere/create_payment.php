@@ -1,307 +1,302 @@
+
 <?php
 
 header("Content-Type: application/json");
 
-
-/*
-|--------------------------------------------------------------------------
-| Load PayHere Configuration
-|--------------------------------------------------------------------------
-*/
-
+require_once __DIR__ . "/../../config/database.php";
+require_once __DIR__ . "/../../config/session.php";
 require_once __DIR__ . "/../../config/payhere.php";
 
+function respond($statusCode, $message, $extra = [])
+{
+    http_response_code($statusCode);
 
-/*
-|--------------------------------------------------------------------------
-| Only allow POST requests
-|--------------------------------------------------------------------------
-*/
-
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-
-    http_response_code(405);
-
-    echo json_encode([
+    echo json_encode(array_merge([
         "success" => false,
-        "message" => "Invalid request method."
-    ]);
+        "message" => $message
+    ], $extra));
 
     exit;
 }
 
+// Only accept POST requests.
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Allow: POST");
+    respond(405, "Invalid request method.");
+}
 
-/*
-|--------------------------------------------------------------------------
-| Read JSON sent by checkout.js
-|--------------------------------------------------------------------------
-*/
+// The customer must be logged in.
+requireLogin();
 
-$rawData = file_get_contents("php://input");
+$customerId = (int) $_SESSION["customer_id"];
 
-$data = json_decode($rawData, true);
-
+// Read the JSON request.
+$data = json_decode(file_get_contents("php://input"), true);
 
 if (!is_array($data)) {
-
-    http_response_code(400);
-
-    echo json_encode([
-        "success" => false,
-        "message" => "Invalid JSON data."
-    ]);
-
-    exit;
+    respond(400, "Invalid JSON data.");
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| Get Customer Information
-|--------------------------------------------------------------------------
-*/
-
+// Read delivery details.
 $fullName = trim($data["fullName"] ?? "");
+$phone    = trim($data["phone"] ?? "");
+$email    = trim($data["email"] ?? "");
+$address  = trim($data["address"] ?? "");
+$city     = trim($data["city"] ?? "");
+$country  = trim($data["country"] ?? "Sri Lanka");
 
-$phone = trim($data["phone"] ?? "");
+// Do not trust the amount sent by JavaScript.
+$items = $data["items"] ?? null;
 
-$email = trim($data["email"] ?? "");
-
-$address = trim($data["address"] ?? "");
-
-$city = trim($data["city"] ?? "");
-
-$country = trim($data["country"] ?? "Sri Lanka");
-
-$amount = floatval($data["amount"] ?? 0);
-
-
-/*
-|--------------------------------------------------------------------------
-| Validate Customer Information
-|--------------------------------------------------------------------------
-*/
-
-if ($fullName === "") {
-
-    echo json_encode([
-        "success" => false,
-        "message" => "Full name is required."
-    ]);
-
-    exit;
+if (
+    $fullName === "" ||
+    $phone === "" ||
+    !filter_var($email, FILTER_VALIDATE_EMAIL) ||
+    $address === "" ||
+    $city === ""
+) {
+    respond(400, "Please provide valid delivery and contact details.");
 }
 
-
-if ($phone === "") {
-
-    echo json_encode([
-        "success" => false,
-        "message" => "Phone number is required."
-    ]);
-
-    exit;
+if (!is_array($items) || count($items) === 0) {
+    respond(400, "Your cart is empty or invalid.");
 }
 
-
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-    echo json_encode([
-        "success" => false,
-        "message" => "Invalid email address."
-    ]);
-
-    exit;
+if (count($items) > 100) {
+    respond(400, "Too many items in the cart.");
 }
 
+// Combine duplicate product IDs and validate quantities.
+$quantities = [];
 
-if ($address === "") {
+foreach ($items as $item) {
+    if (!is_array($item)) {
+        respond(400, "Invalid cart item.");
+    }
 
-    echo json_encode([
-        "success" => false,
-        "message" => "Address is required."
-    ]);
-
-    exit;
-}
-
-
-if ($city === "") {
-
-    echo json_encode([
-        "success" => false,
-        "message" => "City is required."
-    ]);
-
-    exit;
-}
-
-
-if ($amount <= 0) {
-
-    echo json_encode([
-        "success" => false,
-        "message" => "Invalid payment amount."
-    ]);
-
-    exit;
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Split Full Name
-|--------------------------------------------------------------------------
-*/
-
-$nameParts = preg_split(
-    '/\s+/',
-    $fullName
-);
-
-
-$firstName = $nameParts[0];
-
-
-if (count($nameParts) > 1) {
-
-    $lastName = implode(
-        " ",
-        array_slice($nameParts, 1)
+    $productId = filter_var(
+        $item["productId"] ?? null,
+        FILTER_VALIDATE_INT
     );
 
-} else {
+    $quantity = filter_var(
+        $item["quantity"] ?? null,
+        FILTER_VALIDATE_INT
+    );
 
-    $lastName = "";
+    if (
+        $productId === false || $productId < 1 ||
+        $quantity === false || $quantity < 1 ||
+        $quantity > 100
+    ) {
+        respond(400, "Invalid product ID or quantity.");
+    }
+
+    $quantities[$productId] =
+        ($quantities[$productId] ?? 0) + $quantity;
+
+    if ($quantities[$productId] > 100) {
+        respond(400, "The quantity for a product is too large.");
+    }
 }
 
+$nameParts = preg_split('/\s+/', $fullName);
+$firstName = $nameParts[0];
+$lastName = count($nameParts) > 1
+    ? implode(" ", array_slice($nameParts, 1))
+    : "";
 
-/*
-|--------------------------------------------------------------------------
-| Create Unique Order ID
-|--------------------------------------------------------------------------
-*/
-
-$orderId =
-    "GIFTORA-" .
-    date("YmdHis") .
-    "-" .
-    random_int(1000, 9999);
-
-
-/*
-|--------------------------------------------------------------------------
-| PayHere Payment Information
-|--------------------------------------------------------------------------
-*/
+// Your checkout currently charges LKR 350 for delivery.
+// Keep this consistent with checkout.js for now.
+$shippingFee = 350.00;
 
 $currency = "LKR";
+$orderId = null;
+$totalAmount = 0.00;
 
+try {
+    $conn->begin_transaction();
 
-$formattedAmount = number_format(
-    $amount,
-    2,
-    ".",
-    ""
-);
+    // Confirm that this customer still exists.
+    $customerStmt = $conn->prepare(
+        "SELECT CustomerID FROM customer
+         WHERE CustomerID = ? LIMIT 1"
+    );
+    $customerStmt->bind_param("i", $customerId);
+    $customerStmt->execute();
+    $customerResult = $customerStmt->get_result();
 
+    if ($customerResult->num_rows !== 1) {
+        throw new RuntimeException("Customer account was not found.");
+    }
 
-/*
-|--------------------------------------------------------------------------
-| Generate PayHere Hash
-|--------------------------------------------------------------------------
-|
-| PayHere:
-|
-| hash =
-| strtoupper(
-|   md5(
-|     merchant_id
-|     + order_id
-|     + amount
-|     + currency
-|     + strtoupper(md5(merchant_secret))
-|   )
-| )
-|
-|--------------------------------------------------------------------------
-*/
+    $customerStmt->close();
 
-$hashedSecret = strtoupper(
-    md5($PAYHERE_MERCHANT_SECRET)
-);
+    // Get the real product prices and check stock in MySQL.
+    $productStmt = $conn->prepare(
+        "SELECT ProductID, Title, Price, StockQuantity
+         FROM product
+         WHERE ProductID = ? AND IsActive = 1
+         FOR UPDATE"
+    );
 
+    $verifiedItems = [];
+    $subtotal = 0.00;
 
-$hash = strtoupper(
-    md5(
-        $PAYHERE_MERCHANT_ID .
-        $orderId .
-        $formattedAmount .
-        $currency .
-        $hashedSecret
-    )
-);
+    foreach ($quantities as $productId => $quantity) {
+        $productStmt->bind_param("i", $productId);
+        $productStmt->execute();
 
+        $result = $productStmt->get_result();
+        $product = $result->fetch_assoc();
 
-/*
-|--------------------------------------------------------------------------
-| Return Payment Data
-|--------------------------------------------------------------------------
-*/
+        if (!$product) {
+            throw new RuntimeException(
+                "A product in your cart is unavailable."
+            );
+        }
 
-echo json_encode([
+        if ((int) $product["StockQuantity"] < $quantity) {
+            throw new RuntimeException(
+                "Not enough stock for " . $product["Title"] . "."
+            );
+        }
 
-    "success" => true,
+        $unitPrice = (float) $product["Price"];
+        $lineTotal = round($unitPrice * $quantity, 2);
+        $subtotal += $lineTotal;
 
-    "payment_url" =>
-        $PAYHERE_PAYMENT_URL,
+        $verifiedItems[] = [
+            "productId" => (int) $product["ProductID"],
+            "quantity" => $quantity,
+            "unitPrice" => $unitPrice
+        ];
+    }
 
-    "merchant_id" =>
-        $PAYHERE_MERCHANT_ID,
+    $productStmt->close();
 
-    "order_id" =>
+    // Calculate the total on the server.
+    // This does not use the amount from the browser.
+    $subtotal = round($subtotal, 2);
+    $totalAmount = round($subtotal + $shippingFee, 2);
+
+    $deliveryAddress = $address . ", " . $city . ", " . $country;
+
+    // Create the database order. OrderID is generated by MariaDB.
+    $orderStmt = $conn->prepare(
+        "INSERT INTO orders
+            (CustomerID, TotalAmount, Status, DeliveryAddress)
+         VALUES (?, ?, 'Pending', ?)"
+    );
+
+    $orderStmt->bind_param(
+        "ids",
+        $customerId,
+        $totalAmount,
+        $deliveryAddress
+    );
+
+    $orderStmt->execute();
+    $orderId = (int) $conn->insert_id;
+    $orderStmt->close();
+
+    // Save each product and its verified price.
+    $itemStmt = $conn->prepare(
+        "INSERT INTO orderitem
+            (OrderID, ProductID, Quantity, UnitPrice)
+         VALUES (?, ?, ?, ?)"
+    );
+
+    foreach ($verifiedItems as $item) {
+        $productId = $item["productId"];
+        $quantity = $item["quantity"];
+        $unitPrice = $item["unitPrice"];
+
+        $itemStmt->bind_param(
+            "iiid",
+            $orderId,
+            $productId,
+            $quantity,
+            $unitPrice
+        );
+
+        $itemStmt->execute();
+    }
+
+    $itemStmt->close();
+
+    // One pending payment record per order.
+    $paymentMethod = "PayHere";
+    $paymentStatus = "Pending";
+
+    $paymentStmt = $conn->prepare(
+        "INSERT INTO payment
+            (OrderID, PaymentMethod, Amount, Status)
+         VALUES (?, ?, ?, ?)"
+    );
+
+    $paymentStmt->bind_param(
+        "isds",
         $orderId,
+        $paymentMethod,
+        $totalAmount,
+        $paymentStatus
+    );
 
-    "items" =>
-        "GIFTORA Gift Order",
+    $paymentStmt->execute();
+    $paymentStmt->close();
 
-    "currency" =>
-        $currency,
+    // All three records must be saved together.
+    $conn->commit();
 
-    "amount" =>
-        $formattedAmount,
+} catch (Throwable $e) {
+    try {
+        $conn->rollback();
+    } catch (Throwable $ignored) {
+        // The transaction may already have been rolled back.
+    }
 
-    "hash" =>
-        $hash,
+    error_log("GIFTORA checkout error: " . $e->getMessage());
 
-    "first_name" =>
-        $firstName,
+    $message = $e instanceof RuntimeException
+        ? $e->getMessage()
+        : "Could not create your order. Please try again.";
 
-    "last_name" =>
-        $lastName,
+    respond(400, $message);
+}
 
-    "email" =>
-        $email,
+// PayHere uses the numeric database OrderID as its order reference.
+$payHereOrderId = (string) $orderId;
+$formattedAmount = number_format($totalAmount, 2, ".", "");
 
-    "phone" =>
-        $phone,
+$hashedSecret = strtoupper(md5($PAYHERE_MERCHANT_SECRET));
 
-    "address" =>
-        $address,
+$hash = strtoupper(md5(
+    $PAYHERE_MERCHANT_ID .
+    $payHereOrderId .
+    $formattedAmount .
+    $currency .
+    $hashedSecret
+));
 
-    "city" =>
-        $city,
-
-    "country" =>
-        $country,
-
-    "return_url" =>
-        $PAYHERE_RETURN_URL,
-
-    "cancel_url" =>
-        $PAYHERE_CANCEL_URL,
-
-    "notify_url" =>
-        $PAYHERE_NOTIFY_URL
-
+// Return the fields expected by checkout.js.
+echo json_encode([
+    "success" => true,
+    "payment_url" => $PAYHERE_PAYMENT_URL,
+    "merchant_id" => $PAYHERE_MERCHANT_ID,
+    "order_id" => $payHereOrderId,
+    "items" => "GIFTORA Order #" . $payHereOrderId,
+    "currency" => $currency,
+    "amount" => $formattedAmount,
+    "hash" => $hash,
+    "first_name" => $firstName,
+    "last_name" => $lastName,
+    "email" => $email,
+    "phone" => $phone,
+    "address" => $address,
+    "city" => $city,
+    "country" => $country,
+    "return_url" => $PAYHERE_RETURN_URL,
+    "cancel_url" => $PAYHERE_CANCEL_URL,
+    "notify_url" => $PAYHERE_NOTIFY_URL
 ]);
