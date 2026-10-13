@@ -286,56 +286,6 @@ The layouts adapt to different screen sizes while maintaining usability and read
 
 ---
 
-## 🚀 Running the Project Locally
-
-### 1. Install XAMPP
-
-Install XAMPP with:
-
-* Apache
-* MySQL
-* PHP
-
-### 2. Clone the Repository
-
-```bash
-git clone <your-repository-url>
-```
-
-### 3. Move the Project
-
-Place the project inside the XAMPP `htdocs` directory:
-
-```text
-C:\xampp\htdocs\GiftShop
-```
-
-### 4. Start XAMPP
-
-Start:
-
-```text
-Apache
-MySQL
-```
-
-### 5. Configure the Database
-
-Create the required MySQL database and configure the database connection in:
-
-```text
-backend/config/database.php
-```
-
-### 6. Open the Website
-
-Open the project in your browser:
-
-```text
-http://localhost/GiftShop/
-```
-
----
 
 ## 🧪 Payment Testing
 
