@@ -1,9 +1,5 @@
+
 document.addEventListener("DOMContentLoaded", function () {
-
-    // =====================================================
-    // ELEMENTS
-    // =====================================================
-
     const cartItemsContainer = document.getElementById("cartItems");
     const emptyCart = document.getElementById("emptyCart");
     const totals = document.getElementById("totals");
@@ -19,29 +15,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const bankTransferAmount = document.getElementById("bankTransferAmount");
     const bankReference = document.getElementById("bankReference");
 
-    // Prevent duplicate submissions
     let isSubmitting = false;
-
-    // =====================================================
-    // CART
-    // =====================================================
-
     let cart = [];
 
+    // =====================================================
+    // LOAD CART
+    // =====================================================
+
     try {
-        const savedCart = JSON.parse(
-            localStorage.getItem("giftoraCart")
-        );
-
+        const savedCart = JSON.parse(localStorage.getItem("giftoraCart"));
         cart = Array.isArray(savedCart) ? savedCart : [];
-
     } catch (error) {
         console.error("Unable to load cart:", error);
         cart = [];
     }
 
     // =====================================================
-    // MONEY FORMAT
+    // HELPERS
     // =====================================================
 
     function money(amount) {
@@ -51,29 +41,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // =====================================================
-    // ERROR MESSAGE
-    // =====================================================
-
     function showError(message) {
         formError.textContent = message;
         formError.style.display = "block";
         formSuccess.style.display = "none";
     }
 
-    // =====================================================
-    // SUCCESS MESSAGE
-    // =====================================================
-
     function showSuccess(message) {
         formSuccess.textContent = message;
         formSuccess.style.display = "block";
         formError.style.display = "none";
     }
-
-    // =====================================================
-    // CALCULATE TOTALS
-    // =====================================================
 
     function calculateTotals() {
         let subtotal = 0;
@@ -93,12 +71,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const shipping = subtotal > 0 ? 350 : 0;
-        const total = subtotal + shipping;
 
         return {
             subtotal: subtotal,
             shipping: shipping,
-            total: total
+            total: subtotal + shipping
         };
     }
 
@@ -147,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
             info.className = "item-info";
 
             const name = document.createElement("strong");
-            name.textContent = item.name || "Gift item";
+            name.textContent = item.name || item.title || "Gift item";
 
             const qty = document.createElement("small");
             qty.textContent = "Qty: " + quantity;
@@ -162,11 +139,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const shipping = subtotal > 0 ? 350 : 0;
-        const total = subtotal + shipping;
 
         document.getElementById("subtotal").textContent = money(subtotal);
         document.getElementById("shipping").textContent = money(shipping);
-        document.getElementById("total").textContent = money(total);
+        document.getElementById("total").textContent = money(subtotal + shipping);
 
         updateBankTransferAmount();
 
@@ -190,11 +166,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     billingSame.addEventListener("change", updateBillingFields);
-
     updateBillingFields();
 
     // =====================================================
-    // GET CUSTOMER DETAILS
+    // CUSTOMER DETAILS
     // =====================================================
 
     function getCustomerDetails() {
@@ -219,11 +194,9 @@ document.addEventListener("DOMContentLoaded", function () {
             'input[name="paymentMethod"]:checked'
         );
 
-        if (!selectedPayment) {
-            return;
-        }
+        if (!selectedPayment) return;
 
-        const paymentMethod = selectedPayment.value;
+        const method = selectedPayment.value;
 
         codDetails.hidden = true;
         bankTransferDetails.hidden = true;
@@ -231,71 +204,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
         bankReference.required = false;
 
-        if (paymentMethod === "Cash on Delivery") {
+        if (method === "Cash on Delivery") {
             codDetails.hidden = false;
-
-        } else if (paymentMethod === "Bank Transfer") {
+        } else if (method === "Bank Transfer") {
             bankTransferDetails.hidden = false;
             bankReference.required = true;
             updateBankTransferAmount();
-
-        } else if (paymentMethod === "PayHere") {
+        } else if (method === "PayHere") {
             payhereDetails.hidden = false;
         }
     }
 
-    // =====================================================
-    // BANK TRANSFER AMOUNT
-    // =====================================================
-
     function updateBankTransferAmount() {
-        if (!bankTransferAmount) {
-            return;
+        if (bankTransferAmount) {
+            bankTransferAmount.textContent = money(calculateTotals().total);
         }
-
-        const currentTotals = calculateTotals();
-        bankTransferAmount.textContent = money(currentTotals.total);
     }
 
-    // =====================================================
-    // PAYMENT RADIO EVENTS
-    // =====================================================
-
-    document.querySelectorAll('input[name="paymentMethod"]')
-        .forEach(function (radio) {
+    document.querySelectorAll('input[name="paymentMethod"]').forEach(
+        function (radio) {
             radio.addEventListener("change", updatePaymentUI);
-        });
+        }
+    );
 
     updatePaymentUI();
 
     // =====================================================
-    // GENERATE ORDER ID
-    // =====================================================
-
-    function generateOrderId() {
-        const now = new Date();
-        const date = now.getTime();
-
-        const random = Math.floor(
-            1000 + Math.random() * 9000
-        );
-
-        return "GFT-" + date + "-" + random;
-    }
-
-    // =====================================================
-    // SAVE ORDER LOCALLY
-    // =====================================================
-
-    function saveOrder(order) {
-        localStorage.setItem(
-            "giftoraLastOrder",
-            JSON.stringify(order)
-        );
-    }
-
-    // =====================================================
-    // CREATE ORDER OBJECT
+    // LOCAL ORDER DETAILS FOR CONFIRMATION PAGE
     // =====================================================
 
     function createOrderObject(paymentMethod) {
@@ -303,37 +238,30 @@ document.addEventListener("DOMContentLoaded", function () {
         const currentTotals = calculateTotals();
 
         return {
-            orderId: generateOrderId(),
+            orderId: null,
             orderDate: new Date().toISOString(),
-
             customer: {
                 fullName: customer.fullName,
                 phone: customer.phone,
                 email: customer.email
             },
-
             shippingAddress: {
                 address: customer.address,
                 city: customer.city,
                 postalCode: customer.postalCode,
                 country: customer.country
             },
-
             billingSameAsShipping: billingSame.checked,
-
             billingAddress: billingSame.checked ? null : {
                 address: document.getElementById("billingAddress").value.trim(),
                 city: document.getElementById("billingCity").value.trim(),
                 postalCode: document.getElementById("billingPostal").value.trim()
             },
-
             notes: customer.notes,
             paymentMethod: paymentMethod,
-
             bankReference: paymentMethod === "Bank Transfer"
                 ? bankReference.value.trim()
                 : null,
-
             items: cart,
             subtotal: currentTotals.subtotal,
             shipping: currentTotals.shipping,
@@ -341,8 +269,12 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
+    function saveOrder(order) {
+        localStorage.setItem("giftoraLastOrder", JSON.stringify(order));
+    }
+
     // =====================================================
-    // PAYHERE PAYMENT
+    // PAYHERE — KEEP EXISTING INTEGRATION
     // =====================================================
 
     async function startPayHerePayment() {
@@ -350,169 +282,183 @@ document.addEventListener("DOMContentLoaded", function () {
         const currentTotals = calculateTotals();
 
         if (currentTotals.total <= 0) {
-            showError("Your order total must be greater than zero.");
-            return;
+            throw new Error("Your order total must be greater than zero.");
         }
 
         const paymentData = {
-    fullName: customer.fullName,
-    phone: customer.phone,
-    email: customer.email,
-    address: customer.address,
-    city: customer.city,
-    country: customer.country,
-
-    // Send product IDs and quantities.
-    // PHP will calculate the actual prices from the database.
-    items: cart.map(function (item) {
-        return {
-            productId: Number(item.productId),
-            quantity: Number(item.quantity)
+            fullName: customer.fullName,
+            phone: customer.phone,
+            email: customer.email,
+            address: customer.address,
+            city: customer.city,
+            country: customer.country,
+            items: cart.map(function (item) {
+                return {
+                    productId: Number(item.productId ?? item.ProductID),
+                    quantity: Number(item.quantity)
+                };
+            })
         };
-    })
-};
+
+        const response = await fetch(
+            "backend/api/payhere/create_payment.php",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "same-origin",
+                body: JSON.stringify(paymentData)
+            }
+        );
+
+        const responseText = await response.text();
+        let result;
+
         try {
-            placeOrderBtn.disabled = true;
-            placeOrderBtn.textContent = "Connecting to PayHere...";
-
-            const response = await fetch(
-                "backend/api/payhere/create_payment.php",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(paymentData)
-                }
-            );
-
-            // Read the response as text first so that PHP errors
-            // or invalid JSON can be reported clearly.
-            const responseText = await response.text();
-
-            let result;
-
-            try {
-                result = JSON.parse(responseText);
-            } catch (parseError) {
-                console.error("Invalid PHP response:", responseText);
-
-                throw new Error(
-                    "The server returned an invalid response. Check create_payment.php and the PHP error log."
-                );
-            }
-
-            if (!response.ok) {
-                throw new Error(
-                    result.message ||
-                    "Server returned HTTP " + response.status
-                );
-            }
-
-            console.log("PayHere response:", result);
-
-            if (!result.success) {
-                throw new Error(
-                    result.message ||
-                    "Unable to create PayHere payment."
-                );
-            }
-
-            // Check essential values before redirecting.
-            const requiredFields = [
-                "payment_url",
-                "merchant_id",
-                "return_url",
-                "cancel_url",
-                "notify_url",
-                "first_name",
-                "last_name",
-                "email",
-                "phone",
-                "address",
-                "city",
-                "country",
-                "order_id",
-                "items",
-                "currency",
-                "amount",
-                "hash"
-            ];
-
-            const missingFields = requiredFields.filter(function (key) {
-                return (
-                    result[key] === undefined ||
-                    result[key] === null ||
-                    String(result[key]).trim() === ""
-                );
-            });
-
-            if (missingFields.length > 0) {
-                console.error("Missing PayHere fields:", missingFields);
-
-                throw new Error(
-                    "The PHP response is missing required PayHere fields: " +
-                    missingFields.join(", ")
-                );
-            }
-
-            // Create the form required by PayHere.
-            const payhereForm = document.createElement("form");
-
-            payhereForm.method = "POST";
-            payhereForm.action = result.payment_url;
-
-            const fields = {
-                merchant_id: result.merchant_id,
-                return_url: result.return_url,
-                cancel_url: result.cancel_url,
-                notify_url: result.notify_url,
-                first_name: result.first_name,
-                last_name: result.last_name,
-                email: result.email,
-                phone: result.phone,
-                address: result.address,
-                city: result.city,
-                country: result.country,
-                order_id: result.order_id,
-                items: result.items,
-                currency: result.currency,
-                amount: result.amount,
-                hash: result.hash
-            };
-
-            Object.keys(fields).forEach(function (key) {
-                const input = document.createElement("input");
-
-                input.type = "hidden";
-                input.name = key;
-                input.value = String(fields[key]);
-
-                payhereForm.appendChild(input);
-            });
-
-            document.body.appendChild(payhereForm);
-
-            console.log("Redirecting to PayHere...");
-
-            // Submit the form to the PayHere payment page.
-            payhereForm.submit();
-
+            result = JSON.parse(responseText);
         } catch (error) {
-            console.error("PayHere Error:", error);
-
-            showError(
-                error.message ||
-                "Unable to connect to PayHere. Please try again."
-            );
-
-            placeOrderBtn.disabled = false;
-            placeOrderBtn.textContent = "Place Order";
+            console.error("Invalid PayHere response:", responseText);
+            throw new Error("The server returned an invalid PayHere response.");
         }
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Unable to create PayHere payment.");
+        }
+
+        const requiredFields = [
+            "payment_url", "merchant_id", "return_url", "cancel_url",
+            "notify_url", "first_name", "last_name", "email", "phone",
+            "address", "city", "country", "order_id", "items",
+            "currency", "amount", "hash"
+        ];
+
+        const missingFields = requiredFields.filter(function (key) {
+            return result[key] === undefined ||
+                result[key] === null ||
+                String(result[key]).trim() === "";
+        });
+
+        if (missingFields.length) {
+            throw new Error(
+                "Missing PayHere fields: " + missingFields.join(", ")
+            );
+        }
+
+        const payhereForm = document.createElement("form");
+        payhereForm.method = "POST";
+        payhereForm.action = result.payment_url;
+
+        const fields = {
+            merchant_id: result.merchant_id,
+            return_url: result.return_url,
+            cancel_url: result.cancel_url,
+            notify_url: result.notify_url,
+            first_name: result.first_name,
+            last_name: result.last_name,
+            email: result.email,
+            phone: result.phone,
+            address: result.address,
+            city: result.city,
+            country: result.country,
+            order_id: result.order_id,
+            items: result.items,
+            currency: result.currency,
+            amount: result.amount,
+            hash: result.hash
+        };
+
+        Object.entries(fields).forEach(function ([key, value]) {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = key;
+            input.value = String(value);
+            payhereForm.appendChild(input);
+        });
+
+        document.body.appendChild(payhereForm);
+        payhereForm.submit();
     }
 
     // =====================================================
-    // FORM SUBMIT
+    // SAVE COD / BANK TRANSFER ORDER TO DATABASE
+    // =====================================================
+
+    async function createDatabaseOrder(paymentMethod) {
+        const customer = getCustomerDetails();
+
+        const order = createOrderObject(paymentMethod);
+
+        const deliveryAddress = [
+            customer.address,
+            customer.city,
+            customer.postalCode,
+            customer.country
+        ].filter(Boolean).join(", ");
+
+        const orderData = {
+            deliveryAddress: deliveryAddress,
+            paymentMethod: paymentMethod,
+            bankReference: paymentMethod === "Bank Transfer"
+                ? bankReference.value.trim()
+                : "",
+            items: cart.map(function (item) {
+                return {
+                    productId: Number(item.productId ?? item.ProductID),
+                    quantity: Number(item.quantity)
+                };
+            })
+        };
+
+        if (!orderData.items.length ||
+            orderData.items.some(function (item) {
+                return !Number.isInteger(item.productId) ||
+                    item.productId <= 0 ||
+                    !Number.isInteger(item.quantity) ||
+                    item.quantity < 1;
+            })) {
+            throw new Error(
+                "Some cart items are missing valid product IDs or quantities. Please remove them and add the products again."
+            );
+        }
+
+        const response = await fetch("backend/api/create_order.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            body: JSON.stringify(orderData)
+        });
+
+        const responseText = await response.text();
+        let result;
+
+        try {
+            result = JSON.parse(responseText);
+        } catch (error) {
+            console.error("Invalid order API response:", responseText);
+            throw new Error(
+                "The server returned an invalid response while saving your order."
+            );
+        }
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Unable to save your order.");
+        }
+
+        // The database-generated ID is the real order ID.
+        order.orderId = result.orderId;
+        order.databaseOrderId = result.orderId;
+        order.status = "Pending";
+        order.paymentStatus = paymentMethod === "Cash on Delivery"
+            ? "Payment Pending"
+            : "Bank Transfer Pending";
+
+        saveOrder(order);
+        localStorage.removeItem("giftoraCart");
+
+        window.location.href = "order_confirmation.html";
+    }
+
+    // =====================================================
+    // FORM SUBMISSION
     // =====================================================
 
     form.addEventListener("submit", async function (event) {
@@ -521,20 +467,14 @@ document.addEventListener("DOMContentLoaded", function () {
         formError.style.display = "none";
         formSuccess.style.display = "none";
 
-        if (isSubmitting) {
-            return;
-        }
+        if (isSubmitting) return;
 
-        // Check cart.
         if (cart.length === 0) {
             showError("Your cart is empty. Please add a gift first.");
             return;
         }
 
-        // Check form fields.
-        if (!form.reportValidity()) {
-            return;
-        }
+        if (!form.reportValidity()) return;
 
         const selectedPayment = document.querySelector(
             'input[name="paymentMethod"]:checked'
@@ -547,80 +487,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const paymentMethod = selectedPayment.value;
 
-        // PayHere payment.
-        if (paymentMethod === "PayHere") {
-            isSubmitting = true;
-
-            await startPayHerePayment();
-
-            // If the browser stays on checkout because an error
-            // occurred, allow the customer to try again.
-            isSubmitting = false;
-
+        if (paymentMethod === "Bank Transfer" &&
+            !bankReference.value.trim()) {
+            showError("Please enter your bank transfer reference number.");
+            bankReference.focus();
             return;
-        }
-
-        // Bank transfer validation.
-        if (paymentMethod === "Bank Transfer") {
-            if (!bankReference.value.trim()) {
-                showError(
-                    "Please enter your bank transfer reference number."
-                );
-
-                bankReference.focus();
-                return;
-            }
         }
 
         isSubmitting = true;
         placeOrderBtn.disabled = true;
+        placeOrderBtn.textContent = "Processing Order...";
 
         try {
-            const order = createOrderObject(paymentMethod);
-
-            // Cash on Delivery.
-            if (paymentMethod === "Cash on Delivery") {
-                order.status = "Order Received";
-                order.paymentStatus = "Payment Pending";
-
-                saveOrder(order);
-
-                localStorage.removeItem("giftoraCart");
-
-                window.location.href = "order_confirmation.html";
+            if (paymentMethod === "PayHere") {
+                await startPayHerePayment();
                 return;
             }
 
-            // Bank Transfer.
-            if (paymentMethod === "Bank Transfer") {
-                order.status = "Pending Payment Verification";
-                order.paymentStatus = "Bank Transfer Pending";
-
-                saveOrder(order);
-
-                localStorage.removeItem("giftoraCart");
-
-                window.location.href = "order_confirmation.html";
+            if (
+                paymentMethod === "Cash on Delivery" ||
+                paymentMethod === "Bank Transfer"
+            ) {
+                await createDatabaseOrder(paymentMethod);
                 return;
             }
 
-            showError("Please select a valid payment method.");
+            throw new Error("Please select a valid payment method.");
 
         } catch (error) {
             console.error("Checkout error:", error);
-
-            showError("Unable to process your order. Please try again.");
+            showError(error.message || "Unable to process your order. Please try again.");
 
             placeOrderBtn.disabled = false;
+            placeOrderBtn.textContent = "Place Order";
             isSubmitting = false;
         }
     });
 
     // =====================================================
-    // INITIAL RENDER
+    // INITIALISE PAGE
     // =====================================================
 
     renderCart();
     updatePaymentUI();
-
 });
