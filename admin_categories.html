@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Categories | GIFTORA Admin</title>
+        <link rel="stylesheet" href="admin_management.css">
+    </head>
+    
+    <body>
+        <header class="topbar">
+            <div class="brand">
+                GIFT<span>ORA</span> <span style="font-size:12px;color:#786f69;letter-spacing:0">ADMIN</span>
+            </div>
+
+            <nav>
+                <a href="admin_dashboard.html">Dashboard</a>
+                <a href="admin_products.html">Products</a>
+                <a href="admin_categories.html">Categories</a>
+                <a href="admin_orders.html">Orders</a>
+                <a href="admin_customers.html">Customers</a>
+                <a href="admin_login.html" id="logoutLink">Sign out</a>
+            </nav>
+        
+        </header>
+        
+        <main><div class="pagehead"><div>
+            <h1>Category Management</h1>
+            <p class="subtitle">Organize the products in your store.</p>
+        </div>
+    </div>
+    <div id="message" class="message"></div>
+
+<section class="panel">
+    <h2 id="formTitle" style="margin-top:0">Add a category</h2>
+    
+    <form id="categoryForm">
+        <input type="hidden" name="action" value="create">
+        <input type="hidden" name="category_id" id="categoryId">
+
+        <div class="formgrid">
+            <div class="field">
+                <label for="name">Category name *</label>
+                <input id="name" name="name" maxlength="100" required>
+            </div>
+            <div class="field">
+                <label for="description">Description</label>
+                <input id="description" name="description" maxlength="500">
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn" id="saveButton">Save category</button>
+            <button class="btn secondary" id="cancelEdit" type="button" hidden>Cancel edit</button>
+        </div>
+    </form>
+</section>
+
+<section class="panel">
+    <h2 style="margin-top:0">Categories</h2>
+    <div class="tablewrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th><th>Name</th>
+                    <th>Description</th><th>Products</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="categoriesBody">
+                <tr>
+                    <td colspan="5" class="empty">Loading...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+</main>
+<script src="admin_categories.js"></script>
+</body>
+</html>

@@ -1,3 +1,4 @@
+
 const loginForm = document.getElementById("adminLoginForm");
 const loginMessage = document.getElementById("loginMessage");
 const loginButton = document.getElementById("loginButton");
@@ -14,8 +15,9 @@ loginForm.addEventListener("submit", async function (event) {
     try {
         const formData = new FormData(loginForm);
 
+        // Use the separate ADMIN login API.
         const response = await fetch(
-            "/giftora/backend/api/login.php",
+            "/giftora/backend/admin/login.php",
             {
                 method: "POST",
                 body: formData,

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Customers | GIFTORA Admin</title>
+        <link rel="stylesheet" href="admin_management.css">
+    </head>
+    
+    <body>
+    <header class="topbar">
+        <div class="brand">
+            GIFT<span>ORA</span> <span style="font-size:12px;color:#786f69;letter-spacing:0">ADMIN</span>
+        </div>
+        
+        <nav>
+                <a href="admin_dashboard.html">Dashboard</a>
+                <a href="admin_products.html">Products</a>
+                <a href="admin_categories.html">Categories</a>
+                <a href="admin_orders.html">Orders</a>
+                <a href="admin_customers.html">Customers</a>
+                <a href="admin_login.html" id="logoutLink">Sign out</a>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="pagehead"><div>
+            <h1>Customer Management</h1><p class="subtitle">View registered customers. Password hashes are never displayed.</p>
+        </div>
+        
+        <input class="search" id="search" placeholder="Search customers...">
+    </div>
+    
+    <div id="message" class="message">
+
+    </div>
+
+    <section class="panel">
+        <div class="tablewrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Shipping address</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody id="customersBody">
+                    <tr>
+                        <td colspan="6" class="empty">Loading customers...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script src="admin_customers.js"></script>
+</body>
+</html>

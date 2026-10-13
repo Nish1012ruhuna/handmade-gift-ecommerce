@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Orders | GIFTORA Admin</title>
+    <link rel="stylesheet" href="admin_management.css">
+</head>
+
+<body>
+<header class="topbar">
+    <div class="brand">
+        GIFT<span>ORA</span> <span style="font-size:12px;color:#786f69;letter-spacing:0">ADMIN</span>
+    </div>
+    
+    <nav>
+                <a href="admin_dashboard.html">Dashboard</a>
+                <a href="admin_products.html">Products</a>
+                <a href="admin_categories.html">Categories</a>
+                <a href="admin_orders.html">Orders</a>
+                <a href="admin_customers.html">Customers</a>
+                <a href="admin_login.html" id="logoutLink">Sign out</a>
+            </nav>
+        
+    </header>
+    <main>
+        <div class="pagehead">
+            <div>
+                <h1>Order Management</h1>
+                <p class="subtitle">Review orders and update their status.</p>
+            </div>
+            
+            <button class="btn" id="refresh">Refresh orders</button>
+        </div>
+        
+        <div id="message" class="message"></div>
+
+<section class="panel">
+    <div class="tablewrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Delivery address</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            
+            <tbody id="ordersBody">
+                <tr>
+                    <td colspan="7" class="empty">Loading orders...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</main>
+
+<script src="admin_orders.js"></script>
+
+</body>
+</html>

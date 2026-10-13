@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Products | GIFTORA Admin</title>
+    
+    <link rel="stylesheet" href="admin_management.css">
+</head>
+
+<body>
+<header class="topbar">
+    <div class="brand">
+        GIFT<span>ORA</span> <span style="font-size:12px;color:#786f69;letter-spacing:0">ADMIN</span>
+    </div>
+    
+            <nav>
+                <a href="admin_dashboard.html">Dashboard</a>
+                <a href="admin_products.html">Products</a>
+                <a href="admin_categories.html">Categories</a>
+                <a href="admin_orders.html">Orders</a>
+                <a href="admin_customers.html">Customers</a>
+                <a href="admin_login.html" id="logoutLink">Sign out</a>
+            </nav>
+</header>
+
+<main>
+    <div class="pagehead">
+        <div>
+            <h1>Product Management</h1>
+            <p class="subtitle">Add, edit, and manage GIFTORA products.</p>
+        </div>
+    </div>
+
+<div id="message" class="message"></div>
+
+<section class="panel">
+    <h2 id="formTitle" style="margin-top:0">Add a product</h2>
+    <form id="productForm">
+        <input type="hidden" name="action" value="create">
+        <input type="hidden" name="product_id" id="productId">
+
+<div class="formgrid">
+    <div class="field">
+        <label for="title">Product name *</label>
+        <input id="title" name="title" maxlength="200" required>
+    </div>
+
+    <div class="field">
+        <label for="categoryId">Category *</label>
+        <select id="categoryId" name="category_id" required>
+            <option value="">Loading categories...</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label for="price">Price (LKR) *</label>
+        <input id="price" name="price" type="number" min="0" step="0.01" required>
+    </div>
+
+    <div class="field">
+        <label for="stock">Stock quantity *</label>
+        <input id="stock" name="stock_quantity" type="number" min="0" step="1" required>
+    </div>
+
+    <div class="field full">
+        <label for="imageUrl">Image path or URL</label>
+        <input id="imageUrl" name="image_url" maxlength="500" placeholder="shop_images/product.jpg">
+    </div>
+
+    <div class="field full">
+        <label for="description">Description</label>
+        <textarea id="description" name="description"></textarea>
+    </div>
+
+    <div class="field full">
+        <label class="checkboxrow">
+            <input type="checkbox" id="customizable" name="customizable" value="1"> This product can be customized
+        </label>
+    </div>
+</div>
+
+<div class="actions">
+    <button class="btn" id="saveButton" type="submit">Save product</button>
+    <button class="btn secondary" type="button" id="cancelEdit" hidden>Cancel edit</button>
+</div>
+</form>
+</section>
+
+<section class="panel">
+    <div class="pagehead">
+        <div>
+            <h2 style="margin:0">Products</h2>
+            <p class="subtitle">Use Edit to load a product into the form.</p>
+        </div>
+        <input class="search" id="search" placeholder="Search products...">
+    </div>
+
+    <div class="tablewrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Customizable</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            
+            <tbody id="productsBody">
+                <tr>
+                    <td colspan="7" class="empty">Loading products...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+</main>
+
+<script src="admin_products.js"></script>
+
+</body>
+</html>
