@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Customer Inquiries | GIFTORA Admin</title>
+    <link rel="stylesheet" href="admin_management.css">
+
+    <style>
+        .reply-box {
+            min-width: 240px;
+        }
+
+        .reply-box textarea {
+            min-height: 90px;
+            margin-bottom: 8px;
+        }
+
+        .reply-box .btn {
+            width: 100%;
+        }
+
+        .reply-text {
+            min-width: 180px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .status-open {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-replied {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .inquiry-message {
+            min-width: 200px;
+            max-width: 350px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="brand">
+        GIFT<span>ORA</span>
+        <span style="font-size:12px;color:#786f69;letter-spacing:0">
+            ADMIN
+        </span>
+    </div>
+
+    <nav>
+        <a href="admin_dashboard.html">Dashboard</a>
+        <a href="admin_products.html">Products</a>
+        <a href="admin_categories.html">Categories</a>
+        <a href="admin_orders.html">Orders</a>
+        <a href="admin_customers.html">Customers</a>
+        <a href="admin_inquiries.html">Inquiries</a>
+        <a href="admin_login.html" id="logoutLink">Sign out</a>
+    </nav>
+</header>
+
+<main>
+    <div class="pagehead">
+        <div>
+            <h1 id="pageTitle">Customer Inquiries</h1>
+            <p class="subtitle" id="pageSubtitle">
+                Read customer messages and reply to their inquiries.
+            </p>
+        </div>
+
+        <input
+            class="search"
+            id="search"
+            type="search"
+            placeholder="Search inquiries..."
+        >
+    </div>
+
+    <div id="message" class="message" role="status"></div>
+
+    <section class="panel">
+        <div class="tablewrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Inquiry ID</th>
+                        <th>Customer ID</th>
+                        <th>Order ID</th>
+                        <th>Subject</th>
+                        <th>Customer Message</th>
+                        <th>Admin Reply</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Replied</th>
+                    </tr>
+                </thead>
+
+                <tbody id="inquiriesTableBody">
+                    <tr>
+                        <td colspan="9" class="empty">
+                            Loading inquiries...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <p>
+        <a href="admin_customers.html" class="btn secondary">
+            Back to Customers
+        </a>
+
+        <a href="admin_dashboard.html" class="btn secondary">
+            Back to Dashboard
+        </a>
+    </p>
+</main>
+
+<script src="admin_inquiries.js"></script>
+</body>
+</html>
