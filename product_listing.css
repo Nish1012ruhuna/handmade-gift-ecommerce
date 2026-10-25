@@ -748,3 +748,43 @@ footer {
         text-align: center;
     }
 }
+
+
+
+/* ============================================================
+   PRODUCT STOCK DISPLAY
+   ============================================================ */
+
+.product-stock {
+    margin: 10px 0 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.product-stock.in-stock {
+    color: #1f6f5b;
+}
+
+.product-stock.out-of-stock {
+    color: #dc3545;
+}
+
+.product-stock.stock-unknown {
+    color: #b7791f;
+}
+
+/* Disabled Add to Cart button */
+
+.add-cart-btn:disabled,
+.add-cart-btn.disabled-cart-btn {
+    background-color: #cccccc;
+    color: #666666;
+    border-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.add-cart-btn:disabled:hover,
+.add-cart-btn.disabled-cart-btn:hover {
+    background-color: #cccccc;
+}

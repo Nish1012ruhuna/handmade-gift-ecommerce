@@ -364,3 +364,31 @@ Possible future improvements include:
 ### 💚 Made with love for every special moment
 
 **GIFTORA — Give something meaningful. 🎁**
+
+
+## Customer help and information pages (added)
+
+The customer-facing help pages now include:
+
+- `help.html` — help centre and common questions.
+- `track_order.html` + `track_order.js` — checks the current PHP session and loads the signed-in customer's order history from `backend/api/orders.php`. The customer can select an order and view its saved status, date, total and delivery address.
+- `about.html` — about GIFTORA.
+- `contact.html` — support email, phone and address.
+- `shipping.html` — shipping and delivery information.
+- `returns.html` — returns and cancellation guidance.
+- `privacy.html` — starter privacy policy.
+- `terms.html` — starter terms and conditions.
+- `info-pages.css` — shared responsive styling for the new information pages.
+
+The home page footer and customer navigation now link to the actual page names, including the help centre, order tracking and policy pages. Placeholder `#` links and stale `index.html` / `shop.html` links in the customer-facing navigation were corrected where applicable.
+
+### Run and test the new pages
+
+1. Copy the project folder into your XAMPP `htdocs` directory (for example, `C:\xampp\htdocs\giftora`).
+2. Start Apache and MySQL from the XAMPP Control Panel and import/configure the existing `giftora` database as described in the project setup.
+3. Open `http://localhost/giftora/home.html` rather than opening the HTML file directly.
+4. Test every footer link on the home page. Each should open its own information page.
+5. Open Track Order while signed out; it should ask you to sign in. Sign in with a customer account that has orders, then open Track Order again and select an order.
+6. The displayed order status is the value currently stored in the `orders.Status` database column. The page does not invent courier tracking scans or delivery estimates.
+
+**Before public deployment:** review the privacy/terms wording against your real business practices and local legal requirements. Confirm contact details and shipping/returns rules. PayHere sandbox mode is for testing, not live payments.

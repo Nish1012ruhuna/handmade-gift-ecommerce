@@ -166,8 +166,32 @@ CREATE TABLE payment (
 );
 
 
+CREATE TABLE order_inquiry (
+    InquiryID INT AUTO_INCREMENT PRIMARY KEY,
+    OrderID INT NOT NULL,
+    CustomerID INT NOT NULL,
+    Subject VARCHAR(100) NOT NULL,
+    Message TEXT NOT NULL,
+    InquiryStatus VARCHAR(30) NOT NULL DEFAULT 'Open',
+    CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_inquiry_order
+        FOREIGN KEY (OrderID)
+        REFERENCES orders(OrderID)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_inquiry_customer
+        FOREIGN KEY (CustomerID)
+        REFERENCES customer(CustomerID)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
 
 
+ALTER TABLE order_inquiry
+    ADD COLUMN AdminReply TEXT NULL,
+    ADD COLUMN RepliedAt DATETIME NULL;
 
 
 
