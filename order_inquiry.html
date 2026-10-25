@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ask About Your Order | GIFTORA</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --green: #1f6f5b;
+            --green-dark: #185747;
+            --cream: #fffdf9;
+            --text: #28332f;
+            --muted: #68736e;
+            --border: #e5e9e5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            color: var(--text);
+            background: var(--cream);
+        }
+
+        .topbar {
+            padding: 10px 5%;
+            background: var(--green);
+            color: white;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .topbar a {
+            color: white;
+            text-decoration: none;
+        }
+
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav {
+            max-width: 1100px;
+            margin: auto;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            color: var(--green);
+            font-weight: 700;
+            font-size: 23px;
+            text-decoration: none;
+        }
+
+        .navlinks {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .navlinks a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .navlinks a:hover {
+            color: var(--green);
+        }
+
+        main {
+            width: min(720px, 92%);
+            margin: 55px auto 70px;
+        }
+
+        .eyebrow {
+            color: var(--green);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 2px;
+            font-size: 12px;
+        }
+
+        h1 {
+            font-family: "Playfair Display", serif;
+            font-size: clamp(30px, 5vw, 42px);
+            margin: 8px 0 12px;
+        }
+
+        .intro {
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: clamp(20px, 4vw, 34px);
+            margin-top: 25px;
+            box-shadow: 0 8px 30px rgba(20, 60, 45, 0.05);
+        }
+
+        .order-badge {
+            background: #eef6f1;
+            color: var(--green-dark);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .form-row {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px 14px;
+            font: inherit;
+            font-size: 14px;
+            border: 1px solid #d9e0da;
+            border-radius: 9px;
+            background: white;
+            color: var(--text);
+        }
+
+        select:focus,
+        textarea:focus {
+            outline: 2px solid rgba(31, 111, 91, 0.18);
+            border-color: var(--green);
+        }
+
+        textarea {
+            min-height: 155px;
+            resize: vertical;
+        }
+
+        .hint {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 9px;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid var(--green);
+        }
+
+        .primary {
+            background: var(--green);
+            color: white;
+        }
+
+        .primary:hover {
+            background: var(--green-dark);
+        }
+
+        .secondary {
+            background: white;
+            color: var(--green);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .notice {
+            display: none;
+            padding: 13px 15px;
+            border-radius: 9px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .notice.error {
+            display: block;
+            color: #8c2929;
+            background: #fff0f0;
+            border: 1px solid #f0caca;
+        }
+
+        .notice.success {
+            display: block;
+            color: #185747;
+            background: #eef8f0;
+            border: 1px solid #c9e7d1;
+        }
+
+        .footer {
+            background: #173d33;
+            color: white;
+            padding: 24px 5%;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .footer a {
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .nav {
+                align-items: flex-start;
+            }
+
+            .navlinks {
+                gap: 12px;
+            }
+
+            main {
+                margin-top: 35px;
+            }
+
+            .actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <span>🚚 Free delivery on orders over Rs. 2,000</span>
+        <a href="help.html">Help Centre</a>
+    </div>
+
+    <header>
+        <div class="nav">
+            <a class="brand" href="home.html">🎁 GIFTORA</a>
+
+            <nav class="navlinks">
+                <a href="home.html">Home</a>
+                <a href="product_listing.html">Shop</a>
+                <a href="track_order.html">Track Order</a>
+                <a href="customer_dashboard.html">My Account</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <p class="eyebrow">CUSTOMER SUPPORT</p>
+        <h1>How can we help? 💚</h1>
+
+        <p class="intro">
+            Have a question about your GIFTORA order? Tell us what happened.
+            Our team can review your enquiry and help you with the next steps.
+        </p>
+
+        <section class="panel">
+            <div id="orderBadge" class="order-badge">
+                Preparing your order enquiry…
+            </div>
+
+            <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+            <form id="inquiryForm">
+                <div class="form-row">
+                    <label for="subject">What do you need help with?</label>
+
+                    <select id="subject" name="subject" required>
+                        <option value="">Select a subject</option>
+                        <option value="Order status">Order status</option>
+                        <option value="Delivery delay">Delivery delay</option>
+                        <option value="Payment issue">Payment issue</option>
+                        <option value="Product issue">Product issue</option>
+                        <option value="Change my order">Change my order</option>
+                        <option value="Cancellation or return">
+                            Cancellation or return
+                        </option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label for="message">Describe your question or issue</label>
+
+                    <textarea
+                        id="message"
+                        name="message"
+                        minlength="10"
+                        maxlength="5000"
+                        required
+                        placeholder="Please tell us how we can help with this order..."
+                    ></textarea>
+
+                    <p class="hint">
+                        Please enter at least 10 characters. Do not include
+                        passwords or full payment-card details.
+                    </p>
+                </div>
+
+                <button id="submitButton" class="btn primary" type="submit">
+                    Submit Enquiry
+                </button>
+            </form>
+
+            <div class="actions">
+                <a class="btn secondary" href="track_order.html">
+                    Back to Track Order
+                </a>
+
+                <a class="btn secondary" href="contact.html">
+                    Contact Us
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        🎁 GIFTORA — Handmade and personalized gifts created with love.
+        <br><br>
+        <a href="contact.html">Contact Support</a>
+        &nbsp; | &nbsp;
+        <a href="help.html">Help Centre</a>
+    </footer>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const orderID = Number(params.get("order_id"));
+
+        const form = document.getElementById("inquiryForm");
+        const badge = document.getElementById("orderBadge");
+        const notice = document.getElementById("notice");
+        const submitButton = document.getElementById("submitButton");
+
+        function showNotice(message, type) {
+            notice.textContent = message;
+            notice.className = "notice " + type;
+        }
+
+        if (!Number.isSafeInteger(orderID) || orderID <= 0) {
+            badge.textContent = "No valid order was selected.";
+            showNotice(
+                "Please return to Track Order and select the order you need help with.",
+                "error"
+            );
+
+            form.hidden = true;
+        } else {
+            badge.textContent = "Enquiry for Order #" + orderID;
+        }
+
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            if (!Number.isSafeInteger(orderID) || orderID <= 0) {
+                showNotice("Please select a valid order first.", "error");
+                return;
+            }
+
+            const subject = document.getElementById("subject").value;
+            const message = document.getElementById("message").value.trim();
+
+            if (message.length < 10) {
+                showNotice(
+                    "Please explain your issue in at least 10 characters.",
+                    "error"
+                );
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = "Submitting…";
+
+            try {
+                const response = await fetch(
+                    "backend/api/create_order_inquiry.php",
+                    {
+                        method: "POST",
+                        credentials: "same-origin",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            orderID: orderID,
+                            subject: subject,
+                            message: message
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    if (response.status === 401) {
+                        throw new Error(
+                            "Please sign in with your customer account, then submit your enquiry."
+                        );
+                    }
+
+                    throw new Error(
+                        data.message || "Unable to submit your enquiry."
+                    );
+                }
+
+                showNotice(
+                    data.message + " Your enquiry reference is #" +
+                    data.inquiryID + ".",
+                    "success"
+                );
+
+                form.reset();
+                form.hidden = true;
+                submitButton.textContent = "Enquiry Submitted";
+
+            } catch (error) {
+                showNotice(
+                    error.message ||
+                    "Something went wrong. Please try again.",
+                    "error"
+                );
+
+                submitButton.disabled = false;
+                submitButton.textContent = "Submit Enquiry";
+            }
+        });
+    </script>
+</body>
+</html>
