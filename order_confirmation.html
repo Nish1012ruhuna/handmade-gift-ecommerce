@@ -1390,6 +1390,23 @@
                                 quantity
                             );
 
+                            if (
+                                Array.isArray(item.giftBoxAddons) &&
+                                item.giftBoxAddons.length > 0
+                            ) {
+                                const addons =
+                                    document.createElement("div");
+                                addons.className = "item-quantity";
+                                addons.textContent =
+                                    "Gift box includes: " +
+                                    item.giftBoxAddons.map(
+                                        function (addon) {
+                                            return addon.name;
+                                        }
+                                    ).join(", ");
+                                itemInfo.appendChild(addons);
+                            }
+
 
                             const price =
                                 document.createElement(

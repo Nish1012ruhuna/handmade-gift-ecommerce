@@ -9,8 +9,8 @@ require_once __DIR__ . "/../../config/session.php";
 // Only authenticated administrators can access inquiries.
 requireAdmin();
 
-if ($_SERVER["REQUEST_METHOD"] !== "GET") {
-    header("Allow: GET");
+if (!in_array($_SERVER["REQUEST_METHOD"], ["GET", "POST"], true)) {
+    header("Allow: GET, POST");
     http_response_code(405);
 
     echo json_encode([
@@ -18,6 +18,125 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
         "message" => "Method not allowed."
     ]);
     exit;
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $input = json_decode(file_get_contents("php://input"), true);
+
+    if (!is_array($input)) {
+        http_response_code(400);
+
+        echo json_encode([
+            "success" => false,
+            "message" => "Invalid request data."
+        ]);
+        exit;
+    }
+
+    $inquiryID = filter_var(
+        $input["inquiryID"] ?? null,
+        FILTER_VALIDATE_INT
+    );
+    $replyInput = $input["reply"] ?? null;
+
+    if ($inquiryID === false || $inquiryID < 1) {
+        http_response_code(400);
+
+        echo json_encode([
+            "success" => false,
+            "message" => "Invalid inquiry ID."
+        ]);
+        exit;
+    }
+
+    if (!is_string($replyInput)) {
+        http_response_code(400);
+
+        echo json_encode([
+            "success" => false,
+            "message" => "Reply must be text."
+        ]);
+        exit;
+    }
+
+    $reply = trim($replyInput);
+
+    if ($reply === "" || mb_strlen($reply) > 5000) {
+        http_response_code(400);
+
+        echo json_encode([
+            "success" => false,
+            "message" => "Reply must contain 1 to 5000 characters."
+        ]);
+        exit;
+    }
+
+    try {
+        $stmt = $conn->prepare("
+            UPDATE order_inquiry
+            SET AdminReply = ?,
+                InquiryStatus = 'Replied',
+                RepliedAt = CURRENT_TIMESTAMP
+            WHERE InquiryID = ?
+        ");
+
+        if (!$stmt) {
+            throw new RuntimeException("Could not prepare inquiry reply.");
+        }
+
+        $stmt->bind_param("si", $reply, $inquiryID);
+
+        if (!$stmt->execute()) {
+            throw new RuntimeException("Could not save inquiry reply.");
+        }
+
+        if ($stmt->affected_rows === 0) {
+            $stmt->close();
+
+            $check = $conn->prepare(
+                "SELECT InquiryID FROM order_inquiry WHERE InquiryID = ?"
+            );
+
+            if (!$check) {
+                throw new RuntimeException("Could not verify inquiry.");
+            }
+
+            $check->bind_param("i", $inquiryID);
+            $check->execute();
+            $check->store_result();
+            $inquiryExists = $check->num_rows > 0;
+            $check->close();
+
+            if (!$inquiryExists) {
+                http_response_code(404);
+
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Inquiry not found."
+                ]);
+                exit;
+            }
+        } else {
+            $stmt->close();
+        }
+
+        echo json_encode([
+            "success" => true,
+            "message" => "Reply saved successfully."
+        ]);
+        exit;
+
+    } catch (Throwable $e) {
+        error_log("Admin inquiry reply error: " . $e->getMessage());
+
+        http_response_code(500);
+
+        echo json_encode([
+            "success" => false,
+            "message" => "Unable to save the reply."
+        ]);
+        exit;
+    }
 }
 
 // Optional customer ID filter.
@@ -51,8 +170,10 @@ try {
                 OrderID,
                 Subject,
                 Message,
+                AdminReply,
                 InquiryStatus,
-                CreatedAt
+                CreatedAt,
+                RepliedAt
             FROM order_inquiry
             WHERE CustomerID = ?
             ORDER BY CreatedAt DESC, InquiryID DESC
@@ -73,8 +194,10 @@ try {
                 OrderID,
                 Subject,
                 Message,
+                AdminReply,
                 InquiryStatus,
-                CreatedAt
+                CreatedAt,
+                RepliedAt
             FROM order_inquiry
             ORDER BY CreatedAt DESC, InquiryID DESC
         ");
@@ -89,8 +212,10 @@ try {
                 OrderID,
                 Subject,
                 Message,
+                AdminReply,
                 InquiryStatus,
-                CreatedAt
+                CreatedAt,
+                RepliedAt
             FROM order_inquiry
             ORDER BY CreatedAt DESC, InquiryID DESC
             LIMIT 5

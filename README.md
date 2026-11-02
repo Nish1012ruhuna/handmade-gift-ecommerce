@@ -50,6 +50,19 @@ Customers can:
 
 Cart information is maintained using browser local storage.
 
+### 🎁 Gift Box Builder
+
+On Gift Boxes product detail pages, customers can search a catalog of 100
+sample add-ons and select any items to include in the box. Selected item prices
+are added to the gift box price. The sample names and prices are defined in
+`backend/config/gift_box_addons.php`; edit that file to replace them with the
+business's actual add-ons and prices. The server recalculates add-on prices
+during checkout and saves the selected items with the order.
+
+### ❤️ Favorite Products
+
+Customers can save products by selecting the heart on product cards or product detail pages. The header heart opens the favorites page, where saved products can be reviewed or removed. Favorites are maintained in browser local storage.
+
 ### 👤 Customer Authentication
 
 The system provides customer authentication features including:
@@ -321,7 +334,7 @@ For testing:
 | Checkout                    | ✅ Completed              |
 | Cash on Delivery            | ✅ Completed              |
 | Bank Transfer               | ✅ Completed              |
-| PayHere Sandbox Integration | 🚧 In Progress / Testing |
+| PayHere Sandbox Integration | ✅ Completed              |
 | Admin Product Management    | ✅ Completed              |
 | Admin Customer Management   | ✅ Completed              |
 | Admin Order Management      | ✅ Completed              |

@@ -1081,3 +1081,39 @@ footer {
     }
 
 }
+
+
+/* ========================================
+   ADMIN LOGIN LINK
+======================================== */
+
+.admin-login-link {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #e8e8e8;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    text-align: center;
+    font-size: 13px;
+}
+
+.admin-login-link span {
+    color: #666;
+}
+
+.admin-login-link a {
+    color: #1f6f5b;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.admin-login-link a:hover {
+    color: #155443;
+    text-decoration: underline;
+}

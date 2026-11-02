@@ -11,15 +11,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+          rel="stylesheet">
 
+    <!-- Login CSS -->
     <link rel="stylesheet" href="login.css">
 </head>
 
 <body>
 
     <!-- TOP BAR -->
-
     <div class="top-bar">
 
         <p>
@@ -27,27 +28,23 @@
         </p>
 
         <div class="top-links">
-            <a href="#">Contact</a>
-            <a href="#">Help</a>
+            <a href="contact.html">Contact</a>
+            <a href="help.html">Help</a>
         </div>
 
     </div>
 
 
     <!-- HEADER -->
-
     <header>
 
         <div class="navbar">
 
             <!-- LOGO -->
-
             <a href="home.html" class="logo">
 
                 <div class="logo-icon">
-                    <img
-                    src="Logo.png"
-                    alt="business logo">
+                    <img src="Logo.png" alt="GIFTORA business logo">
                 </div>
 
                 <div>
@@ -59,7 +56,6 @@
 
 
             <!-- NAVIGATION -->
-
             <nav>
 
                 <a href="home.html">Home</a>
@@ -76,20 +72,19 @@
                     Register
                 </a>
 
-                
-
             </nav>
 
 
             <!-- HEADER ACTIONS -->
-
             <div class="header-actions">
 
-                <a href="#" class="icon-btn">
+                <a href="#" class="icon-btn" aria-label="Favorites">
                     ♡
                 </a>
 
-                <a href="login.html" class="account-btn active">
+                <a href="login.html"
+                   class="account-btn active"
+                   aria-label="Account">
                     ♙
                 </a>
 
@@ -106,13 +101,11 @@
 
 
     <!-- LOGIN SECTION -->
-
     <main class="login-section">
 
         <div class="login-wrapper">
 
             <!-- LEFT SIDE -->
-
             <div class="login-image">
 
                 <div class="image-content">
@@ -156,8 +149,7 @@
             </div>
 
 
-            <!-- LOGIN FORM -->
-
+            <!-- RIGHT SIDE: CUSTOMER LOGIN FORM -->
             <div class="login-form-container">
 
                 <div class="form-heading">
@@ -166,9 +158,7 @@
                         YOUR ACCOUNT
                     </p>
 
-                    <h1>
-                        Welcome Back
-                    </h1>
+                    <h1>Welcome Back</h1>
 
                     <p>
                         Login to continue your GIFTORA journey.
@@ -177,10 +167,10 @@
                 </div>
 
 
+                <!-- CUSTOMER LOGIN FORM -->
                 <form id="loginForm">
 
                     <!-- EMAIL -->
-
                     <div class="form-group">
 
                         <label for="email">
@@ -192,6 +182,8 @@
                             id="email"
                             name="email"
                             placeholder="Enter your email address"
+                            autocomplete="email"
+                            required
                         >
 
                         <small
@@ -203,7 +195,6 @@
 
 
                     <!-- PASSWORD -->
-
                     <div class="form-group">
 
                         <div class="password-label">
@@ -212,8 +203,8 @@
                                 Password
                             </label>
 
-                            <a href="#">
-                                Forgot Password?
+                            <a href="help.html">
+                                Forgot Password? Contact Support
                             </a>
 
                         </div>
@@ -225,12 +216,15 @@
                                 id="password"
                                 name="password"
                                 placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
                             >
 
                             <button
                                 type="button"
                                 id="showPassword"
-                                class="show-password">
+                                class="show-password"
+                                aria-label="Show password">
 
                                 👁
 
@@ -246,8 +240,7 @@
                     </div>
 
 
-                    <!-- REMEMBER -->
-
+                    <!-- REMEMBER ME -->
                     <label class="remember">
 
                         <input
@@ -255,42 +248,39 @@
                             id="rememberMe"
                         >
 
-                        <span>
-                            Remember me
-                        </span>
+                        <span>Remember me</span>
 
                     </label>
 
 
                     <!-- LOGIN BUTTON -->
+                    <button
+                        type="submit"
+                        id="loginBtn"
+                        class="login-btn">
 
-                    <button type="submit" 
-                            id="loginBtn" 
-                            class="login-btn" >
-                            Login to Account
-                        </button>
-                            <!--<a href="customer_dashboard.html">
-            My Account
-        </a>-->
+                        Login to Account
 
-                    <!-- ERROR -->
+                    </button>
 
+
+                    <!-- ERROR MESSAGE -->
                     <div
                         id="loginError"
-                        class="login-error">
+                        class="login-error"
+                        role="alert">
                     </div>
 
 
-                    <!-- SUCCESS -->
-
+                    <!-- SUCCESS MESSAGE -->
                     <div
                         id="successMessage"
-                        class="success-message">
+                        class="success-message"
+                        role="status">
                     </div>
 
 
-                    <!-- REGISTER -->
-
+                    <!-- REGISTER LINK -->
                     <div class="register-link">
 
                         <span>
@@ -299,6 +289,20 @@
 
                         <a href="register.html">
                             Create an Account
+                        </a>
+
+                    </div>
+
+
+                    <!-- NEW: ADMIN LOGIN LINK -->
+                    <div class="admin-login-link">
+
+                        <span>
+                            Managing the GIFTORA store?
+                        </span>
+
+                        <a href="admin_login.html">
+                            Admin Login
                         </a>
 
                     </div>
@@ -313,11 +317,11 @@
 
 
     <!-- FOOTER -->
-
     <footer>
 
         <div class="footer-container">
 
+            <!-- ABOUT -->
             <div class="footer-column">
 
                 <h2>GIFTORA</h2>
@@ -329,6 +333,8 @@
 
             </div>
 
+
+            <!-- QUICK LINKS -->
             <div class="footer-column">
 
                 <h3>Quick Links</h3>
@@ -339,32 +345,33 @@
 
             </div>
 
+
+            <!-- ACCOUNT LINKS -->
             <div class="footer-column">
 
                 <h3>Account</h3>
 
-                <a href="login.html">Login</a>
+                <a href="login.html">Customer Login</a>
                 <a href="register.html">Register</a>
+                <a href="admin_login.html">Admin Login</a>
 
             </div>
 
+
+            <!-- CONTACT -->
             <div class="footer-column">
 
                 <h3>Contact</h3>
 
-                <p>
-                    Kandy, Sri Lanka
-                </p>
-
-                <p>
-                    hello@giftora.com
-                </p>
+                <p>Kandy, Sri Lanka</p>
+                <p>hello@giftora.com</p>
 
             </div>
 
         </div>
 
 
+        <!-- FOOTER BOTTOM -->
         <div class="footer-bottom">
 
             <p>
@@ -380,7 +387,10 @@
     </footer>
 
 
-<script src="auth.js"></script>
-<script src="login.js"></script></body>
+    <!-- JAVASCRIPT -->
+    <script src="auth.js"></script>
+    <script src="login.js"></script>
+
+</body>
 
 </html>

@@ -418,6 +418,97 @@ nav a.active::after {
     font-size: 12px;
 }
 
+.gift-box-builder {
+    margin-top: 24px;
+    padding: 18px;
+    border: 1px solid #e5e2dc;
+    border-radius: 8px;
+    background: #fffaf3;
+}
+
+.gift-box-builder h3 {
+    margin-bottom: 4px;
+    font-size: 16px;
+}
+
+.gift-box-note,
+.gift-box-status {
+    margin: 4px 0 12px;
+    color: #68645f;
+    font-size: 12px;
+}
+
+.gift-box-builder label {
+    display: block;
+    margin: 12px 0 6px;
+    font-size: 13px;
+}
+
+.gift-box-search {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d8d8d8;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 13px;
+}
+
+.gift-box-addon-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    max-height: 310px;
+    margin-top: 12px;
+    overflow-y: auto;
+}
+
+.gift-box-addon {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 9px;
+    border: 1px solid #eee8df;
+    border-radius: 5px;
+    background: #fff;
+    font-size: 12px;
+}
+
+.gift-box-addon input {
+    margin-top: 3px;
+    accent-color: #217d6b;
+}
+
+.gift-box-addon span {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.gift-box-addon strong {
+    white-space: nowrap;
+}
+
+.gift-box-total {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e2dc;
+    font-size: 13px;
+}
+
+.gift-box-total strong {
+    color: #176456;
+}
+
+@media (max-width: 600px) {
+    .gift-box-addon-list {
+        grid-template-columns: 1fr;
+    }
+}
+
 
 /* =========================================
    QUANTITY
@@ -1031,6 +1122,10 @@ footer {
     z-index: 2;
 }
 
+.related-image button.selected {
+    color: #d95f62;
+}
+
 
 
 /* CONTINUE SHOPPING SECTION */
@@ -1092,4 +1187,3 @@ footer {
         font-size: 27px;
     }
 }
-

@@ -2,6 +2,7 @@
 
 require_once "../config/database.php";
 require_once "../config/session.php";
+require_once "../config/gift_box_addons.php";
 
 header("Content-Type: application/json");
 
@@ -28,7 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
     exit;
 }
-
 
 // =====================================================
 // READ JSON DATA
@@ -159,6 +159,31 @@ try {
     $subtotal = 0;
 
     $validatedItems = [];
+    $requestedQuantities = [];
+
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            throw new Exception("Invalid product in cart.");
+        }
+
+        $productId = isset($item["productId"])
+            ? (int) $item["productId"]
+            : (isset($item["ProductID"]) ? (int) $item["ProductID"] : 0);
+        $quantity = isset($item["quantity"])
+            ? (int) $item["quantity"]
+            : 0;
+
+        if ($productId <= 0 || $quantity < 1 || $quantity > 100) {
+            throw new Exception("Invalid product or quantity in cart.");
+        }
+
+        $requestedQuantities[$productId] =
+            ($requestedQuantities[$productId] ?? 0) + $quantity;
+
+        if ($requestedQuantities[$productId] > 100) {
+            throw new Exception("The quantity for a product is too large.");
+        }
+    }
 
     // =================================================
     // PREPARE PRODUCT QUERY
@@ -167,13 +192,15 @@ try {
     $productStmt = $conn->prepare(
         "
         SELECT
-            ProductID,
+            p.ProductID,
             Title,
             Price,
             StockQuantity,
-            IsActive
-        FROM product
-        WHERE ProductID = ?
+            IsActive,
+            c.Name AS CategoryName
+        FROM product p
+        INNER JOIN category c ON c.CategoryID = p.CategoryID
+        WHERE p.ProductID = ?
         FOR UPDATE
         "
     );
@@ -209,6 +236,7 @@ try {
         $quantity = isset($item["quantity"])
             ? (int) $item["quantity"]
             : 0;
+        $giftBoxAddonIds = $item["giftBoxAddonIds"] ?? [];
 
 
         // ---------------------------------------------
@@ -289,14 +317,14 @@ try {
             (int) $product["StockQuantity"];
 
 
-        if ($quantity > $stock) {
+        if ($requestedQuantities[$productId] > $stock) {
 
             throw new Exception(
                 "Only " .
                 $stock .
                 " item(s) of \"" .
                 $product["Title"] .
-                "\" are available."
+                "\" are available across your cart."
             );
         }
 
@@ -305,8 +333,25 @@ try {
         // USE DATABASE PRICE
         // ---------------------------------------------
 
+        $selectedAddons = getGiftBoxAddonsByIds($giftBoxAddonIds);
+        $isGiftBox = strtolower(trim($product["CategoryName"])) === "gift boxes";
+
+        if (count($selectedAddons) > 0 && !$isGiftBox) {
+            throw new Exception(
+                "Gift-box items can only be added to products in the Gift Boxes category."
+            );
+        }
+
+        $addonTotal = array_reduce(
+            $selectedAddons,
+            function ($total, $addon) {
+                return $total + (float) $addon["price"];
+            },
+            0.0
+        );
+
         $unitPrice =
-            (float) $product["Price"];
+            (float) $product["Price"] + $addonTotal;
 
 
         $lineTotal =
@@ -335,6 +380,9 @@ try {
             "unitPrice" =>
                 $unitPrice,
 
+            "giftBoxAddons" =>
+                $selectedAddons,
+
             "lineTotal" =>
                 $lineTotal
 
@@ -350,7 +398,7 @@ try {
     // =================================================
 
     $shipping =
-        $subtotal > 0
+        $subtotal > 0 && $subtotal < 2000
             ? 350
             : 0;
 
@@ -429,10 +477,11 @@ try {
         (
             OrderID,
             ProductID,
+            CustomizationID,
             Quantity,
             UnitPrice
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
         "
     );
 
@@ -452,14 +501,20 @@ try {
         $quantity =
             $item["quantity"];
 
+        $customizationId = saveGiftBoxAddons(
+            $conn,
+            $item["giftBoxAddons"]
+        );
+
         $unitPrice =
             $item["unitPrice"];
 
 
         $itemStmt->bind_param(
-            "iiid",
+            "iiiid",
             $orderId,
             $productId,
+            $customizationId,
             $quantity,
             $unitPrice
         );

@@ -1,1201 +1,881 @@
 document.addEventListener("DOMContentLoaded", function () {
+    "use strict";
 
     // ============================================================
-    // GET PRODUCT ID FROM URL
+    // GIFTORA - PRODUCT DETAILS
     // ============================================================
+
+    const CART_KEY = "giftoraCart";
+    const API_URL = "backend/api/products.php";
 
     const urlParams = new URLSearchParams(window.location.search);
-
     const productID = urlParams.get("id");
 
-
     // ============================================================
-    // ELEMENTS
+    // HTML ELEMENTS
     // ============================================================
 
-    const mainImage =
-        document.getElementById("mainProductImage");
+    const mainImage = document.getElementById("mainProductImage");
+    const productTitle = document.querySelector(".product-info h1");
+    const productCategory = document.querySelector(".product-category");
+    const productPrice = document.querySelector(".price");
+    const shortDescription = document.querySelector(".short-description");
 
-    const productTitle =
-        document.querySelector(".product-info h1");
+    const quantityDisplay = document.getElementById("quantity");
+    const decreaseButton = document.getElementById("decrease");
+    const increaseButton = document.getElementById("increase");
+    const addToCartButton = document.getElementById("addToCart");
+    const giftBoxBuilder = document.getElementById("giftBoxBuilder");
+    const giftBoxAddonSearch = document.getElementById("giftBoxAddonSearch");
+    const giftBoxAddonList = document.getElementById("giftBoxAddonList");
+    const giftBoxAddonStatus = document.getElementById("giftBoxAddonStatus");
+    const giftBoxAddonCount = document.getElementById("giftBoxAddonCount");
+    const giftBoxAddonTotal = document.getElementById("giftBoxAddonTotal");
 
-    const productCategory =
-        document.querySelector(".product-category");
+    const wishlistButton = document.getElementById("wishlistButton");
+    const imageWishlist = document.querySelector(".image-wishlist");
+    const thumbnailContainer = document.querySelector(".thumbnail-container");
 
-    const productPrice =
-        document.querySelector(".price");
-
-    const shortDescription =
-        document.querySelector(".short-description");
-
-    const quantityDisplay =
-        document.getElementById("quantity");
-
-    const decreaseButton =
-        document.getElementById("decrease");
-
-    const increaseButton =
-        document.getElementById("increase");
-
-    const addToCartButton =
-        document.getElementById("addToCart");
-
-    const wishlistButton =
-        document.getElementById("wishlistButton");
-
-    const imageWishlist =
-        document.querySelector(".image-wishlist");
-
-    const cartCount =
-        document.querySelector(".cart-count");
-
-    const thumbnailContainer =
-        document.querySelector(".thumbnail-container");
-
+    const relatedGrid = document.getElementById("relatedGrid");
 
     // ============================================================
     // VARIABLES
     // ============================================================
 
     let product = null;
-
     let quantity = 1;
-
-
-    // ============================================================
-    // CHECK PRODUCT ID
-    // ============================================================
-
-    if (!productID) {
-
-        showError("No product was selected.");
-
-        return;
-    }
-
+    let giftBoxAddonCatalog = [];
+    let selectedGiftBoxAddonIds = new Set();
+    let giftBoxOptionsState = "not-applicable";
 
     // ============================================================
-    // API URL
+    // HELPERS
     // ============================================================
 
-    const API_URL =
-        "backend/api/products.php?id=" +
-        encodeURIComponent(productID);
+    function formatMoney(amount) {
+        const number = Number(amount);
 
-
-    // ============================================================
-    // LOAD PRODUCT
-    // ============================================================
-
-    async function loadProduct() {
-
-        try {
-
-            console.log(
-                "Loading product ID:",
-                productID
-            );
-
-
-            const response =
-                await fetch(
-                    API_URL + "&t=" + Date.now(),
-                    {
-                        method: "GET",
-                        cache: "no-store"
-                    }
-                );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Product request failed. HTTP " +
-                    response.status
-                );
-            }
-
-
-            const data =
-                await response.json();
-
-
-            console.log(
-                "Product API response:",
-                data
-            );
-
-
-            if (!data.success) {
-
-                throw new Error(
-                    data.message ||
-                    "Product not found."
-                );
-            }
-
-
-            product =
-                data.product;
-
-
-            console.log(
-                "Product loaded:",
-                product
-            );
-
-
-            // Display product
-            displayProduct();
-
-
-        } catch (error) {
-
-            console.error(
-                "Product loading error:",
-                error
-            );
-
-
-            showError(
-                "Unable to load this product. " +
-                error.message
-            );
-
+        if (!Number.isFinite(number)) {
+            return "LKR 0.00";
         }
 
+        return "LKR " + number.toLocaleString("en-LK", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
     }
 
+    function getStock(item) {
+        if (
+            !item ||
+            item.StockQuantity === null ||
+            item.StockQuantity === undefined ||
+            String(item.StockQuantity).trim() === ""
+        ) {
+            return null;
+        }
+
+        const stock = Number(item.StockQuantity);
+
+        if (!Number.isInteger(stock) || stock < 0) {
+            return null;
+        }
+
+        return stock;
+    }
+
+    function isCustomizable(item) {
+        if (!item) {
+            return false;
+        }
+
+        const value = item.Customizable;
+
+        return value === true ||
+            Number(value) === 1 ||
+            String(value).toLowerCase() === "true";
+    }
+
+    function isGiftBox(item) {
+        const category = String(item && item.CategoryName || "")
+            .toLowerCase()
+            .replace(/[^a-z]/g, "");
+
+        return category === "giftbox" || category === "giftboxes";
+    }
+
+    function getSelectedGiftBoxAddons() {
+        return giftBoxAddonCatalog.filter(function (addon) {
+            return selectedGiftBoxAddonIds.has(Number(addon.id));
+        });
+    }
+
+    function updateGiftBoxPrice() {
+        if (!product || !productPrice) {
+            return;
+        }
+
+        const addonTotal = getSelectedGiftBoxAddons().reduce(
+            function (total, addon) {
+                return total + Number(addon.price);
+            },
+            0
+        );
+
+        productPrice.textContent = formatMoney(
+            Number(product.Price) + addonTotal
+        );
+
+        if (giftBoxAddonCount) {
+            giftBoxAddonCount.textContent =
+                String(selectedGiftBoxAddonIds.size);
+        }
+
+        if (giftBoxAddonTotal) {
+            giftBoxAddonTotal.textContent = formatMoney(addonTotal);
+        }
+    }
+
+    function filterGiftBoxAddons() {
+        if (!giftBoxAddonList || !giftBoxAddonSearch) {
+            return;
+        }
+
+        const query = giftBoxAddonSearch.value.trim().toLowerCase();
+
+        giftBoxAddonList.querySelectorAll(".gift-box-addon").forEach(
+            function (option) {
+                option.hidden = !option.dataset.search.includes(query);
+            }
+        );
+    }
+
+    async function loadGiftBoxAddons() {
+        if (!giftBoxBuilder || !isGiftBox(product)) {
+            giftBoxOptionsState = "not-applicable";
+            if (giftBoxBuilder) {
+                giftBoxBuilder.hidden = true;
+            }
+            updateStock();
+            return;
+        }
+
+        giftBoxBuilder.hidden = false;
+        giftBoxOptionsState = "loading";
+        giftBoxAddonStatus.textContent = "Loading gift-box items...";
+        giftBoxAddonList.replaceChildren();
+        updateStock();
+
+        try {
+            const response = await fetch(
+                "backend/api/gift_box_addons.php",
+                {
+                    method: "GET",
+                    cache: "no-store",
+                    headers: { "Accept": "application/json" }
+                }
+            );
+            const data = await response.json();
+
+            if (
+                !response.ok ||
+                !data.success ||
+                !Array.isArray(data.addons) ||
+                data.addons.length === 0
+            ) {
+                throw new Error(
+                    data.message || "Gift-box items are currently unavailable."
+                );
+            }
+
+            giftBoxAddonCatalog = data.addons;
+            giftBoxAddonStatus.textContent =
+                (data.samplePrices
+                    ? "Sample catalog: "
+                    : "") +
+                giftBoxAddonCatalog.length +
+                " items available. Select any items to add them to your box.";
+
+            giftBoxAddonCatalog.forEach(function (addon) {
+                const label = document.createElement("label");
+                label.className = "gift-box-addon";
+                label.dataset.search =
+                    (addon.name + " " + addon.category).toLowerCase();
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.value = String(addon.id);
+                checkbox.addEventListener("change", function () {
+                    const id = Number(addon.id);
+                    if (checkbox.checked) {
+                        selectedGiftBoxAddonIds.add(id);
+                    } else {
+                        selectedGiftBoxAddonIds.delete(id);
+                    }
+                    updateGiftBoxPrice();
+                });
+
+                const details = document.createElement("span");
+                const name = document.createElement("span");
+                name.textContent = addon.name + " · " + addon.category;
+
+                const price = document.createElement("strong");
+                price.textContent = formatMoney(addon.price);
+
+                details.append(name, price);
+                label.append(checkbox, details);
+                giftBoxAddonList.appendChild(label);
+            });
+
+            giftBoxOptionsState = "ready";
+            updateGiftBoxPrice();
+            filterGiftBoxAddons();
+            updateStock();
+        } catch (error) {
+            console.error("Unable to load gift-box items:", error);
+            giftBoxAddonStatus.textContent =
+                "We could not load gift-box items. Please refresh the page to try again.";
+            giftBoxOptionsState = "error";
+            updateStock();
+        }
+    }
+
+    function getImagePath(imageURL) {
+        if (!imageURL) {
+            return "Logo.png";
+        }
+
+        let image = String(imageURL).trim();
+
+        if (/^(https?:\/\/|data:)/i.test(image)) {
+            return image;
+        }
+
+        image = image.replace(/^\/+/, "");
+
+        if (image.startsWith("giftora/shop_images/")) {
+            return image.substring("giftora/".length);
+        }
+
+        if (image.startsWith("shop_images/")) {
+            return image;
+        }
+
+        return "shop_images/" + image;
+    }
+
+    function getCart() {
+        try {
+            const savedCart = localStorage.getItem(CART_KEY);
+
+            if (!savedCart) {
+                return [];
+            }
+
+            const cart = JSON.parse(savedCart);
+
+            return Array.isArray(cart) ? cart : [];
+        } catch (error) {
+            console.error("Could not read cart:", error);
+            return [];
+        }
+    }
+
+    function saveCart(cart) {
+        try {
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            return true;
+        } catch (error) {
+            console.error("Could not save cart:", error);
+            alert("Unable to save your cart. Please try again.");
+            return false;
+        }
+    }
+
+    function showError(message) {
+        console.error("GIFTORA:", message);
+
+        if (productTitle) {
+            productTitle.textContent = "Product unavailable";
+        }
+
+        if (shortDescription) {
+            shortDescription.textContent = message;
+        }
+
+        if (addToCartButton) {
+            addToCartButton.disabled = true;
+            addToCartButton.textContent = "Unavailable";
+        }
+
+        if (increaseButton) {
+            increaseButton.disabled = true;
+        }
+    }
 
     // ============================================================
-    // DISPLAY PRODUCT
+    // UPDATE CART COUNT
     // ============================================================
 
-    function displayProduct() {
+    function updateCartCount() {
+        const cartCountElements =
+            document.querySelectorAll(".cart-count");
+
+        const cart = getCart();
+
+        const totalQuantity = cart.reduce(function (total, item) {
+            const itemQuantity = Number(item.quantity);
+
+            if (Number.isInteger(itemQuantity) && itemQuantity > 0) {
+                return total + itemQuantity;
+            }
+
+            return total;
+        }, 0);
+
+        cartCountElements.forEach(function (element) {
+            element.textContent = totalQuantity;
+        });
+    }
+
+    // ============================================================
+    // UPDATE STOCK AND BUTTONS
+    // ============================================================
+
+    function updateStock() {
+        const stockElement = document.querySelector(".stock");
 
         if (!product) {
             return;
         }
 
-
-        // --------------------------------------------------------
-        // TITLE
-        // --------------------------------------------------------
-
-        if (productTitle) {
-
-            productTitle.textContent =
-                product.Title || "Untitled Product";
-
-        }
-
-
-        // --------------------------------------------------------
-        // CATEGORY
-        // --------------------------------------------------------
-
-        if (productCategory) {
-
-            productCategory.textContent =
-                product.CategoryName || "GIFT";
-
-        }
-
-
-        // --------------------------------------------------------
-        // PRICE
-        // --------------------------------------------------------
-
-        if (productPrice) {
-
-            productPrice.textContent =
-                formatMoney(product.Price);
-
-        }
-
-
-        // --------------------------------------------------------
-        // DESCRIPTION
-        // --------------------------------------------------------
-
-        if (shortDescription) {
-
-            shortDescription.textContent =
-                product.Description ||
-                "A beautiful handmade gift created with love.";
-
-        }
-
-
-        // --------------------------------------------------------
-        // MAIN IMAGE
-        // --------------------------------------------------------
-
-        const imagePath =
-            getImagePath(product.ImageURL);
-
-
-        if (mainImage) {
-
-            mainImage.src =
-                imagePath;
-
-            mainImage.alt =
-                product.Title || "Product image";
-
-
-            mainImage.onerror = function () {
-
-                this.onerror = null;
-
-                this.src = "Logo.png";
-
-            };
-
-        }
-
-
-        // --------------------------------------------------------
-        // THUMBNAILS
-        // --------------------------------------------------------
-
-        createThumbnail(imagePath);
-
-
-        // --------------------------------------------------------
-        // STOCK
-        // --------------------------------------------------------
-
-        updateStock();
-
-
-        // --------------------------------------------------------
-        // CUSTOMIZATION
-        // --------------------------------------------------------
-
-        updateCustomization();
-
-
-        // --------------------------------------------------------
-        // PAGE TITLE
-        // --------------------------------------------------------
-
-        document.title =
-            product.Title +
-            " | GIFTORA";
-
-    }
-
-
-    // ============================================================
-    // IMAGE PATH
-    // ============================================================
-
-    function getImagePath(imageURL) {
-
-        if (!imageURL) {
-
-            return "Logo.png";
-
-        }
-
-
-        let image =
-            String(imageURL).trim();
-
-
-        /*
-         * If database already contains:
-         *
-         * shop_images/card.jpg
-         *
-         * don't add shop_images again.
-         */
-
-        if (
-            image.startsWith("shop_images/") ||
-            image.startsWith("http://") ||
-            image.startsWith("https://") ||
-            image.startsWith("data:")
-        ) {
-
-            return image;
-
-        }
-
-
-        return "shop_images/" + image;
-
-    }
-
-
-    // ============================================================
-    // CREATE THUMBNAIL
-    // ============================================================
-
-    function createThumbnail(imagePath) {
-
-        if (!thumbnailContainer) {
-
-            return;
-
-        }
-
-
-        // Remove old hard-coded thumbnails
-        thumbnailContainer.innerHTML = "";
-
-
-        const thumbnail =
-            document.createElement("button");
-
-
-        thumbnail.type =
-            "button";
-
-
-        thumbnail.className =
-            "thumbnail active";
-
-
-        thumbnail.setAttribute(
-            "data-image",
-            imagePath
-        );
-
-
-        const image =
-            document.createElement("img");
-
-
-        image.src =
-            imagePath;
-
-
-        image.alt =
-            product.Title || "Product image";
-
-
-        image.onerror = function () {
-
-            this.onerror = null;
-
-            this.src = "Logo.png";
-
-        };
-
-
-        thumbnail.appendChild(image);
-
-
-        thumbnail.addEventListener(
-            "click",
-            function () {
-
-                if (mainImage) {
-
-                    mainImage.src =
-                        imagePath;
-
-                }
-
-
-                document
-                    .querySelectorAll(".thumbnail")
-                    .forEach(function (item) {
-
-                        item.classList.remove(
-                            "active"
-                        );
-
-                    });
-
-
-                thumbnail.classList.add(
-                    "active"
-                );
-
+        const stock = getStock(product);
+        const available = stock !== null && stock > 0;
+
+        if (stockElement) {
+            if (stock === null) {
+                stockElement.textContent = "Stock unavailable";
+                stockElement.style.color = "#c94b4b";
+            } else if (stock === 0) {
+                stockElement.textContent = "Out of Stock";
+                stockElement.style.color = "#c94b4b";
+            } else {
+                stockElement.textContent =
+                    stock + (stock === 1 ? " item available" : " items available");
+
+                stockElement.style.color = "";
             }
-        );
-
-
-        thumbnailContainer.appendChild(
-            thumbnail
-        );
-
-    }
-
-
-    // ============================================================
-    // FORMAT MONEY
-    // ============================================================
-
-    function formatMoney(amount) {
-
-        const number =
-            Number(amount);
-
-
-        if (!Number.isFinite(number)) {
-
-            return "LKR 0.00";
-
         }
 
+        if (addToCartButton) {
+            const waitingForGiftBoxOptions =
+                isGiftBox(product) &&
+                giftBoxOptionsState !== "ready";
+            addToCartButton.disabled =
+                !available || waitingForGiftBoxOptions;
 
-        return "LKR " +
-            number.toLocaleString(
-                "en-LK",
-                {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }
-            );
-
-    }
-
-
-    // ============================================================
-    // STOCK
-    // ============================================================
-
-    function updateStock() {
-
-        const stockElement =
-            document.querySelector(".stock");
-
-
-        if (!stockElement || !product) {
-
-            return;
-
+            addToCartButton.textContent =
+                stock === null
+                    ? "Stock Unavailable"
+                    : stock === 0
+                        ? "Out of Stock"
+                        : giftBoxOptionsState === "loading"
+                            ? "Loading Box Items..."
+                            : giftBoxOptionsState === "error"
+                                ? "Options Unavailable"
+                                : "Add to Cart";
         }
 
-
-        const stock =
-            Number(product.StockQuantity);
-
-
-        if (stock <= 0) {
-
-            stockElement.textContent =
-                "Out of Stock";
-
-            stockElement.style.color =
-                "#c94b4b";
-
-
-            if (addToCartButton) {
-
-                addToCartButton.disabled =
-                    true;
-
-                addToCartButton.textContent =
-                    "Out of Stock";
-
-            }
-
-        } else {
-
-            stockElement.textContent =
-                stock +
-                " items available";
-
-
-            if (addToCartButton) {
-
-                addToCartButton.disabled =
-                    false;
-
-                addToCartButton.textContent =
-                    "Add to Cart";
-
-            }
-
+        if (increaseButton) {
+            increaseButton.disabled = !available;
         }
 
-    }
-
-
-    // ============================================================
-    // CUSTOMIZATION
-    // ============================================================
-
-    function updateCustomization() {
-
-        const customization =
-            document.querySelector(".customization");
-
-
-        if (!customization || !product) {
-
-            return;
-
+        if (quantity > stock && stock !== null) {
+            quantity = Math.max(1, stock);
+            updateQuantityDisplay();
         }
 
-
-        /*
-         * Customizable = 1
-         */
-
-        if (product.Customizable) {
-
-            customization.style.display =
-                "block";
-
-        } else {
-
-            customization.style.display =
-                "none";
-
+        if (stock === null || stock === 0) {
+            quantity = 1;
+            updateQuantityDisplay();
         }
-
     }
-
-
-    // ============================================================
-    // QUANTITY - DECREASE
-    // ============================================================
-
-    if (decreaseButton) {
-
-        decreaseButton.addEventListener(
-            "click",
-            function () {
-
-                if (quantity > 1) {
-
-                    quantity--;
-
-                    updateQuantityDisplay();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    // ============================================================
-    // QUANTITY - INCREASE
-    // ============================================================
-
-    if (increaseButton) {
-
-        increaseButton.addEventListener(
-            "click",
-            function () {
-
-                if (!product) {
-
-                    return;
-
-                }
-
-
-                const stock =
-                    Number(product.StockQuantity);
-
-
-                if (quantity < stock) {
-
-                    quantity++;
-
-                    updateQuantityDisplay();
-
-                } else {
-
-                    alert(
-                        "You cannot add more than the available stock."
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
 
     // ============================================================
     // UPDATE QUANTITY DISPLAY
     // ============================================================
 
     function updateQuantityDisplay() {
-
         if (quantityDisplay) {
-
-            quantityDisplay.textContent =
-                quantity;
-
+            quantityDisplay.textContent = quantity;
         }
-
     }
 
-
     // ============================================================
-    // WISHLIST
+    // LOAD PRODUCT
     // ============================================================
 
-    function toggleWishlist(button) {
-
-        if (!button) {
-
+    async function loadProduct() {
+        if (!productID || !/^\d+$/.test(productID)) {
+            showError("Please select a valid product.");
             return;
-
         }
 
-
-        if (
-            button.classList.contains(
-                "selected"
-            )
-        ) {
-
-            button.classList.remove(
-                "selected"
+        try {
+            const response = await fetch(
+                API_URL + "?id=" +
+                encodeURIComponent(productID) +
+                "&t=" + Date.now(),
+                {
+                    method: "GET",
+                    cache: "no-store",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
             );
 
-            button.textContent =
-                "♡";
+            if (!response.ok) {
+                throw new Error("HTTP " + response.status);
+            }
 
-        } else {
+            const data = await response.json();
 
-            button.classList.add(
-                "selected"
+            if (!data.success || !data.product) {
+                throw new Error(data.message || "Product not found.");
+            }
+
+            product = data.product;
+
+            if (
+                product.ProductID === undefined ||
+                Number(product.ProductID) !== Number(productID)
+            ) {
+                throw new Error("The requested product could not be verified.");
+            }
+
+            displayProduct();
+            updateCartCount();
+
+        } catch (error) {
+            console.error("Product loading error:", error);
+
+            showError(
+                "Unable to load this product. Please refresh the page."
             );
+        }
+    }
 
-            button.textContent =
-                "♥";
+    // ============================================================
+    // DISPLAY PRODUCT
+    // ============================================================
 
+    function displayProduct() {
+        if (!product) {
+            return;
         }
 
-    }
+        if (productTitle) {
+            productTitle.textContent =
+                product.Title || "Untitled Product";
+        }
 
+        if (productCategory) {
+            productCategory.textContent =
+                product.CategoryName || "GIFT";
+        }
 
-    if (wishlistButton) {
+        updateGiftBoxPrice();
 
-        wishlistButton.addEventListener(
-            "click",
-            function () {
+        if (shortDescription) {
+            shortDescription.textContent =
+                product.Description ||
+                "A beautiful handmade gift created with love.";
+        }
 
-                toggleWishlist(
-                    wishlistButton
-                );
+        const imagePath = getImagePath(product.ImageURL);
 
+        if (mainImage) {
+            mainImage.src = imagePath;
+            mainImage.alt = product.Title || "Product image";
+
+            mainImage.onerror = function () {
+                this.onerror = null;
+                this.src = "Logo.png";
+            };
+        }
+
+        createThumbnail(imagePath);
+        updateCustomization();
+        loadGiftBoxAddons();
+        updateStock();
+
+        if (window.GiftoraFavorites) {
+            if (wishlistButton) {
+                window.GiftoraFavorites.bindButton(wishlistButton, product);
             }
-        );
 
-    }
-
-
-    if (imageWishlist) {
-
-        imageWishlist.addEventListener(
-            "click",
-            function () {
-
-                toggleWishlist(
-                    imageWishlist
-                );
-
+            if (imageWishlist) {
+                window.GiftoraFavorites.bindButton(imageWishlist, product);
             }
-        );
+        }
 
+        document.title = (product.Title || "Product") + " | GIFTORA";
     }
 
+    // ============================================================
+    // PRODUCT IMAGE THUMBNAIL
+    // ============================================================
+
+    function createThumbnail(imagePath) {
+        if (!thumbnailContainer) {
+            return;
+        }
+
+        thumbnailContainer.innerHTML = "";
+
+        const thumbnail = document.createElement("button");
+        thumbnail.type = "button";
+        thumbnail.className = "thumbnail active";
+        thumbnail.setAttribute("aria-label", "View product image");
+
+        const image = document.createElement("img");
+        image.src = imagePath;
+        image.alt = product.Title || "Product image";
+
+        image.onerror = function () {
+            this.onerror = null;
+            this.src = "Logo.png";
+        };
+
+        thumbnail.appendChild(image);
+
+        thumbnail.addEventListener("click", function () {
+            if (mainImage) {
+                mainImage.src = imagePath;
+            }
+
+            thumbnailContainer
+                .querySelectorAll(".thumbnail")
+                .forEach(function (item) {
+                    item.classList.remove("active");
+                });
+
+            thumbnail.classList.add("active");
+        });
+
+        thumbnailContainer.appendChild(thumbnail);
+    }
+
+    // ============================================================
+    // CUSTOMIZATION
+    // ============================================================
+
+    function updateCustomization() {
+        const customization =
+            document.querySelector(".customization");
+
+        if (!customization || !product) {
+            return;
+        }
+
+        customization.style.display =
+            isCustomizable(product) ? "block" : "none";
+    }
+
+    if (giftBoxAddonSearch) {
+        giftBoxAddonSearch.addEventListener("input", filterGiftBoxAddons);
+    }
+
+    // ============================================================
+    // QUANTITY DECREASE
+    // ============================================================
+
+    if (decreaseButton) {
+        decreaseButton.addEventListener("click", function () {
+            if (quantity > 1) {
+                quantity--;
+                updateQuantityDisplay();
+            }
+        });
+    }
+
+    // ============================================================
+    // QUANTITY INCREASE
+    // ============================================================
+
+    if (increaseButton) {
+        increaseButton.addEventListener("click", function () {
+            if (!product) {
+                return;
+            }
+
+            const stock = getStock(product);
+
+            if (stock === null || stock <= 0) {
+                alert("Stock is unavailable for this product.");
+                return;
+            }
+
+            if (quantity < stock) {
+                quantity++;
+                updateQuantityDisplay();
+            } else {
+                alert("You cannot select more than the available stock.");
+            }
+        });
+    }
 
     // ============================================================
     // ADD TO CART
     // ============================================================
 
     if (addToCartButton) {
-
-        addToCartButton.addEventListener(
-            "click",
-            function () {
-
-                if (!product) {
-
-                    alert(
-                        "Product information is not available."
-                    );
-
-                    return;
-
-                }
-
-
-                const stock =
-                    Number(product.StockQuantity);
-
-
-                if (stock <= 0) {
-
-                    alert(
-                        "Sorry, this product is out of stock."
-                    );
-
-                    return;
-
-                }
-
-
-                if (quantity > stock) {
-
-                    alert(
-                        "Only " +
-                        stock +
-                        " item(s) are available."
-                    );
-
-                    return;
-
-                }
-
-
-                // ------------------------------------------------
-                // PERSONALIZATION
-                // ------------------------------------------------
-
-                const nameInput =
-                    document.getElementById("name");
-
-                const messageInput =
-                    document.getElementById("message");
-
-
-                const name =
-                    nameInput
-                        ? nameInput.value.trim()
-                        : "";
-
-
-                const message =
-                    messageInput
-                        ? messageInput.value.trim()
-                        : "";
-
-
-                /*
-                 * Only require personalization
-                 * if the product is customizable.
-                 */
-
-                if (
-                    product.Customizable &&
-                    nameInput &&
-                    name === ""
-                ) {
-
-                    alert(
-                        "Please enter the name for personalization."
-                    );
-
-                    nameInput.focus();
-
-                    return;
-
-                }
-
-
-                // ------------------------------------------------
-                // GET EXISTING CART
-                // ------------------------------------------------
-
-                let cart = [];
-
-
-                try {
-
-                    const savedCart =
-                        localStorage.getItem(
-                            "giftoraCart"
-                        );
-
-
-                    cart =
-                        savedCart
-                            ? JSON.parse(savedCart)
-                            : [];
-
-
-                    if (!Array.isArray(cart)) {
-
-                        cart = [];
-
-                    }
-
-                } catch (error) {
-
-                    console.error(
-                        "Cart loading error:",
-                        error
-                    );
-
-                    cart = [];
-
-                }
-
-
-                // ------------------------------------------------
-                // CHECK EXISTING PRODUCT
-                // ------------------------------------------------
-
-                const existingItem =
-                    cart.find(
-                        function (item) {
-
-                            return Number(
-                                item.productId
-                            ) === Number(
-                                product.ProductID
-                            );
-
-                        }
-                    );
-
-
-                if (existingItem) {
-
-                    existingItem.quantity =
-                        Number(
-                            existingItem.quantity
-                        ) + quantity;
-
-
-                    /*
-                     * Update customization
-                     * if provided.
-                     */
-
-                    if (name) {
-
-                        existingItem.personalizedName =
-                            name;
-
-                    }
-
-
-                    if (message) {
-
-                        existingItem.message =
-                            message;
-
-                    }
-
-                } else {
-
-                    cart.push({
-
-                        productId:
-                            Number(
-                                product.ProductID
-                            ),
-
-                        name:
-                            product.Title,
-
-                        price:
-                            Number(
-                                product.Price
-                            ),
-
-                        image:
-                            product.ImageURL,
-
-                        quantity:
-                            quantity,
-
-                        personalizedName:
-                            name,
-
-                        message:
-                            message
-
-                    });
-
-                }
-
-
-                // ------------------------------------------------
-                // SAVE CART
-                // ------------------------------------------------
-
-                localStorage.setItem(
-                    "giftoraCart",
-                    JSON.stringify(cart)
-                );
-
-
-                // Update cart count
-                updateCartCount();
-
-
-                alert(
-                    product.Title +
-                    " has been added to your cart! 🛒"
-                );
-
+        addToCartButton.addEventListener("click", function () {
+            if (!product) {
+                alert("Product information is not available.");
+                return;
             }
-        );
 
-    }
+            const stock = getStock(product);
 
+            if (stock === null) {
+                alert("We could not verify the available stock.");
+                return;
+            }
 
-    // ============================================================
-    // CART COUNT
-    // ============================================================
+            if (stock <= 0) {
+                alert("Sorry, this product is out of stock.");
+                updateStock();
+                return;
+            }
 
-    function updateCartCount() {
+            if (!Number.isInteger(quantity) || quantity < 1) {
+                alert("Please select a valid quantity.");
+                return;
+            }
 
-        if (!cartCount) {
+            // Read personalization.
+            const nameInput = document.getElementById("name");
+            const messageInput = document.getElementById("message");
 
-            return;
+            const name = nameInput ? nameInput.value.trim() : "";
+            const message = messageInput ? messageInput.value.trim() : "";
 
-        }
+            if (isCustomizable(product) && nameInput && !name) {
+                alert("Please enter the name for personalization.");
+                nameInput.focus();
+                return;
+            }
 
+            // Read the current cart.
+            const cart = getCart();
 
-        let cart = [];
+            const selectedAddons = getSelectedGiftBoxAddons();
+            const selectedAddonIds = selectedAddons
+                .map(function (addon) {
+                    return Number(addon.id);
+                })
+                .sort(function (left, right) {
+                    return left - right;
+                });
 
+            const itemSignature = JSON.stringify({
+                productId: Number(product.ProductID),
+                addonIds: selectedAddonIds,
+                personalizedName: name,
+                message: message
+            });
 
-        try {
-
-            const savedCart =
-                localStorage.getItem(
-                    "giftoraCart"
-                );
-
-
-            cart =
-                savedCart
-                    ? JSON.parse(savedCart)
+            const existingItem = cart.find(function (item) {
+                const itemAddonIds = Array.isArray(item.giftBoxAddons)
+                    ? item.giftBoxAddons.map(function (addon) {
+                        return Number(addon.id);
+                    }).sort(function (left, right) {
+                        return left - right;
+                    })
                     : [];
 
+                return JSON.stringify({
+                    productId: Number(item.productId),
+                    addonIds: itemAddonIds,
+                    personalizedName: item.personalizedName || "",
+                    message: item.message || ""
+                }) === itemSignature;
+            });
 
-            if (!Array.isArray(cart)) {
-
-                cart = [];
-
-            }
-
-        } catch (error) {
-
-            cart = [];
-
-        }
-
-
-        const totalQuantity =
-            cart.reduce(
+            const existingQuantity = cart.reduce(
                 function (total, item) {
-
-                    const itemQuantity =
-                        Number(
-                            item.quantity
-                        );
-
-
                     if (
-                        Number.isFinite(
-                            itemQuantity
-                        ) &&
-                        itemQuantity > 0
+                        Number(item.productId) ===
+                        Number(product.ProductID)
                     ) {
-
-                        return total +
-                            itemQuantity;
-
+                        return total + Math.max(
+                            0,
+                            Number(item.quantity) || 0
+                        );
                     }
 
-
                     return total;
-
                 },
                 0
             );
 
+            const safeExistingQuantity =
+                Number.isInteger(existingQuantity) &&
+                existingQuantity > 0
+                    ? existingQuantity
+                    : 0;
 
-        cartCount.textContent =
-            totalQuantity;
+            // Validate the TOTAL quantity in the cart.
+            if (safeExistingQuantity + quantity > stock) {
+                alert(
+                    "Only " + stock + " item(s) are available. " +
+                    "You already have " + safeExistingQuantity +
+                    " in your cart."
+                );
+                return;
+            }
 
+            if (existingItem) {
+                existingItem.quantity =
+                    safeExistingQuantity + quantity;
+
+                existingItem.stockQuantity = stock;
+            } else {
+                const addonTotal = selectedAddons.reduce(
+                    function (total, addon) {
+                        return total + Number(addon.price);
+                    },
+                    0
+                );
+
+                cart.push({
+                    productId: Number(product.ProductID),
+                    name: product.Title || "Handmade Gift",
+                    basePrice: Number(product.Price),
+                    price: Number(product.Price) + addonTotal,
+                    image: product.ImageURL || "",
+                    quantity: quantity,
+                    stockQuantity: stock,
+                    selected: true,
+                    personalizedName: name,
+                    message: message,
+                    giftBoxAddons: selectedAddons.map(function (addon) {
+                        return {
+                            id: Number(addon.id),
+                            name: addon.name,
+                            price: Number(addon.price)
+                        };
+                    })
+                });
+            }
+
+            if (!saveCart(cart)) {
+                return;
+            }
+
+            updateCartCount();
+
+            alert(
+                (product.Title || "Product") +
+                " has been added to your cart! 🛒"
+            );
+        });
     }
-
 
     // ============================================================
     // DESCRIPTION TABS
     // ============================================================
 
-    const tabs =
-        document.querySelectorAll(".tab");
+    const tabs = document.querySelectorAll(".tab");
+    const tabContents = document.querySelectorAll(".tab-content");
 
-    const tabContents =
-        document.querySelectorAll(
-            ".tab-content"
-        );
+    tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+            const target = tab.getAttribute("data-tab");
 
+            tabs.forEach(function (item) {
+                item.classList.remove("active");
+            });
 
-    tabs.forEach(
-        function (tab) {
+            tabContents.forEach(function (content) {
+                content.classList.remove("active");
+            });
 
-            tab.addEventListener(
-                "click",
-                function () {
+            tab.classList.add("active");
 
-                    const target =
-                        tab.getAttribute(
-                            "data-tab"
-                        );
+            const targetContent = document.getElementById(target);
 
+            if (targetContent) {
+                targetContent.classList.add("active");
+            }
+        });
+    });
 
-                    tabs.forEach(
-                        function (item) {
-
-                            item.classList.remove(
-                                "active"
-                            );
-
-                        }
-                    );
-
-
-                    tabContents.forEach(
-                        function (content) {
-
-                            content.classList.remove(
-                                "active"
-                            );
-
-                        }
-                    );
-
-
-                    tab.classList.add(
-                        "active"
-                    );
-
-
-                    const targetContent =
-                        document.getElementById(
-                            target
-                        );
-
-
-                    if (targetContent) {
-
-                        targetContent.classList.add(
-                            "active"
-                        );
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-
-
-    
     // ============================================================
-    // LOAD RELATED PRODUCTS
+    // RELATED PRODUCTS
     // ============================================================
 
     async function loadRelatedProducts() {
-        const relatedGrid =
-            document.getElementById("relatedGrid");
-
-        if (!relatedGrid) return;
+        if (!relatedGrid) {
+            return;
+        }
 
         try {
             const response = await fetch(
-                "backend/api/products.php?t=" + Date.now(),
+                API_URL + "?t=" + Date.now(),
                 {
                     method: "GET",
-                    cache: "no-store"
+                    cache: "no-store",
+                    headers: {
+                        "Accept": "application/json"
+                    }
                 }
             );
 
             if (!response.ok) {
-                throw new Error(
-                    "HTTP error: " + response.status
-                );
+                throw new Error("HTTP " + response.status);
             }
 
             const data = await response.json();
 
-            console.log("Related products API:", data);
-
-            // Support common product-list response formats.
-            let products = [];
-
-            if (Array.isArray(data)) {
-                products = data;
-            } else if (Array.isArray(data.products)) {
-                products = data.products;
-            } else if (Array.isArray(data.data)) {
-                products = data.data;
-            } else if (Array.isArray(data.product)) {
-                products = data.product;
+            if (!data.success || !Array.isArray(data.products)) {
+                throw new Error(
+                    data.message || "Invalid related-products response."
+                );
             }
 
-            // Exclude the product currently being viewed.
-            const related = products
+            const related = data.products
                 .filter(function (item) {
-                    const id =
-                        item.ProductID ??
-                        item.productId ??
-                        item.id;
-
-                    return String(id) !== String(productID);
+                    return Number(item.ProductID) !== Number(productID);
                 })
                 .slice(0, 4);
 
+            relatedGrid.innerHTML = "";
+
             if (related.length === 0) {
-                relatedGrid.innerHTML =
-                    "<p>No related gifts are available.</p>";
+                relatedGrid.textContent =
+                    "No related gifts are available.";
                 return;
             }
 
-            relatedGrid.innerHTML = "";
-
             related.forEach(function (item) {
-                const id =
-                    item.ProductID ??
-                    item.productId ??
-                    item.id;
+                const id = item.ProductID;
 
-                const title =
-                    item.Title ??
-                    item.title ??
-                    item.ProductName ??
-                    item.Name ??
-                    "Handmade Gift";
+                if (id === undefined || id === null) {
+                    return;
+                }
 
-                const category =
-                    item.CategoryName ??
-                    item.category ??
-                    "GIFT COLLECTION";
+                const title = item.Title || "Handmade Gift";
+                const category = item.CategoryName || "GIFT COLLECTION";
+                const price = Number(item.Price);
+                const imagePath = getImagePath(item.ImageURL);
 
-                const price =
-                    Number(item.Price ?? item.price ?? 0);
-
-                const imageURL =
-                    item.ImageURL ??
-                    item.imageURL ??
-                    item.image ??
-                    "";
-
-                const imagePath = getImagePath(imageURL);
-
-                const card = document.createElement("div");
+                const card = document.createElement("article");
                 card.className = "related-card";
 
-                const imageContainer =
-                    document.createElement("div");
-
+                const imageContainer = document.createElement("div");
                 imageContainer.className = "related-image";
 
                 const link = document.createElement("a");
@@ -1218,47 +898,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const heart = document.createElement("button");
                 heart.type = "button";
-                heart.textContent = "♡";
-                heart.setAttribute(
-                    "aria-label",
-                    "Add " + title + " to wishlist"
-                );
-
-                heart.addEventListener("click", function () {
-                    if (heart.textContent === "♡") {
-                        heart.textContent = "♥";
-                        heart.style.color = "#d95f62";
-                    } else {
-                        heart.textContent = "♡";
-                        heart.style.color = "";
-                    }
-                });
+                if (window.GiftoraFavorites) {
+                    window.GiftoraFavorites.bindButton(heart, item);
+                }
 
                 imageContainer.appendChild(heart);
 
-                const categoryText =
-                    document.createElement("p");
+                const categoryText = document.createElement("p");
                 categoryText.textContent = category;
 
                 const heading = document.createElement("h3");
                 heading.textContent = title;
 
-                const priceText =
-                    document.createElement("strong");
+                const priceText = document.createElement("strong");
+                priceText.textContent = formatMoney(price);
 
-                priceText.textContent =
-                    "Rs. " + price.toLocaleString("en-LK", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    });
-
-                const viewLink =
-                    document.createElement("a");
-
+                const viewLink = document.createElement("a");
                 viewLink.href =
                     "prduct_details.html?id=" +
                     encodeURIComponent(id);
-
                 viewLink.textContent = "View Product";
 
                 card.appendChild(imageContainer);
@@ -1271,26 +929,18 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
         } catch (error) {
-            console.error(
-                "Could not load related products:",
-                error
-            );
+            console.error("Related products error:", error);
 
-            relatedGrid.innerHTML =
-                "<p>Unable to load related gifts. " +
-                "Please refresh the page.</p>";
+            relatedGrid.textContent =
+                "Unable to load related gifts. Please refresh the page.";
         }
     }
-
-
-
 
     // ============================================================
     // INITIALIZE
     // ============================================================
 
     updateCartCount();
-
     loadProduct();
-
+    loadRelatedProducts();
 });

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Favorite Gifts | GIFTORA</title>
+    <link rel="stylesheet" href="product_listing.css">
+    <link rel="stylesheet" href="favorites.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="home.html" class="logo">
+                <img src="Logo.png" alt="GIFTORA Logo">
+                <div><h1>GIFTORA</h1><span>Handmade &amp; Personalized Gifts</span></div>
+            </a>
+            <nav>
+                <a href="home.html">Home</a>
+                <a href="product_listing.html">Shop</a>
+                <a href="home.html#categories">Categories</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <div class="header-actions">
+                <a href="product_listing.html" class="icon-btn" title="Shop gifts">🔍</a>
+                <button class="icon-btn wishlist-header" type="button" title="Favorite products">♥</button>
+                <a href="cart.html" class="cart-link" title="Shopping Cart">🛒 <span class="cart-count">0</span></a>
+                <a href="login.html" class="account-btn" title="My Account">👤</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="favorites-page">
+        <section class="favorites-heading">
+            <p>YOUR PERSONAL COLLECTION</p>
+            <h1>Favorite Gifts</h1>
+            <span>All the thoughtful gifts you have saved in one place.</span>
+        </section>
+        <section aria-label="Favorite products">
+            <div id="favoritesGrid" class="favorites-grid"></div>
+            <div id="emptyFavorites" class="empty-favorites" hidden>
+                <div class="empty-heart">♡</div>
+                <h2>No favorite gifts yet</h2>
+                <p>Tap the heart on a product to save it here.</p>
+                <a href="product_listing.html">Explore the gifts</a>
+            </div>
+        </section>
+    </main>
+    <script src="favorites.js?v=2"></script>
+    <script src="favorites_page.js?v=2"></script>
+</body>
+</html>

@@ -272,6 +272,59 @@ nav a:hover {
 
 }
 
+.header-actions .logout-btn {
+
+    min-height: 40px;
+
+    padding: 0 15px;
+
+    border: 1px solid var(--green);
+
+    border-radius: 22px;
+
+    background: var(--green);
+
+    color: var(--white);
+
+    font-family: 'Poppins', sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: background-color 0.3s ease, transform 0.3s ease;
+
+}
+
+
+.header-actions .logout-btn:hover {
+
+    background: var(--dark-green);
+
+    transform: translateY(-2px);
+
+}
+
+
+.header-actions .logout-btn:focus-visible {
+
+    outline: 2px solid #9abdb3;
+
+    outline-offset: 2px;
+
+}
+
+
+.header-actions .logout-btn:disabled {
+
+    cursor: wait;
+
+    opacity: 0.7;
+
+}
+
 
 .cart-link {
 

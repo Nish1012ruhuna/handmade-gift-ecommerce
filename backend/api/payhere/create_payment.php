@@ -6,6 +6,7 @@ header("Content-Type: application/json");
 require_once __DIR__ . "/../../config/database.php";
 require_once __DIR__ . "/../../config/session.php";
 require_once __DIR__ . "/../../config/payhere.php";
+require_once __DIR__ . "/../../config/gift_box_addons.php";
 
 function respond($statusCode, $message, $extra = [])
 {
@@ -68,6 +69,7 @@ if (count($items) > 100) {
 
 // Combine duplicate product IDs and validate quantities.
 $quantities = [];
+$cartLines = [];
 
 foreach ($items as $item) {
     if (!is_array($item)) {
@@ -83,13 +85,21 @@ foreach ($items as $item) {
         $item["quantity"] ?? null,
         FILTER_VALIDATE_INT
     );
+    $giftBoxAddonIds = $item["giftBoxAddonIds"] ?? [];
 
     if (
         $productId === false || $productId < 1 ||
         $quantity === false || $quantity < 1 ||
-        $quantity > 100
+        $quantity > 100 ||
+        !is_array($giftBoxAddonIds)
     ) {
         respond(400, "Invalid product ID or quantity.");
+    }
+
+    try {
+        $selectedAddons = getGiftBoxAddonsByIds($giftBoxAddonIds);
+    } catch (InvalidArgumentException $e) {
+        respond(400, $e->getMessage());
     }
 
     $quantities[$productId] =
@@ -98,6 +108,12 @@ foreach ($items as $item) {
     if ($quantities[$productId] > 100) {
         respond(400, "The quantity for a product is too large.");
     }
+
+    $cartLines[] = [
+        "productId" => $productId,
+        "quantity" => $quantity,
+        "giftBoxAddons" => $selectedAddons
+    ];
 }
 
 $nameParts = preg_split('/\s+/', $fullName);
@@ -106,9 +122,7 @@ $lastName = count($nameParts) > 1
     ? implode(" ", array_slice($nameParts, 1))
     : "";
 
-// Your checkout currently charges LKR 350 for delivery.
-// Keep this consistent with checkout.js for now.
-$shippingFee = 350.00;
+$shippingFee = 0.00;
 
 $currency = "LKR";
 $orderId = null;
@@ -134,14 +148,14 @@ try {
 
     // Get the real product prices and check stock in MySQL.
     $productStmt = $conn->prepare(
-        "SELECT ProductID, Title, Price, StockQuantity
-         FROM product
-         WHERE ProductID = ? AND IsActive = 1
+        "SELECT p.ProductID, p.Title, p.Price, p.StockQuantity, c.Name AS CategoryName
+         FROM product p
+         INNER JOIN category c ON c.CategoryID = p.CategoryID
+         WHERE p.ProductID = ? AND p.IsActive = 1
          FOR UPDATE"
     );
 
-    $verifiedItems = [];
-    $subtotal = 0.00;
+    $verifiedProducts = [];
 
     foreach ($quantities as $productId => $quantity) {
         $productStmt->bind_param("i", $productId);
@@ -162,22 +176,52 @@ try {
             );
         }
 
-        $unitPrice = (float) $product["Price"];
-        $lineTotal = round($unitPrice * $quantity, 2);
-        $subtotal += $lineTotal;
-
-        $verifiedItems[] = [
-            "productId" => (int) $product["ProductID"],
-            "quantity" => $quantity,
-            "unitPrice" => $unitPrice
-        ];
+        $verifiedProducts[$productId] = $product;
     }
 
     $productStmt->close();
 
+    $verifiedItems = [];
+    $subtotal = 0.00;
+
+    foreach ($cartLines as $line) {
+        $productId = $line["productId"];
+        $quantity = $line["quantity"];
+        $product = $verifiedProducts[$productId];
+        $selectedAddons = $line["giftBoxAddons"];
+        $isGiftBox = strtolower(trim($product["CategoryName"])) === "gift boxes";
+
+        if (count($selectedAddons) > 0 && !$isGiftBox) {
+            throw new RuntimeException(
+                "Gift-box items can only be added to products in the Gift Boxes category."
+            );
+        }
+
+        $addonTotal = array_reduce(
+            $selectedAddons,
+            function ($total, $addon) {
+                return $total + (float) $addon["price"];
+            },
+            0.0
+        );
+
+        $unitPrice = (float) $product["Price"] + $addonTotal;
+        $subtotal += round($unitPrice * $quantity, 2);
+
+        $verifiedItems[] = [
+            "productId" => (int) $product["ProductID"],
+            "quantity" => $quantity,
+            "unitPrice" => $unitPrice,
+            "giftBoxAddons" => $selectedAddons
+        ];
+    }
+
     // Calculate the total on the server.
     // This does not use the amount from the browser.
     $subtotal = round($subtotal, 2);
+    if ($subtotal > 0 && $subtotal < 2000) {
+        $shippingFee = 350.00;
+    }
     $totalAmount = round($subtotal + $shippingFee, 2);
 
     $deliveryAddress = $address . ", " . $city . ", " . $country;
@@ -203,19 +247,24 @@ try {
     // Save each product and its verified price.
     $itemStmt = $conn->prepare(
         "INSERT INTO orderitem
-            (OrderID, ProductID, Quantity, UnitPrice)
-         VALUES (?, ?, ?, ?)"
+            (OrderID, ProductID, CustomizationID, Quantity, UnitPrice)
+         VALUES (?, ?, ?, ?, ?)"
     );
 
     foreach ($verifiedItems as $item) {
         $productId = $item["productId"];
         $quantity = $item["quantity"];
         $unitPrice = $item["unitPrice"];
+        $customizationId = saveGiftBoxAddons(
+            $conn,
+            $item["giftBoxAddons"]
+        );
 
         $itemStmt->bind_param(
-            "iiid",
+            "iiiid",
             $orderId,
             $productId,
+            $customizationId,
             $quantity,
             $unitPrice
         );

@@ -25,7 +25,7 @@ async function load(){
             if(!r.ok||d.success===false)throw Error(d.message||"Could not load customers");
             customers=d.customers||[];
             render()}catch(e){msg(e.message);
-                body.innerHTML='<tr><td colspan="6" class="empty">Could not load customers.</td></tr>';
+                body.innerHTML='<tr><td colspan="7" class="empty">Could not load customers.</td></tr>';
             }
         }
 
@@ -37,7 +37,10 @@ function render(){
         <td>${esc(c.MobileNo||"—")}</td>
         <td>${esc(c.ShippingAddress||"—")}</td>
         <td>${esc(c.CreatedAt||"—")}</td>
-        </tr>`).join(""):'<tr><td colspan="6" class="empty">No customers found.</td></tr>';
+        <td><div class="rowactions">
+            <a class="btn small secondary" href="admin_inquiries.html?customer_id=${encodeURIComponent(String(c.CustomerID))}">View inquiries</a>
+        </div></td>
+        </tr>`).join(""):'<tr><td colspan="7" class="empty">No customers found.</td></tr>';
     }
 
 document.getElementById("search").addEventListener("input",render);

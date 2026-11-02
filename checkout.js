@@ -1,20 +1,3 @@
-
-/*
-=========================================================
- GIFTORA - CHECKOUT JAVASCRIPT
----------------------------------------------------------
- Features:
- 1. Verify the customer's PHP session.
- 2. Load saved customer details from the database.
- 3. Load selected cart items.
- 4. Display the order summary.
- 5. Handle billing address and payment method selection.
- 6. Submit COD and bank-transfer orders to PHP.
- 7. Start the existing PayHere payment flow.
- 8. Preserve unpurchased items in the cart.
-=========================================================
-*/
-
 document.addEventListener("DOMContentLoaded", async function () {
 
     // =====================================================
@@ -268,9 +251,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         });
 
-        // Keep the checkout display aligned with create_order.php.
-        // Update this rule in BOTH places if your shipping policy changes.
-        const shipping = subtotal > 0 ? 350 : 0;
+        const shipping =
+            subtotal > 0 && subtotal < 2000
+                ? 350
+                : 0;
 
         return {
             subtotal: subtotal,
@@ -323,6 +307,20 @@ document.addEventListener("DOMContentLoaded", async function () {
             priceElement.textContent = money(price * quantity);
 
             info.append(name, qty);
+
+            if (
+                Array.isArray(item.giftBoxAddons) &&
+                item.giftBoxAddons.length > 0
+            ) {
+                const addonNames = document.createElement("small");
+                addonNames.textContent =
+                    "Includes: " +
+                    item.giftBoxAddons.map(function (addon) {
+                        return addon.name;
+                    }).join(", ");
+                info.appendChild(addonNames);
+            }
+
             row.append(info, priceElement);
             cartItemsContainer.appendChild(row);
         });
@@ -604,7 +602,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                     productId: Number(
                         item.productId ?? item.ProductID
                     ),
-                    quantity: Number(item.quantity)
+                    quantity: Number(item.quantity),
+                    giftBoxAddonIds: Array.isArray(item.giftBoxAddons)
+                        ? item.giftBoxAddons.map(function (addon) {
+                            return Number(addon.id);
+                        })
+                        : []
                 };
             })
         };
@@ -750,7 +753,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                     productId: Number(
                         item.productId ?? item.ProductID
                     ),
-                    quantity: Number(item.quantity)
+                    quantity: Number(item.quantity),
+                    giftBoxAddonIds: Array.isArray(item.giftBoxAddons)
+                        ? item.giftBoxAddons.map(function (addon) {
+                            return Number(addon.id);
+                        })
+                        : []
                 };
             })
         };

@@ -23,11 +23,22 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
             o.Status,
             o.DeliveryAddress,
             c.FullName,
-            c.Email
+            c.Email,
+            oi.OrderItemID,
+            p.Title AS ProductTitle,
+            oi.Quantity,
+            oi.UnitPrice,
+            cu.SpecialInstruction
         FROM `orders` o
         INNER JOIN `customer` c
             ON o.CustomerID = c.CustomerID
-        ORDER BY o.OrderDate DESC
+        LEFT JOIN orderitem oi
+            ON oi.OrderID = o.OrderID
+        LEFT JOIN product p
+            ON p.ProductID = oi.ProductID
+        LEFT JOIN customization cu
+            ON cu.CustomizationID = oi.CustomizationID
+        ORDER BY o.OrderDate DESC, oi.OrderItemID ASC
     ";
 
     $result = $conn->query($sql);
@@ -46,12 +57,40 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $orders = [];
 
     while ($row = $result->fetch_assoc()) {
-        $orders[] = $row;
+        $orderID = (int) $row["OrderID"];
+
+        if (!isset($orders[$orderID])) {
+            $orders[$orderID] = [
+                "OrderID" => $orderID,
+                "OrderDate" => $row["OrderDate"],
+                "TotalAmount" => $row["TotalAmount"],
+                "Status" => $row["Status"],
+                "DeliveryAddress" => $row["DeliveryAddress"],
+                "FullName" => $row["FullName"],
+                "Email" => $row["Email"],
+                "Items" => []
+            ];
+        }
+
+        if ($row["OrderItemID"] !== null) {
+            $giftBoxAddons = json_decode(
+                $row["SpecialInstruction"] ?? "",
+                true
+            );
+
+            $orders[$orderID]["Items"][] = [
+                "ProductTitle" => $row["ProductTitle"],
+                "Quantity" => (int) $row["Quantity"],
+                "GiftBoxAddons" => is_array($giftBoxAddons)
+                    ? $giftBoxAddons
+                    : []
+            ];
+        }
     }
 
     echo json_encode([
         "success" => true,
-        "orders" => $orders
+        "orders" => array_values($orders)
     ]);
 
     exit;

@@ -1,67 +1,24 @@
-
-<<<<<<< Updated upstream
- // ============================================================
- // GIFTORA - PRODUCT LISTING
- // ============================================================
-=======
-/* ============================================================
-   GIFTORA - PRODUCT LISTING WITH STOCK MANAGEMENT
-   ============================================================ */
->>>>>>> Stashed changes
-
 document.addEventListener("DOMContentLoaded", function () {
+    "use strict";
+
+    // ============================================================
+    // GIFTORA - PRODUCT LISTING WITH STOCK MANAGEMENT
+    // ============================================================
+
+    const CART_KEY = "giftoraCart";
+    const API_URL = "backend/api/products.php";
+
     const productGrid = document.getElementById("productGrid");
     const noResults = document.getElementById("noResults");
     const searchInput = document.getElementById("searchInput");
     const filterButtons = document.querySelectorAll(".filter-btn");
 
-<<<<<<< Updated upstream
-    // ============================================================
-    // ELEMENTS
-    // ============================================================
-
-    const productGrid =
-        document.getElementById("productGrid");
-
-    const noResults =
-        document.getElementById("noResults");
-
-    const searchInput =
-        document.getElementById("searchInput");
-
-    const filterButtons =
-        document.querySelectorAll(".filter-btn");
-
-
-    // Check required elements
-    if (!productGrid || !noResults || !searchInput) {
-        console.error(
-            "GIFTORA: Required product listing elements were not found."
-        );
-        return;
-    }
-
-
-    // ============================================================
-    // VARIABLES
-    // ============================================================
-
-    let products = [];
-
-    let selectedCategory = "all";
-
-
-    // ============================================================
-    // API
-    // ============================================================
-
-=======
-    const CART_KEY = "giftoraCart";
->>>>>>> Stashed changes
-    const API_URL = "backend/api/products.php";
-
     let products = [];
     let selectedCategory = "all";
+
+    // ============================================================
+    // CHECK REQUIRED ELEMENTS
+    // ============================================================
 
     if (!productGrid || !noResults || !searchInput) {
         console.error(
@@ -70,16 +27,16 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    /* ========================================================
-       HELPER FUNCTIONS
-       ======================================================== */
+    // ============================================================
+    // HELPER FUNCTIONS
+    // ============================================================
 
     function cleanTitle(title) {
-        if (!title) return "Untitled Product";
+        if (!title) {
+            return "Untitled Product";
+        }
 
-        return String(title)
-            .replace(/^#+\s*/, "")
-            .trim();
+        return String(title).replace(/^#+\s*/, "").trim();
     }
 
     function formatMoney(amount) {
@@ -96,15 +53,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function getStock(product) {
-        const stock = Number(product.StockQuantity);
-
         if (
+            !product ||
             product.StockQuantity === null ||
             product.StockQuantity === undefined ||
-            product.StockQuantity === "" ||
-            !Number.isInteger(stock) ||
-            stock < 0
+            String(product.StockQuantity).trim() === ""
         ) {
+            return null;
+        }
+
+        const stock = Number(product.StockQuantity);
+
+        if (!Number.isInteger(stock) || stock < 0) {
             return null;
         }
 
@@ -112,43 +72,65 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function getImagePath(imageURL) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         if (!imageURL) {
             return "Logo.png";
         }
 
         let imagePath = String(imageURL).trim();
 
-<<<<<<< Updated upstream
-        // Remove starting slash
-        imagePath = imagePath.replace(/^\/+/, "");
-
-        // Keep existing shop_images path
-        if (imagePath.startsWith("shop_images/")) {
-            return imagePath;
-        }
-
-        // Add shop_images folder to the filename
-=======
-        if (/^https?:\/\//i.test(imagePath)) {
+        if (/^(https?:\/\/|data:)/i.test(imagePath)) {
             return imagePath;
         }
 
         imagePath = imagePath.replace(/^\/+/, "");
 
+        if (imagePath.startsWith("giftora/shop_images/")) {
+            return imagePath.substring("giftora/".length);
+        }
+
         if (imagePath.startsWith("shop_images/")) {
             return imagePath;
         }
 
->>>>>>> Stashed changes
         return "shop_images/" + imagePath;
     }
 
+    function getCart() {
+        try {
+            const savedCart = localStorage.getItem(CART_KEY);
+
+            if (!savedCart) {
+                return [];
+            }
+
+            const cart = JSON.parse(savedCart);
+
+            return Array.isArray(cart) ? cart : [];
+        } catch (error) {
+            console.error("Could not read cart:", error);
+            return [];
+        }
+    }
+
+    function saveCart(cart) {
+        try {
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            return true;
+        } catch (error) {
+            console.error("Could not save cart:", error);
+            alert("Unable to save your cart. Please try again.");
+            return false;
+        }
+    }
+
+    // ============================================================
+    // CATEGORY FILTERING
+    // ============================================================
+
     function getCategorySlug(categoryName) {
-        if (!categoryName) return "";
+        if (!categoryName) {
+            return "";
+        }
 
         return String(categoryName)
             .toLowerCase()
@@ -157,27 +139,50 @@ document.addEventListener("DOMContentLoaded", function () {
             .replace(/[^a-z0-9]+/g, "");
     }
 
-    /* ========================================================
-       LOAD PRODUCTS FROM DATABASE API
-       ======================================================== */
+    function categoryMatches(productCategory, filterCategory) {
+        const category = getCategorySlug(productCategory);
+        const filter = getCategorySlug(filterCategory);
+
+        if (filter === "all") {
+            return true;
+        }
+
+        const categoryAliases = {
+            cards: ["greetingcards"],
+            keychains: ["resinkeychains"],
+            giftboxes: ["giftboxes"],
+            candles: ["candles"],
+            wood: ["woodengifts"],
+            frames: ["photogifts", "photoframes"],
+            cakes: ["cakes"]
+        };
+
+        if (categoryAliases[filter]) {
+            return categoryAliases[filter].includes(category);
+        }
+
+        return category === filter;
+    }
+
+    // ============================================================
+    // LOAD PRODUCTS
+    // ============================================================
 
     async function loadProducts() {
         try {
-<<<<<<< Updated upstream
+            productGrid.innerHTML = "";
 
-=======
->>>>>>> Stashed changes
-            productGrid.innerHTML = `
-                <div class="loading-message">
-                    <p>Loading our beautiful gifts... 🎁</p>
-                </div>
-            `;
+            const loading = document.createElement("div");
+            loading.className = "loading-message";
 
-<<<<<<< Updated upstream
-=======
+            const loadingText = document.createElement("p");
+            loadingText.textContent = "Loading our beautiful gifts... 🎁";
+
+            loading.appendChild(loadingText);
+            productGrid.appendChild(loading);
+
             noResults.style.display = "none";
 
->>>>>>> Stashed changes
             const response = await fetch(
                 API_URL + "?t=" + Date.now(),
                 {
@@ -191,130 +196,73 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!response.ok) {
                 throw new Error(
-                    "Failed to load products. HTTP status: " +
-                    response.status
+                    "Failed to load products. HTTP " + response.status
                 );
             }
 
             const data = await response.json();
 
-<<<<<<< Updated upstream
-            console.log("Products API response:", data);
-=======
             console.log("GIFTORA products API response:", data);
->>>>>>> Stashed changes
 
-            if (!data.success) {
+            if (!data.success || !Array.isArray(data.products)) {
                 throw new Error(
-                    data.message || "Unable to load products."
+                    data.message || "Invalid product API response."
                 );
             }
 
-            products = Array.isArray(data.products)
-                ? data.products
-                : [];
+            products = data.products;
 
-            console.log("Products loaded:", products);
+            console.log("Products loaded:", products.length);
 
             displayProducts();
 
         } catch (error) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             console.error("Product loading error:", error);
 
-            productGrid.innerHTML = `
-                <div class="loading-message">
-                    <h2>Unable to load products</h2>
-                    <p>
-<<<<<<< Updated upstream
-                        Please make sure the server is running
-                        and try again.
-                    </p>
-                    <p>Error: ${error.message}</p>
-=======
-                        Please check your server and database connection.
-                    </p>
-                    <p>${error.message}</p>
->>>>>>> Stashed changes
-                </div>
-            `;
+            productGrid.innerHTML = "";
+
+            const message = document.createElement("div");
+            message.className = "loading-message";
+
+            const heading = document.createElement("h2");
+            heading.textContent = "Unable to load products";
+
+            const description = document.createElement("p");
+            description.textContent =
+                "Please check your server and try again.";
+
+            message.appendChild(heading);
+            message.appendChild(description);
+            productGrid.appendChild(message);
 
             noResults.style.display = "none";
         }
     }
 
-    /* ========================================================
-       DISPLAY PRODUCTS AND APPLY FILTERS
-       ======================================================== */
+    // ============================================================
+    // DISPLAY FILTERED PRODUCTS
+    // ============================================================
 
     function displayProducts() {
-        const searchText = searchInput.value
-            .trim()
-            .toLowerCase();
+        const searchText = searchInput.value.trim().toLowerCase();
 
-<<<<<<< Updated upstream
-        const searchText = searchInput.value
-            .trim()
-            .toLowerCase();
-
-        const filteredProducts = products.filter(
-            function (product) {
-
-                const title = cleanTitle(product.Title);
-
-                const description = String(
-                    product.Description || ""
-                );
-
-                const category = String(
-                    product.CategoryName || ""
-                );
-
-                const matchesSearch =
-                    title.toLowerCase().includes(searchText) ||
-                    description.toLowerCase().includes(searchText) ||
-                    category.toLowerCase().includes(searchText);
-
-                let matchesCategory = true;
-
-                if (selectedCategory !== "all") {
-                    matchesCategory =
-                        getCategorySlug(category) === selectedCategory;
-                }
-
-                return matchesSearch && matchesCategory;
-            }
-        );
-=======
         const filteredProducts = products.filter(function (product) {
             const title = cleanTitle(product.Title);
 
-            const description = String(
-                product.Description || ""
-            );
-
-            const category = String(
-                product.CategoryName || ""
-            );
+            const description = String(product.Description || "");
+            const category = String(product.CategoryName || "");
 
             const matchesSearch =
                 title.toLowerCase().includes(searchText) ||
                 description.toLowerCase().includes(searchText) ||
                 category.toLowerCase().includes(searchText);
 
-            let matchesCategory = true;
-
-            if (selectedCategory !== "all") {
-                matchesCategory =
-                    getCategorySlug(category) === selectedCategory;
-            }
+            const matchesCategory =
+                selectedCategory === "all" ||
+                categoryMatches(category, selectedCategory);
 
             return matchesSearch && matchesCategory;
         });
->>>>>>> Stashed changes
 
         productGrid.innerHTML = "";
 
@@ -326,79 +274,45 @@ document.addEventListener("DOMContentLoaded", function () {
         noResults.style.display = "none";
 
         filteredProducts.forEach(function (product) {
-<<<<<<< Updated upstream
-
-            const card = createProductCard(product);
-
-            productGrid.appendChild(card);
-=======
             productGrid.appendChild(createProductCard(product));
->>>>>>> Stashed changes
         });
     }
 
-    /* ========================================================
-       CREATE PRODUCT CARD
-       ======================================================== */
+    // ============================================================
+    // CREATE PRODUCT CARD
+    // ============================================================
 
     function createProductCard(product) {
         const card = document.createElement("article");
         card.className = "product-card";
 
-<<<<<<< Updated upstream
-        const card = document.createElement("article");
-        card.className = "product-card";
-=======
-        /* Product image */
-
+        // Product image.
         const imageContainer = document.createElement("div");
         imageContainer.className = "product-image";
->>>>>>> Stashed changes
 
         const image = document.createElement("img");
         image.src = getImagePath(product.ImageURL);
         image.alt = cleanTitle(product.Title);
         image.loading = "lazy";
 
-<<<<<<< Updated upstream
-        // IMAGE
-        const imageContainer = document.createElement("div");
-        imageContainer.className = "product-image";
-
-        const image = document.createElement("img");
-
-        image.src = getImagePath(product.ImageURL);
-        image.alt = cleanTitle(product.Title);
-        image.loading = "lazy";
-
         image.onerror = function () {
+            console.error("Product image could not be loaded:", image.src);
 
-            console.error(
-                "Image could not be loaded:",
-                image.src,
-                "Database ImageURL:",
-                product.ImageURL
-=======
-        image.onerror = function () {
-            console.error(
-                "Product image could not be loaded:",
-                image.src
->>>>>>> Stashed changes
-            );
-
-            image.onerror = null;
-            image.src = "Logo.png";
+            this.onerror = null;
+            this.src = "Logo.png";
         };
 
         imageContainer.appendChild(image);
 
-        /* Product information */
+        const favoriteButton = document.createElement("button");
+        favoriteButton.className = "product-favorite-btn";
+        favoriteButton.type = "button";
+        if (window.GiftoraFavorites) {
+            window.GiftoraFavorites.bindButton(favoriteButton, product);
+        }
+        imageContainer.appendChild(favoriteButton);
 
-<<<<<<< Updated upstream
-        // PRODUCT INFO
-        const info = document.createElement("div");
-        info.className = "product-info";
-=======
+        // Product information.
         const info = document.createElement("div");
         info.className = "product-info";
 
@@ -409,36 +323,21 @@ document.addEventListener("DOMContentLoaded", function () {
         const title = document.createElement("h3");
         title.className = "product-title";
         title.textContent = cleanTitle(product.Title);
->>>>>>> Stashed changes
 
         const description = document.createElement("p");
         description.className = "product-description";
         description.textContent = product.Description || "";
 
-<<<<<<< Updated upstream
-        // CATEGORY
-        const category = document.createElement("span");
-        category.className = "product-category";
-        category.textContent = product.CategoryName || "Gift";
-=======
         const price = document.createElement("span");
         price.className = "product-price";
         price.textContent = formatMoney(product.Price);
 
-        /* Stock information */
-
+        // Stock display.
         const stock = document.createElement("p");
         stock.className = "product-stock";
->>>>>>> Stashed changes
 
         const stockQuantity = getStock(product);
 
-<<<<<<< Updated upstream
-        // TITLE
-        const title = document.createElement("h3");
-        title.className = "product-title";
-        title.textContent = cleanTitle(product.Title);
-=======
         if (stockQuantity === null) {
             stock.textContent = "Stock unavailable";
             stock.classList.add("stock-unknown");
@@ -452,8 +351,7 @@ document.addEventListener("DOMContentLoaded", function () {
             stock.classList.add("in-stock");
         }
 
-        /* Product action buttons */
-
+        // Action buttons.
         const actions = document.createElement("div");
         actions.className = "product-actions";
 
@@ -461,139 +359,64 @@ document.addEventListener("DOMContentLoaded", function () {
         viewButton.className = "view-product-btn";
         viewButton.type = "button";
         viewButton.textContent = "View Product";
->>>>>>> Stashed changes
 
         viewButton.addEventListener("click", function () {
-            const productID = product.ProductID;
+            const id = product.ProductID;
 
-<<<<<<< Updated upstream
-        // DESCRIPTION
-        const description = document.createElement("p");
-        description.className = "product-description";
-        description.textContent = product.Description || "";
-
-
-        // PRICE
-        const price = document.createElement("span");
-        price.className = "product-price";
-        price.textContent = formatMoney(product.Price);
-
-
-        // BUTTON CONTAINER
-        const actions = document.createElement("div");
-        actions.className = "product-actions";
-
-
-        // ========================================================
-        // VIEW PRODUCT BUTTON - CORRECTED
-        // ========================================================
-
-        const viewButton = document.createElement("button");
-
-        viewButton.className = "view-product-btn";
-        viewButton.type = "button";
-        viewButton.textContent = "View Product";
-
-        viewButton.addEventListener("click", function () {
-
-            const productID = product.ProductID;
-
-=======
->>>>>>> Stashed changes
             if (
-                productID === undefined ||
-                productID === null ||
-                String(productID).trim() === ""
+                id === undefined ||
+                id === null ||
+                String(id).trim() === ""
             ) {
-                console.error(
-                    "GIFTORA: Product ID is missing.",
-                    product
-                );
-
-<<<<<<< Updated upstream
-                alert("Unable to open this product. Product ID is missing.");
-                return;
-            }
-
-            const targetURL =
-                "/giftora/prduct_details.html?id=" +
-                encodeURIComponent(productID);
-
-            console.log("Opening product details:", targetURL);
-
-            window.location.href = targetURL;
-        });
-=======
+                console.error("GIFTORA: Product ID is missing.", product);
                 alert("Unable to open this product.");
                 return;
             }
->>>>>>> Stashed changes
 
-            /*
-             * Keep your existing product-details filename here.
-             * Correct the filename if your actual HTML file differs.
-             */
-            const targetURL =
-                "/giftora/prduct_details.html?id=" +
-                encodeURIComponent(productID);
-
-            window.location.href = targetURL;
+            window.location.href =
+                "prduct_details.html?id=" +
+                encodeURIComponent(id);
         });
 
         const cartButton = document.createElement("button");
-<<<<<<< Updated upstream
-
         cartButton.className = "add-cart-btn";
         cartButton.type = "button";
-        cartButton.textContent = "Add to Cart";
+        const isGiftBox =
+            getCategorySlug(product.CategoryName) === "giftboxes";
+        cartButton.textContent = isGiftBox
+            ? "Choose Box Items"
+            : "Add to Cart";
 
-        cartButton.addEventListener("click", function () {
-
-            addToCart(product);
-        });
-=======
-        cartButton.className = "add-cart-btn";
-        cartButton.type = "button";
-        cartButton.textContent = "Add to Cart";
-
-        if (stockQuantity === 0) {
-            cartButton.disabled = true;
-            cartButton.textContent = "Out of Stock";
-            cartButton.classList.add("disabled-cart-btn");
-        } else if (stockQuantity === null) {
+        if (stockQuantity === null) {
             cartButton.disabled = true;
             cartButton.textContent = "Stock Unavailable";
             cartButton.classList.add("disabled-cart-btn");
+        } else if (stockQuantity === 0) {
+            cartButton.disabled = true;
+            cartButton.textContent = "Out of Stock";
+            cartButton.classList.add("disabled-cart-btn");
         }
->>>>>>> Stashed changes
 
         cartButton.addEventListener("click", function () {
+            if (isGiftBox) {
+                window.location.href =
+                    "prduct_details.html?id=" +
+                    encodeURIComponent(product.ProductID);
+                return;
+            }
+
             addToCart(product);
         });
 
-<<<<<<< Updated upstream
-        // ADD BUTTONS
-        actions.appendChild(viewButton);
-        actions.appendChild(cartButton);
-=======
-        /* Assemble card */
->>>>>>> Stashed changes
-
+        // Assemble the card.
         actions.appendChild(viewButton);
         actions.appendChild(cartButton);
 
-<<<<<<< Updated upstream
-        // BUILD PRODUCT CARD
-=======
->>>>>>> Stashed changes
         info.appendChild(category);
         info.appendChild(title);
         info.appendChild(description);
         info.appendChild(price);
-<<<<<<< Updated upstream
-=======
         info.appendChild(stock);
->>>>>>> Stashed changes
         info.appendChild(actions);
 
         card.appendChild(imageContainer);
@@ -602,48 +425,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return card;
     }
 
-<<<<<<< Updated upstream
-
     // ============================================================
-    // SEARCH
+    // ADD PRODUCT TO CART
     // ============================================================
-
-    searchInput.addEventListener("input", function () {
-
-        displayProducts();
-    });
-
-
-    // ============================================================
-    // CATEGORY FILTER
-    // ============================================================
-
-    filterButtons.forEach(function (button) {
-
-        button.addEventListener("click", function () {
-
-            filterButtons.forEach(function (btn) {
-
-                btn.classList.remove("active");
-            });
-
-            button.classList.add("active");
-
-            selectedCategory = button.dataset.category || "all";
-
-            displayProducts();
-        });
-    });
-
-
-    // ============================================================
-    // ADD TO CART
-    // ============================================================
-=======
-    /* ========================================================
-       ADD PRODUCT TO CART
-       ======================================================== */
->>>>>>> Stashed changes
 
     function addToCart(product) {
         const stockQuantity = getStock(product);
@@ -661,253 +445,124 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        let cart = [];
+        const productID = Number(product.ProductID);
 
-        try {
-            const savedCart = localStorage.getItem(CART_KEY);
-
-<<<<<<< Updated upstream
-            const savedCart = localStorage.getItem("giftoraCart");
-
-            if (savedCart) {
-                cart = JSON.parse(savedCart);
-            }
-=======
-            cart = savedCart ? JSON.parse(savedCart) : [];
->>>>>>> Stashed changes
-
-            if (!Array.isArray(cart)) {
-                cart = [];
-            }
-        } catch (error) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-            console.error("Cart loading error:", error);
-            cart = [];
+        if (!Number.isInteger(productID) || productID <= 0) {
+            alert("Unable to identify this product.");
+            return;
         }
 
+        const cart = getCart();
+
         const existingItem = cart.find(function (item) {
-            return Number(item.productId) ===
-                Number(product.ProductID);
+            return Number(item.productId) === productID;
         });
 
-<<<<<<< Updated upstream
-        // FIND EXISTING PRODUCT
-        const existingItem = cart.find(function (item) {
-
-            return Number(item.productId) ===
-                Number(product.ProductID);
-        });
-
-
-        // INCREASE QUANTITY
-        if (existingItem) {
-
-            existingItem.quantity =
-                (Number(existingItem.quantity) || 0) + 1;
-
-        } else {
-
-            // ADD NEW PRODUCT
-            cart.push({
-
-                productId: product.ProductID,
-
-                name: cleanTitle(product.Title),
-
-                price: Number(product.Price),
-
-                image: product.ImageURL,
-
-                quantity: 1
-=======
         const currentQuantity = existingItem
-            ? Number(existingItem.quantity) || 0
+            ? Number(existingItem.quantity)
             : 0;
 
-        if (currentQuantity + 1 > stockQuantity) {
+        const safeCurrentQuantity =
+            Number.isInteger(currentQuantity) && currentQuantity > 0
+                ? currentQuantity
+                : 0;
+
+        // Check the combined cart quantity, not just one new item.
+        if (safeCurrentQuantity + 1 > stockQuantity) {
             alert(
                 "Sorry! Only " + stockQuantity +
-                " unit(s) of this product are available."
+                " unit(s) of this product are available. " +
+                "You already have " + safeCurrentQuantity +
+                " in your cart."
             );
             return;
         }
 
         if (existingItem) {
-            existingItem.quantity = currentQuantity + 1;
+            existingItem.quantity = safeCurrentQuantity + 1;
             existingItem.stockQuantity = stockQuantity;
         } else {
             cart.push({
-                productId: product.ProductID,
+                productId: productID,
                 name: cleanTitle(product.Title),
                 price: Number(product.Price),
-                image: product.ImageURL,
+                image: product.ImageURL || "",
                 quantity: 1,
                 stockQuantity: stockQuantity,
-                selected: true
->>>>>>> Stashed changes
+                selected: true,
+                personalizedName: "",
+                message: ""
             });
         }
 
-        try {
-            localStorage.setItem(
-                CART_KEY,
-                JSON.stringify(cart)
-            );
-        } catch (error) {
-            console.error("Unable to save cart:", error);
-
-<<<<<<< Updated upstream
-        // SAVE CART
-        try {
-
-            localStorage.setItem(
-                "giftoraCart",
-                JSON.stringify(cart)
-            );
-
-        } catch (error) {
-
-            console.error("Unable to save cart:", error);
-
-            alert("Unable to save your cart. Please try again.");
-            return;
-        }
-
-
-        // UPDATE CART COUNT
-        updateCartCount();
-
-
-        // CONFIRMATION
-=======
-            alert(
-                "Unable to save your cart. Please try again."
-            );
+        if (!saveCart(cart)) {
             return;
         }
 
         updateCartCount();
 
->>>>>>> Stashed changes
         alert(
             cleanTitle(product.Title) +
             " has been added to your cart! 🛒"
         );
     }
 
-    /* ========================================================
-       UPDATE CART COUNT
-       ======================================================== */
+    // ============================================================
+    // UPDATE CART COUNT
+    // ============================================================
 
     function updateCartCount() {
-<<<<<<< Updated upstream
+        const cartCountElements =
+            document.querySelectorAll(".cart-count");
 
-        const cartCount = document.querySelector(".cart-count");
-
-        if (!cartCount) {
-            return;
-        }
-=======
-        const cartCount = document.querySelectorAll(".cart-count");
->>>>>>> Stashed changes
-
-        let cart = [];
-
-        try {
-<<<<<<< Updated upstream
-
-            const savedCart = localStorage.getItem("giftoraCart");
-
-=======
-            const savedCart = localStorage.getItem(CART_KEY);
->>>>>>> Stashed changes
-            cart = savedCart ? JSON.parse(savedCart) : [];
-
-            if (!Array.isArray(cart)) {
-                cart = [];
-            }
-        } catch (error) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-            console.error("Cart count loading error:", error);
-            cart = [];
-        }
+        const cart = getCart();
 
         const totalQuantity = cart.reduce(function (total, item) {
             const quantity = Number(item.quantity);
 
-<<<<<<< Updated upstream
-        // CALCULATE TOTAL QUANTITY
-        const totalQuantity = cart.reduce(
-            function (total, item) {
-
-                const quantity = Number(item.quantity);
-
-                if (
-                    Number.isInteger(quantity) &&
-                    quantity > 0
-                ) {
-                    return total + quantity;
-                }
-
-                return total;
-            },
-            0
-        );
-
-        cartCount.textContent = totalQuantity;
-=======
-            if (
-                Number.isInteger(quantity) &&
-                quantity > 0
-            ) {
+            if (Number.isInteger(quantity) && quantity > 0) {
                 return total + quantity;
             }
 
             return total;
         }, 0);
 
-        cartCount.forEach(function (element) {
+        cartCountElements.forEach(function (element) {
             element.textContent = totalQuantity;
         });
->>>>>>> Stashed changes
     }
 
-    /* ========================================================
-       SEARCH AND CATEGORY FILTERS
-       ======================================================== */
+    // ============================================================
+    // SEARCH
+    // ============================================================
 
     searchInput.addEventListener("input", displayProducts);
 
+    // ============================================================
+    // CATEGORY FILTER BUTTONS
+    // ============================================================
+
     filterButtons.forEach(function (button) {
         button.addEventListener("click", function () {
-            filterButtons.forEach(function (btn) {
-                btn.classList.remove("active");
+            filterButtons.forEach(function (item) {
+                item.classList.remove("active");
             });
 
             button.classList.add("active");
 
-            selectedCategory =
-                button.dataset.category || "all";
+            selectedCategory = button.dataset.category || "all";
+
+            console.log("Selected category:", selectedCategory);
 
             displayProducts();
         });
     });
 
-    /* ========================================================
-       INITIALIZE PAGE
-       ======================================================== */
+    // ============================================================
+    // INITIALIZE
+    // ============================================================
 
-    console.log(
-        "GIFTORA product listing with stock management loaded."
-    );
-
-    console.log("GIFTORA product_listing.js loaded - corrected version");
+    console.log("GIFTORA product listing initialized.");
 
     updateCartCount();
     loadProducts();

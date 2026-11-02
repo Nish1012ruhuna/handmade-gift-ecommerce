@@ -210,6 +210,34 @@ nav a.active::after {
     transition: 0.3s ease;
 }
 
+.header-actions .logout-btn {
+    min-height: 42px;
+    padding: 0 16px;
+    border: 1px solid #1f6f5b;
+    border-radius: 22px;
+    background: #1f6f5b;
+    color: white;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.header-actions .logout-btn:hover {
+    background: #185846;
+    transform: translateY(-2px);
+}
+
+.header-actions .logout-btn:focus-visible {
+    outline: 3px solid rgba(31, 111, 91, 0.3);
+    outline-offset: 2px;
+}
+
+.header-actions .logout-btn:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
 .icon-btn:hover,
 .account-btn:hover,
 .cart-link:hover {

@@ -76,7 +76,7 @@ header {
     gap: 10px;
 }
 
-.logo-icon img {
+.logo img {
     width: 58px;
     height: 58px;
     object-fit: contain;
@@ -166,6 +166,35 @@ nav a.active::after {
 
 .account-btn {
     font-size: 20px;
+}
+
+.header-actions .logout-btn {
+    min-height: 40px;
+    padding: 0 15px;
+    border: 1px solid #397064;
+    border-radius: 22px;
+    background: #397064;
+    color: #ffffff;
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.25s ease, transform 0.2s ease;
+}
+
+.header-actions .logout-btn:hover {
+    background: #28584f;
+    transform: translateY(-2px);
+}
+
+.header-actions .logout-btn:focus-visible {
+    outline: 2px solid #9abdb3;
+    outline-offset: 2px;
+}
+
+.header-actions .logout-btn:disabled {
+    cursor: wait;
+    opacity: 0.7;
 }
 
 
@@ -327,6 +356,29 @@ nav a.active::after {
     object-fit: cover;
     display: block;
     transition: 0.4s;
+}
+
+.product-favorite-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    display: flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    color: #444;
+    cursor: pointer;
+    font-size: 22px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.product-favorite-btn.selected {
+    color: #d95f62;
 }
 
 .product-card:hover .product-image img {
@@ -700,7 +752,7 @@ footer {
         font-size: 20px;
     }
 
-    .logo-icon img {
+    .logo img {
         width: 45px;
         height: 45px;
     }

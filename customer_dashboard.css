@@ -62,6 +62,34 @@ nav a:hover {
     font-size: 13px;
 }
 
+.nav-actions .logout-btn {
+    border: 1px solid #1f6f5b;
+    background: #1f6f5b;
+    color: white;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 13px;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.nav-actions .logout-btn:hover {
+    background: #185846;
+    border-color: #185846;
+}
+
+.nav-actions .logout-btn:focus-visible {
+    outline: 3px solid rgba(31, 111, 91, 0.3);
+    outline-offset: 2px;
+}
+
+.nav-actions .logout-btn:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
 .account-btn {
     background: #1f6f5b;
     color: white;

@@ -248,6 +248,15 @@ function displayCart() {
                         ${escapeHTML(item.message)}
                     </p>` : ""}
 
+                ${Array.isArray(item.giftBoxAddons) && item.giftBoxAddons.length
+                    ? `<div class="customization">
+                        <strong>Gift box items:</strong>
+                        <ul>${item.giftBoxAddons.map(addon => `
+                            <li>${escapeHTML(addon.name)} — Rs. ${Number(addon.price || 0).toLocaleString()}</li>
+                        `).join("")}</ul>
+                    </div>`
+                    : ""}
+
                 <div class="quantity-controls">
                     <button type="button"
                         class="quantity-btn decrease-btn"

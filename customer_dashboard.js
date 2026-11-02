@@ -131,6 +131,35 @@ async function loadCustomerOrders() {
                 (order.DeliveryAddress || "Not available");
 
             card.append(heading, date, total, status, address);
+
+            if (Array.isArray(order.Items) && order.Items.length > 0) {
+                const itemsHeading = document.createElement("p");
+                itemsHeading.textContent = "Items:";
+                card.appendChild(itemsHeading);
+
+                order.Items.forEach(function (item) {
+                    const itemLine = document.createElement("p");
+                    itemLine.textContent =
+                        (item.ProductTitle || "Gift item") +
+                        " × " + item.Quantity +
+                        " — " + formatMoney(item.UnitPrice) + " each";
+                    card.appendChild(itemLine);
+
+                    if (
+                        Array.isArray(item.GiftBoxAddons) &&
+                        item.GiftBoxAddons.length > 0
+                    ) {
+                        const addonLine = document.createElement("p");
+                        addonLine.textContent =
+                            "  Gift box includes: " +
+                            item.GiftBoxAddons.map(function (addon) {
+                                return addon.name;
+                            }).join(", ");
+                        card.appendChild(addonLine);
+                    }
+                });
+            }
+
             container.appendChild(card);
         });
     } catch (error) {

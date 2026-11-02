@@ -43,6 +43,14 @@ async function load(){
             </td>
             <td>${esc(o.OrderDate||"—")}</td>
             <td>${money(o.TotalAmount)}</td>
+            <td>${Array.isArray(o.Items) && o.Items.length
+                ? o.Items.map(item => {
+                    const addons = Array.isArray(item.GiftBoxAddons)
+                        ? item.GiftBoxAddons.map(addon => addon.name).join(", ")
+                        : "";
+                    return `<div>${esc(item.ProductTitle)} × ${esc(item.Quantity)}${addons ? `<small class="muted"><br>Includes: ${esc(addons)}</small>` : ""}</div>`;
+                }).join("")
+                : "—"}</td>
             <td>${esc(o.DeliveryAddress||"—")}</td>
             <td><span class="pill">${esc(o.Status||"Pending")}</span></td>
             <td>
@@ -54,9 +62,9 @@ async function load(){
             <button class="btn small" data-save="${o.OrderID}">Save</button>
             </div>
             </td>
-            </tr>`).join(""):'<tr><td colspan="7" class="empty">No orders found.</td></tr>';}
+            </tr>`).join(""):'<tr><td colspan="8" class="empty">No orders found.</td></tr>';}
             catch(e){
-                msg(e.message,"error");body.innerHTML='<tr><td colspan="7" class="empty">Could not load orders.</td></tr>';
+                msg(e.message,"error");                body.innerHTML='<tr><td colspan="8" class="empty">Could not load orders.</td></tr>';
             }
         }
 

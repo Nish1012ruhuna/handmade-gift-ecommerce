@@ -393,6 +393,28 @@
 
             </div>
 
+            <section id="giftBoxBuilder" class="gift-box-builder" hidden>
+                <h3>Build Your Gift Box</h3>
+                <p class="gift-box-note">
+                    Choose any items you would like to include. Prices shown are editable sample prices.
+                </p>
+                <label for="giftBoxAddonSearch">Search items</label>
+                <input
+                    id="giftBoxAddonSearch"
+                    class="gift-box-search"
+                    type="search"
+                    placeholder="Search the 100 available items"
+                    autocomplete="off"
+                >
+                <p id="giftBoxAddonStatus" class="gift-box-status" role="status">
+                    Loading gift-box items...
+                </p>
+                <div id="giftBoxAddonList" class="gift-box-addon-list"></div>
+                <div class="gift-box-total">
+                    <span><span id="giftBoxAddonCount">0</span> add-on items selected</span>
+                    <strong id="giftBoxAddonTotal">LKR 0.00</strong>
+                </div>
+            </section>
 
 
             <!-- QUANTITY -->
@@ -785,7 +807,7 @@
                     My Orders
                 </a>
 
-                <a href="#">
+                <a href="favorites.html">
                     Wishlist
                 </a>
 
@@ -841,7 +863,8 @@
 
     <!-- JAVASCRIPT -->
 
-    <script src="prduct_details.js"></script>
+    <script src="favorites.js?v=2"></script>
+    <script src="prduct_details.js?v=2"></script>
 
 </body>
 

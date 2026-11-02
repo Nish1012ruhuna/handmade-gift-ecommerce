@@ -33,14 +33,22 @@ if ($_SERVER["REQUEST_METHOD"] !== "GET") {
 try {
     $sql = "
         SELECT
-            OrderID,
-            OrderDate,
-            TotalAmount,
-            Status,
-            DeliveryAddress
-        FROM `orders`
-        WHERE CustomerID = ?
-        ORDER BY OrderDate DESC
+            o.OrderID,
+            o.OrderDate,
+            o.TotalAmount,
+            o.Status,
+            o.DeliveryAddress,
+            oi.OrderItemID,
+            p.Title AS ProductTitle,
+            oi.Quantity,
+            oi.UnitPrice,
+            cu.SpecialInstruction
+        FROM `orders` o
+        LEFT JOIN orderitem oi ON oi.OrderID = o.OrderID
+        LEFT JOIN product p ON p.ProductID = oi.ProductID
+        LEFT JOIN customization cu ON cu.CustomizationID = oi.CustomizationID
+        WHERE o.CustomerID = ?
+        ORDER BY o.OrderDate DESC, oi.OrderItemID ASC
     ";
 
     $stmt = $conn->prepare($sql);
@@ -56,10 +64,38 @@ try {
     $orders = [];
 
     while ($row = $result->fetch_assoc()) {
-        $orders[] = $row;
+        $orderID = (int) $row["OrderID"];
+
+        if (!isset($orders[$orderID])) {
+            $orders[$orderID] = [
+                "OrderID" => $orderID,
+                "OrderDate" => $row["OrderDate"],
+                "TotalAmount" => $row["TotalAmount"],
+                "Status" => $row["Status"],
+                "DeliveryAddress" => $row["DeliveryAddress"],
+                "Items" => []
+            ];
+        }
+
+        if ($row["OrderItemID"] !== null) {
+            $giftBoxAddons = json_decode(
+                $row["SpecialInstruction"] ?? "",
+                true
+            );
+
+            $orders[$orderID]["Items"][] = [
+                "ProductTitle" => $row["ProductTitle"],
+                "Quantity" => (int) $row["Quantity"],
+                "UnitPrice" => (float) $row["UnitPrice"],
+                "GiftBoxAddons" => is_array($giftBoxAddons)
+                    ? $giftBoxAddons
+                    : []
+            ];
+        }
     }
 
     $stmt->close();
+    $orders = array_values($orders);
 
     echo json_encode([
         "success" => true,

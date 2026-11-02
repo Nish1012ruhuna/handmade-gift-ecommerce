@@ -136,7 +136,11 @@ const homeProducts = [
     {
         id: 1,
 
+        favoriteId: "home-featured-card",
+
         name: "Personalized Greeting Card",
+
+        category: "Handmade Cards",
 
         price: 350,
 
@@ -148,7 +152,11 @@ const homeProducts = [
     {
         id: 3,
 
+        favoriteId: "home-featured-keychain",
+
         name: "Customized Resin Keychain",
+
+        category: "Resin Collection",
 
         price: 950,
 
@@ -160,7 +168,11 @@ const homeProducts = [
     {
         id: 5,
 
+        favoriteId: "home-featured-gift-box",
+
         name: "Premium Handmade Gift Box",
+
+        category: "Gift Box",
 
         price: 2500,
 
@@ -172,7 +184,11 @@ const homeProducts = [
     {
         id: 7,
 
+        favoriteId: "home-featured-candle",
+
         name: "Scented Handmade Candle",
+
+        category: "Handmade Candle",
 
         price: 1500,
 
@@ -207,6 +223,13 @@ cartButtons.forEach(function (button, index) {
 
 
             if (!product) {
+                return;
+            }
+
+            if (String(product.category).toLowerCase().includes("gift box")) {
+                window.location.href =
+                    "prduct_details.html?id=" +
+                    encodeURIComponent(product.id);
                 return;
             }
 
@@ -262,38 +285,18 @@ cartButtons.forEach(function (button, index) {
 
 
 // ========================================
-// WISHLIST BUTTONS
+// FAVORITE PRODUCTS
 // ========================================
 
-const wishlistButtons =
-    document.querySelectorAll(
-        ".wishlist-btn"
-    );
+const favoriteButtons =
+    document.querySelectorAll(".wishlist-btn");
 
+favoriteButtons.forEach(function (button, index) {
+    const product = homeProducts[index];
 
-wishlistButtons.forEach(function (button) {
-
-    button.addEventListener(
-        "click",
-        function () {
-
-            if (
-                this.textContent.trim() === "♡"
-            ) {
-
-                this.textContent = "♥";
-
-            }
-
-            else {
-
-                this.textContent = "♡";
-
-            }
-
-        }
-    );
-
+    if (product && window.GiftoraFavorites) {
+        window.GiftoraFavorites.bindButton(button, product);
+    }
 });
 
 
@@ -365,32 +368,6 @@ if (searchButton) {
                     );
 
             }
-
-        }
-    );
-
-}
-
-
-// ========================================
-// HEADER WISHLIST
-// ========================================
-
-const headerWishlist =
-    document.querySelector(
-        ".wishlist-header"
-    );
-
-
-if (headerWishlist) {
-
-    headerWishlist.addEventListener(
-        "click",
-        function () {
-
-            alert(
-                "Your wishlist will appear here! ❤️"
-            );
 
         }
     );
