@@ -404,4 +404,3 @@ The home page footer and customer navigation now link to the actual page names, 
 5. Open Track Order while signed out; it should ask you to sign in. Sign in with a customer account that has orders, then open Track Order again and select an order.
 6. The displayed order status is the value currently stored in the `orders.Status` database column. The page does not invent courier tracking scans or delivery estimates.
 
-**Before public deployment:** review the privacy/terms wording against your real business practices and local legal requirements. Confirm contact details and shipping/returns rules. PayHere sandbox mode is for testing, not live payments.
